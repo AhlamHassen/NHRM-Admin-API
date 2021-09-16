@@ -11,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Microsoft.EntityFrameworkCore;
+using NHRM_Admin_API.Model;
 
 namespace NHRM_Admin_API
 {
@@ -26,6 +28,7 @@ namespace NHRM_Admin_API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<NHRMDBContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("NHRMConnectionString")));
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

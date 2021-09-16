@@ -7,13 +7,6 @@ namespace NHRM_Admin_API.Model
 {
     public partial class Patient
     {
-        public Patient()
-        {
-            PatientCategories = new HashSet<PatientCategory>();
-            PatientRecords = new HashSet<PatientRecord>();
-            Treatings = new HashSet<Treating>();
-        }
-
         public string Urnumber { get; set; }
         public string Email { get; set; }
         public string Title { get; set; }
@@ -33,6 +26,40 @@ namespace NHRM_Admin_API.Model
         public bool LivesAlone { get; set; }
         public int RegisteredBy { get; set; }
         public bool Active { get; set; }
+
+        public Patient()
+        {
+            PatientCategories = new HashSet<PatientCategory>();
+            PatientRecords = new HashSet<PatientRecord>();
+            Treatings = new HashSet<Treating>();
+        }
+
+        public Patient(string urnumber, string email, string title, string firstName, string surName, string gender, DateTime dob, string address, string suburb, string postCode, string mobileNumber, string homeNumber, string countryOfBirth, string preferredLanguage, string password, string salt, bool livesAlone, int registeredBy, bool active, staff registeredByNavigation, ICollection<PatientCategory> patientCategories, ICollection<PatientRecord> patientRecords, ICollection<Treating> treatings)
+        {
+            Urnumber = urnumber;
+            Email = email;
+            Title = title;
+            FirstName = firstName;
+            SurName = surName;
+            Gender = gender;
+            Dob = dob;
+            Address = address;
+            Suburb = suburb;
+            PostCode = postCode;
+            MobileNumber = mobileNumber;
+            HomeNumber = homeNumber;
+            CountryOfBirth = countryOfBirth;
+            PreferredLanguage = preferredLanguage;
+            Password = password;
+            Salt = salt;
+            LivesAlone = livesAlone;
+            RegisteredBy = registeredBy;
+            Active = active;
+            RegisteredByNavigation = registeredByNavigation;
+            PatientCategories = patientCategories;
+            PatientRecords = patientRecords;
+            Treatings = treatings;
+        }
 
         public virtual staff RegisteredByNavigation { get; set; }
         public virtual ICollection<PatientCategory> PatientCategories { get; set; }
