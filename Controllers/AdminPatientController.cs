@@ -1,5 +1,4 @@
 using System;
-using AutoMapper;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,7 +7,7 @@ using Microsoft.Extensions.Logging;
 using NHRM_Admin_API.Model;
 using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace NHRM_Admin_API.Controllers
@@ -31,7 +30,7 @@ namespace NHRM_Admin_API.Controllers
         }
 
 
-        //Gets a Patient using a URNumber
+        //Gets a Patient using a URNumber -- still needs a bit of work to display categories and measurements
         [HttpGet]
         [Route("GetPatient")]
         public async Task<ActionResult<Patient>> GetPatient([FromQuery] string urnumber){
@@ -166,16 +165,13 @@ namespace NHRM_Admin_API.Controllers
         }
 
 
-        [HttpGet]
-        [Route("SearchPatient")]
-
+        //View Patient
+        // [HttpGet]
+        // [Route("ViewPatient")]
 
         
-        //Delete patient
-
-
-
-
+        // we are not deleting patients we will activate and deactivate only
+        
 
 
         public static List<string> GetHashandSalt(string password){

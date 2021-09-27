@@ -31,10 +31,13 @@ namespace NHRM_Admin_API
             services.AddDbContext<NHRMDBContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("NHRMConnectionString")));
 
             services.AddControllers();
+
+            //for generating swagger documentation UI
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "NHRM_Admin_API", Version = "v1" });
             });
+ 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
