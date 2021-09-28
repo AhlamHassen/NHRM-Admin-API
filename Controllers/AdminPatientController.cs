@@ -146,12 +146,13 @@ namespace NHRM_Admin_API.Controllers
         //Search a patient using either a urnumber, given name or family name or all
         [HttpGet]
         [Route("SearchPatient")]
-        public async Task<ActionResult<IEnumerable<Patient>>>  SearchPatient([FromQuery] string searchurnumber, Boolean isExactUr, string searchgivenname,
+        public async Task<ActionResult<IEnumerable<Patient>>> SearchPatient([FromQuery] string searchurnumber, Boolean isExactUr, string searchgivenname,
             Boolean isExactGivenName, string searchfamilyname, Boolean isExactFamilyName){
             
             if(searchurnumber == null && searchgivenname == null && searchfamilyname ==null){
                 return BadRequest("No search string was provided");
             }
+            //
 
             var Qurn = isExactUr == true? searchurnumber : searchurnumber+"%";
             var Qgname = isExactGivenName == true ? searchgivenname : searchgivenname+"%";

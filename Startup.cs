@@ -28,6 +28,17 @@ namespace NHRM_Admin_API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(options =>
+                {
+                    options
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                });
+            });
+
             services.AddDbContext<NHRMDBContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("NHRMConnectionString")));
 
             services.AddControllers();
@@ -50,7 +61,9 @@ namespace NHRM_Admin_API
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "NHRM_Admin_API v1"));
             }
 
-            app.UseHttpsRedirection();
+            app.UseCors();
+            
+           // app.UseHttpsRedirection();
 
             app.UseRouting();
 
