@@ -8,6 +8,7 @@ using NHRM_Admin_API.Model;
 using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using NHRM_Admin_API.ViewModels;
 
 
 namespace NHRM_Admin_API.Controllers
@@ -161,6 +162,16 @@ namespace NHRM_Admin_API.Controllers
             var result = await context.Patients.Where(p => EF.Functions.Like(p.Urnumber, $"{Qurn}") ||
                 EF.Functions.Like(p.FirstName, $"{Qgname}") ||
                 EF.Functions.Like(p.SurName, $"{Qfname}")).ToListAsync();
+
+            //-------------------------------------------------------------------------------------------
+            // TODO --Hey Ahlam maybe we can use something like this to limit passing the DB whole entity
+            //--------------------------------------------------------------------------------------------
+            // var result = await context.Patients.Where(p => EF.Functions.Like(p.Urnumber, $"{Qurn}") ||
+            //     EF.Functions.Like(p.FirstName, $"{Qgname}") ||
+            //     EF.Functions.Like(p.SurName, $"{Qfname}")).Select( x => new PatientSearchViewModel{ 
+            //     Urnumber = x.Urnumber, FirstName = x.FirstName, SurName = x.SurName}).ToListAsync(); 
+            //   
+            //----------------------------- this is not tested yet--------------------------------------
 
             return Ok(result);
         }

@@ -1,15 +1,9 @@
-using System;
-using System.Collections.Generic;
-
-#nullable disable
-
-namespace NHRM_Admin_API.Model
+namespace NHRM_Admin_API.ViewModels
 {
-    public partial class SearchPatientDTO
+    public class PatientSearchViewModel
     {
         public string Urnumber { get; set; }
         public string FirstName { get; set; }
         public string SurName { get; set; }
-
     }
 }
