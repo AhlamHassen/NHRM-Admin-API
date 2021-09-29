@@ -60,6 +60,9 @@ namespace NHRM_Admin_API.Controllers
                 return BadRequest("The Patient is not assigned to a patient category");
             }
             
+            // Create the patient of type Patient from the pm.Patient (which is of type PatientViewModel)
+
+            // option: generate random strings which include symbols, number and minimum length
             List<string> hashsalt = GetHashandSalt(pm.patient.Password);
             var p = pm.patient;
 
@@ -70,7 +73,8 @@ namespace NHRM_Admin_API.Controllers
             context.Patients.Add(newPatient);
             
             foreach(var c in pm.patientCategory){
-                context.PatientCategories.Add(c);
+                //var pc = new PatientCategory () { CategoryId = c, urNumber = newPatient.urNumber}
+                context.PatientCategories.Add(pc);
             }
 
             foreach(var m in pm.patientMeasurement){
