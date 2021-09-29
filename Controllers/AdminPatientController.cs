@@ -8,6 +8,7 @@ using NHRM_Admin_API.Model;
 using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using NHRM_Admin_API.ViewModels;
 
 
 namespace NHRM_Admin_API.Controllers
@@ -59,6 +60,9 @@ namespace NHRM_Admin_API.Controllers
                 return BadRequest("The Patient is not assigned to a patient category");
             }
             
+            // Create the patient of type Patient from the pm.Patient (which is of type PatientViewModel)
+
+            // option: generate random strings which include symbols, number and minimum length
             List<string> hashsalt = GetHashandSalt(pm.patient.Password);
             var p = pm.patient;
 
@@ -69,7 +73,8 @@ namespace NHRM_Admin_API.Controllers
             context.Patients.Add(newPatient);
             
             foreach(var c in pm.patientCategory){
-                context.PatientCategories.Add(c);
+                //var pc = new PatientCategory () { CategoryId = c, urNumber = newPatient.urNumber}
+                context.PatientCategories.Add(pc);
             }
 
             foreach(var m in pm.patientMeasurement){
@@ -146,12 +151,13 @@ namespace NHRM_Admin_API.Controllers
         //Search a patient using either a urnumber, given name or family name or all
         [HttpGet]
         [Route("SearchPatient")]
-        public async Task<ActionResult<IEnumerable<Patient>>>  SearchPatient([FromQuery] string searchurnumber, Boolean isExactUr, string searchgivenname,
+        public async Task<ActionResult<IEnumerable<Patient>>> SearchPatient([FromQuery] string searchurnumber, Boolean isExactUr, string searchgivenname,
             Boolean isExactGivenName, string searchfamilyname, Boolean isExactFamilyName){
             
             if(searchurnumber == null && searchgivenname == null && searchfamilyname ==null){
                 return BadRequest("No search string was provided");
             }
+            //
 
             var Qurn = isExactUr == true? searchurnumber : searchurnumber+"%";
             var Qgname = isExactGivenName == true ? searchgivenname : searchgivenname+"%";
@@ -160,6 +166,16 @@ namespace NHRM_Admin_API.Controllers
             var result = await context.Patients.Where(p => EF.Functions.Like(p.Urnumber, $"{Qurn}") ||
                 EF.Functions.Like(p.FirstName, $"{Qgname}") ||
                 EF.Functions.Like(p.SurName, $"{Qfname}")).ToListAsync();
+
+            //-------------------------------------------------------------------------------------------
+            // TODO --Hey Ahlam maybe we can use something like this to limit passing the DB whole entity
+            //--------------------------------------------------------------------------------------------
+            // var result = await context.Patients.Where(p => EF.Functions.Like(p.Urnumber, $"{Qurn}") ||
+            //     EF.Functions.Like(p.FirstName, $"{Qgname}") ||
+            //     EF.Functions.Like(p.SurName, $"{Qfname}")).Select( x => new PatientSearchViewModel{ 
+            //     Urnumber = x.Urnumber, FirstName = x.FirstName, SurName = x.SurName}).ToListAsync(); 
+            //   
+            //----------------------------- this is not tested yet--------------------------------------
 
             return Ok(result);
         }

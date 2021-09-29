@@ -18,7 +18,7 @@
       "Humanizer.Core/2.8.26": {
         "type": "package",
         "compile": {
-          "lib/netstandard2.0/Humanizer.dll": {}
+          "lib/netstandard2.0/_._": {}
         },
         "runtime": {
           "lib/netstandard2.0/Humanizer.dll": {}
@@ -146,7 +146,7 @@
           "Microsoft.EntityFrameworkCore.Relational": "5.0.10"
         },
         "compile": {
-          "lib/netstandard2.1/Microsoft.EntityFrameworkCore.Design.dll": {}
+          "lib/netstandard2.1/_._": {}
         },
         "runtime": {
           "lib/netstandard2.1/Microsoft.EntityFrameworkCore.Design.dll": {}
@@ -6515,26 +6515,27 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\User\\.nuget\\packages\\": {}
+    "C:\\Users\\Cooler Master\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\User\\Desktop\\myRepositories\\NHRM-Admin-API\\NHRM-Admin-API.csproj",
+      "projectUniqueName": "C:\\Users\\Cooler Master\\source\\repos\\NHRM-Admin-API\\NHRM-Admin-API.csproj",
       "projectName": "NHRM-Admin-API",
-      "projectPath": "c:\\Users\\User\\Desktop\\myRepositories\\NHRM-Admin-API\\NHRM-Admin-API.csproj",
-      "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-      "outputPath": "c:\\Users\\User\\Desktop\\myRepositories\\NHRM-Admin-API\\obj\\",
+      "projectPath": "C:\\Users\\Cooler Master\\source\\repos\\NHRM-Admin-API\\NHRM-Admin-API.csproj",
+      "packagesPath": "C:\\Users\\Cooler Master\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Cooler Master\\source\\repos\\NHRM-Admin-API\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Cooler Master\\NuGet.Config",
+        "C:\\Users\\Cooler Master\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net5.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Users\\Cooler Master\\Documents\\swinburne\\2021_project\\packages": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -6558,6 +6559,8 @@
             "version": "[10.1.1, )"
           },
           "Microsoft.EntityFrameworkCore.Design": {
+            "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+            "suppressParent": "All",
             "target": "Package",
             "version": "[5.0.10, )"
           },
@@ -6592,7 +6595,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.301\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.303\\RuntimeIdentifierGraph.json"
       }
     }
   }

@@ -46,7 +46,8 @@ namespace NHRM_Admin_API.Model
             if (!optionsBuilder.IsConfigured)
             {
                // #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Data Source=nhrmdb.chxrsmr071sd.us-east-1.rds.amazonaws.com;Initial Catalog=NHRMDB;User ID=admin;Password=kereneritrea");
+               // optionsBuilder.UseSqlServer("Data Source=nhrmdb.chxrsmr071sd.us-east-1.rds.amazonaws.com;Initial Catalog=NHRMDB;User ID=admin;Password=kereneritrea");
+                optionsBuilder.UseSqlServer("Data Source=(localdb)\\ProjectsV13;Initial Catalog=NH;Integrated Security=True");
             }
         }
 
@@ -197,7 +198,9 @@ namespace NHRM_Admin_API.Model
 
                 entity.Property(e => e.MobileNumber).HasMaxLength(10);
 
-                entity.Property(e => e.Password).IsRequired();
+                entity.Property(e => e.Password)
+                    .IsRequired()
+                    .HasMaxLength(400);
 
                 entity.Property(e => e.PostCode)
                     .IsRequired()
