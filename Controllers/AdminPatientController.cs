@@ -72,7 +72,7 @@ namespace NHRM_Admin_API.Controllers
 
             context.Patients.Add(newPatient);
             
-            foreach(var c in pm.patientCategory){
+            foreach(var pc in pm.patientCategory){
                 //var pc = new PatientCategory () { CategoryId = c, urNumber = newPatient.urNumber}
                 context.PatientCategories.Add(pc);
             }
