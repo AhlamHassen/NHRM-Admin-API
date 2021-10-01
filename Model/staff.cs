@@ -9,7 +9,7 @@ namespace NHRM_Admin_API.Model
     {
         public staff()
         {
-            Patients = new HashSet<Patient>();
+            //Patients = new HashSet<Patient>();
             Treatings = new HashSet<Treating>();
         }
 
@@ -22,7 +22,7 @@ namespace NHRM_Admin_API.Model
         public int RoleId { get; set; }
 
         public virtual StaffRole Role { get; set; }
-        public virtual ICollection<Patient> Patients { get; set; }
+        //public virtual ICollection<Patient> Patients { get; set; }
         public virtual ICollection<Treating> Treatings { get; set; }
     }
 }

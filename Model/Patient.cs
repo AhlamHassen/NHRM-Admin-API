@@ -29,9 +29,9 @@ namespace NHRM_Admin_API.Model
 
         public Patient()
         {
-            PatientCategories = new HashSet<PatientCategory>();
-            PatientRecords = new HashSet<PatientRecord>();
-            Treatings = new HashSet<Treating>();
+            // PatientCategories = new HashSet<PatientCategory>();
+            // PatientRecords = new HashSet<PatientRecord>();
+            // Treatings = new HashSet<Treating>();
         }
 
         public Patient(string urnumber, string email, string title, string firstName, string surName, string gender, DateTime dob, string address, string suburb, string postCode, string mobileNumber, string homeNumber, string countryOfBirth, string preferredLanguage, string password, string salt, bool livesAlone, int registeredBy, bool active)
@@ -57,9 +57,9 @@ namespace NHRM_Admin_API.Model
             Active = active;
         }
 
-        public virtual staff RegisteredByNavigation { get; set; }
-        public virtual ICollection<PatientCategory> PatientCategories { get; set; }
-        public virtual ICollection<PatientRecord> PatientRecords { get; set; }
-        public virtual ICollection<Treating> Treatings { get; set; }
+        //public virtual staff RegisteredByNavigation { get; set; }
+        // public virtual ICollection<PatientCategory> PatientCategories { get; set; }
+        // public virtual ICollection<PatientRecord> PatientRecords { get; set; }
+        // public virtual ICollection<Treating> Treatings { get; set; }
     }
 }

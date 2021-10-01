@@ -13,6 +13,6 @@ namespace NHRM_Admin_API.Model
         public int StaffId { get; set; }
 
         public virtual staff Staff { get; set; }
-        public virtual Patient UrnumberNavigation { get; set; }
+        //public virtual Patient UrnumberNavigation { get; set; }
     }
 }
