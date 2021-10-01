@@ -23,6 +23,27 @@ namespace NHRM_Admin_API.Controllers
             context = _context;
         }
 
+        // Gets All Measurements -- this needs to be moved into its own controller prolly at some stage
+        [HttpGet]
+        [Route("GetMeasurements")]
+        public IEnumerable<MeasurementViewModel> GetMeasurements(){
+            
+            var measurments = context.Measurements.ToList();
+
+            List<MeasurementViewModel> outputlist = new List<MeasurementViewModel>();
+            foreach(var m in measurments){
+               
+                var mc = new MeasurementViewModel() { 
+                   MeasurementId = m.MeasurementId,
+                   MeasurementName = m.MeasurementName
+                };
+                
+              outputlist.Add(mc);
+            }
+            
+            return outputlist;
+        }
+
         //Gets All Patients
         [HttpGet]
         [Route("GetAllPatients")]
