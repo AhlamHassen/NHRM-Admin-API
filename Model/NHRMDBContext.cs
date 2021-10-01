@@ -495,17 +495,17 @@ namespace NHRM_Admin_API.Model
 
                 entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
 
-                entity.HasOne(d => d.Category)
-                    .WithMany(p => p.TemplateMeasurements)
-                    .HasForeignKey(d => d.CategoryId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__TemplateMeasurement_TemplateCategory");
+                // entity.HasOne(d => d.Category)
+                //     .WithMany(p => p.TemplateMeasurements)
+                //     .HasForeignKey(d => d.CategoryId)
+                //     .OnDelete(DeleteBehavior.ClientSetNull)
+                //     .HasConstraintName("FK__TemplateMeasurement_TemplateCategory");
 
-                entity.HasOne(d => d.Measurement)
-                    .WithMany(p => p.TemplateMeasurements)
-                    .HasForeignKey(d => d.MeasurementId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_TemplateMeasurement_Measurement");
+                // entity.HasOne(d => d.Measurement)
+                //     .WithMany(p => p.TemplateMeasurements)
+                //     .HasForeignKey(d => d.MeasurementId)
+                //     .OnDelete(DeleteBehavior.ClientSetNull)
+                //     .HasConstraintName("FK_TemplateMeasurement_Measurement");
             });
 
             modelBuilder.Entity<TemplateResource>(entity =>
@@ -518,11 +518,11 @@ namespace NHRM_Admin_API.Model
 
                 entity.Property(e => e.ResourceId).HasColumnName("ResourceID");
 
-                entity.HasOne(d => d.Category)
-                    .WithMany(p => p.TemplateResources)
-                    .HasForeignKey(d => d.CategoryId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_TemplateResource_TemplateCategory");
+                // entity.HasOne(d => d.Category)
+                //     .WithMany(p => p.TemplateResources)
+                //     .HasForeignKey(d => d.CategoryId)
+                //     .OnDelete(DeleteBehavior.ClientSetNull)
+                //     .HasConstraintName("FK_TemplateResource_TemplateCategory");
 
                 entity.HasOne(d => d.Resource)
                     .WithMany(p => p.TemplateResources)
