@@ -30,22 +30,22 @@ namespace NHRM_Admin_API.Controllers
             return context.Patients.ToList();
         }
 
-        //Gets All MEasurements -- this needs to be moved into its own controller prolly
+       // Gets All MEasurements -- this needs to be moved into its own controller prolly
         [HttpGet]
         [Route("GetMeasurements")]
         public IEnumerable<MeasurementViewModel> GetMeasurements(){
             
             var measurments = context.Measurements.ToList();
 
-            List outputlist = new List<MeasurementViewModel>()
+            List<MeasurementViewModel> outputlist = new List<MeasurementViewModel>();
             foreach(var m in measurments){
                
                 var mc = new MeasurementViewModel() { 
-                    MeasurementId = m.MeasurementId,
-                    MeasurementName = m.MeasurementName
-                }
+                   MeasurementId = m.MeasurementId,
+                   MeasurementName = m.MeasurementName
+                };
                 
-               outputlist.Add(mc);
+              outputlist.Add(mc);
             }
             
             return outputlist;
@@ -53,6 +53,7 @@ namespace NHRM_Admin_API.Controllers
 
 
         //Gets a Patient using a URNumber -- still needs a bit of work to display categories and measurements
+
         [HttpGet]
         [Route("GetPatient")]
         public async Task<ActionResult<Patient>> GetPatient([FromQuery] string urnumber){

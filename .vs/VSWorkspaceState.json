@@ -1,7 +1,10 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Controllers"
+    "\\Controllers",
+    "\\Migrations",
+    "\\Model",
+    "\\ViewModels"
   ],
   "SelectedNode": "\\Controllers\\AdminPatientController.cs",
   "PreviewInSolutionExplorer": false
