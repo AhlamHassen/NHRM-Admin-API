@@ -6520,11 +6520,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\dnadi\\Desktop\\dan Dotnet api\\NHRM-Admin-API\\NHRM-Admin-API.csproj",
+      "projectUniqueName": "C:\\Users\\dnadi\\Desktop\\main api\\NHRM-Admin-API\\NHRM-Admin-API.csproj",
       "projectName": "NHRM-Admin-API",
-      "projectPath": "C:\\Users\\dnadi\\Desktop\\dan Dotnet api\\NHRM-Admin-API\\NHRM-Admin-API.csproj",
+      "projectPath": "C:\\Users\\dnadi\\Desktop\\main api\\NHRM-Admin-API\\NHRM-Admin-API.csproj",
       "packagesPath": "C:\\Users\\dnadi\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\dnadi\\Desktop\\dan Dotnet api\\NHRM-Admin-API\\obj\\",
+      "outputPath": "C:\\Users\\dnadi\\Desktop\\main api\\NHRM-Admin-API\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\dnadi\\AppData\\Roaming\\NuGet\\NuGet.Config",

@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using NHRM_Admin_API.ViewModels;
 
 #nullable disable
 
@@ -15,8 +16,9 @@ namespace NHRM_Admin_API.Model
         public NHRMDBContext(DbContextOptions<NHRMDBContext> options)
             : base(options)
         {
-        }
+        }        
 
+        //----------------------Entity Frame work stuff don't change VVVVVVV
         public virtual DbSet<ConditionDetail> ConditionDetails { get; set; }
         public virtual DbSet<DataPoint> DataPoints { get; set; }
         public virtual DbSet<DataPointRecord> DataPointRecords { get; set; }
@@ -53,6 +55,7 @@ namespace NHRM_Admin_API.Model
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //--------------------------- Entity Frame work don't change VVVV-------------------------------------------->
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
 
             modelBuilder.Entity<ConditionDetail>(entity =>
@@ -223,7 +226,12 @@ namespace NHRM_Admin_API.Model
                 entity.Property(e => e.Title)
                     .IsRequired()
                     .HasMaxLength(50);
-                
+
+                entity.HasOne(d => d.RegisteredByNavigation)
+                    .WithMany(p => p.Patients)
+                    .HasForeignKey(d => d.RegisteredBy)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Patient_Staff");
             });
 
             modelBuilder.Entity<PatientCategory>(entity =>
@@ -236,7 +244,19 @@ namespace NHRM_Admin_API.Model
 
                 entity.Property(e => e.Urnumber)
                     .HasMaxLength(50)
-                    .HasColumnName("URNumber");               
+                    .HasColumnName("URNumber");
+
+                entity.HasOne(d => d.Category)
+                    .WithMany(p => p.PatientCategories)
+                    .HasForeignKey(d => d.CategoryId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_PatientCategory_TemplateCategory");
+
+                entity.HasOne(d => d.UrnumberNavigation)
+                    .WithMany(p => p.PatientCategories)
+                    .HasForeignKey(d => d.Urnumber)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_PatientCategory_Patient");
             });
 
             modelBuilder.Entity<PatientMeasurement>(entity =>
@@ -288,11 +308,11 @@ namespace NHRM_Admin_API.Model
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_PatientRecord_RecordType");
 
-                // entity.HasOne(d => d.UrnumberNavigation)
-                //     .WithMany(p => p.PatientRecords)
-                //     .HasForeignKey(d => d.Urnumber)
-                //     .OnDelete(DeleteBehavior.ClientSetNull)
-                //     .HasConstraintName("FK_PatientRecord_Patient");
+                entity.HasOne(d => d.UrnumberNavigation)
+                    .WithMany(p => p.PatientRecords)
+                    .HasForeignKey(d => d.Urnumber)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_PatientRecord_Patient");
             });
 
             modelBuilder.Entity<PatientResource>(entity =>
@@ -495,17 +515,17 @@ namespace NHRM_Admin_API.Model
 
                 entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
 
-                // entity.HasOne(d => d.Category)
-                //     .WithMany(p => p.TemplateMeasurements)
-                //     .HasForeignKey(d => d.CategoryId)
-                //     .OnDelete(DeleteBehavior.ClientSetNull)
-                //     .HasConstraintName("FK__TemplateMeasurement_TemplateCategory");
+                entity.HasOne(d => d.Category)
+                    .WithMany(p => p.TemplateMeasurements)
+                    .HasForeignKey(d => d.CategoryId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__TemplateMeasurement_TemplateCategory");
 
-                // entity.HasOne(d => d.Measurement)
-                //     .WithMany(p => p.TemplateMeasurements)
-                //     .HasForeignKey(d => d.MeasurementId)
-                //     .OnDelete(DeleteBehavior.ClientSetNull)
-                //     .HasConstraintName("FK_TemplateMeasurement_Measurement");
+                entity.HasOne(d => d.Measurement)
+                    .WithMany(p => p.TemplateMeasurements)
+                    .HasForeignKey(d => d.MeasurementId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_TemplateMeasurement_Measurement");
             });
 
             modelBuilder.Entity<TemplateResource>(entity =>
@@ -518,11 +538,11 @@ namespace NHRM_Admin_API.Model
 
                 entity.Property(e => e.ResourceId).HasColumnName("ResourceID");
 
-                // entity.HasOne(d => d.Category)
-                //     .WithMany(p => p.TemplateResources)
-                //     .HasForeignKey(d => d.CategoryId)
-                //     .OnDelete(DeleteBehavior.ClientSetNull)
-                //     .HasConstraintName("FK_TemplateResource_TemplateCategory");
+                entity.HasOne(d => d.Category)
+                    .WithMany(p => p.TemplateResources)
+                    .HasForeignKey(d => d.CategoryId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_TemplateResource_TemplateCategory");
 
                 entity.HasOne(d => d.Resource)
                     .WithMany(p => p.TemplateResources)
@@ -553,11 +573,11 @@ namespace NHRM_Admin_API.Model
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Treating_Staff");
 
-                // entity.HasOne(d => d.UrnumberNavigation)
-                //     .WithMany(p => p.Treatings)
-                //     .HasForeignKey(d => d.Urnumber)
-                //     .OnDelete(DeleteBehavior.ClientSetNull)
-                //     .HasConstraintName("FK_Treating_Patient");
+                entity.HasOne(d => d.UrnumberNavigation)
+                    .WithMany(p => p.Treatings)
+                    .HasForeignKey(d => d.Urnumber)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Treating_Patient");
             });
 
             modelBuilder.Entity<staff>(entity =>

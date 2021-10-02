@@ -13,6 +13,6 @@ namespace NHRM_Admin_API.Model
         public int RecordTypeId { get; set; }
 
         public virtual RecordType RecordType { get; set; }
-        // public virtual Patient UrnumberNavigation { get; set; }
+        public virtual Patient UrnumberNavigation { get; set; }
     }
 }

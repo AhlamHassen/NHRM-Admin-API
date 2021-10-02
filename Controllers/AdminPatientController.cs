@@ -20,16 +20,8 @@ namespace NHRM_Admin_API.Controllers
         private readonly NHRMDBContext context;
 
         public AdminPatientController(NHRMDBContext _context){
-            context = _context;
+            context = _context;            
         }
-
-        //Gets All Patients
-        [HttpGet]
-        [Route("GetAllPatients")]
-        public IEnumerable<Patient> GetAllPatients(){
-            return context.Patients.ToList();
-        }
-
 
         //Gets a Patient using a URNumber -- still needs a bit of work to display categories and measurements
         [HttpGet]
@@ -66,15 +58,15 @@ namespace NHRM_Admin_API.Controllers
             List<string> hashsalt = GetHashandSalt(pm.patient.Password);
             var p = pm.patient;
 
-            Patient newPatient = new (p.Urnumber, p.Email, p.Title, p.FirstName, p.SurName, p.Gender, p.Dob,
+            Patient newPatient = new Patient(p.Urnumber, p.Email, p.Title, p.FirstName, p.SurName, p.Gender, p.Dob,
             p.Address, p.Suburb, p.PostCode, p.MobileNumber, p.HomeNumber, p.CountryOfBirth, p.PreferredLanguage,
             hashsalt[0], hashsalt[1], p.LivesAlone, p.RegisteredBy, p.Active);
 
             context.Patients.Add(newPatient);
             
-            foreach(var pc in pm.patientCategory){
+            foreach(var c in pm.patientCategory){
                 //var pc = new PatientCategory () { CategoryId = c, urNumber = newPatient.urNumber}
-                context.PatientCategories.Add(pc);
+                context.PatientCategories.Add(c);
             }
 
             foreach(var m in pm.patientMeasurement){

@@ -1,2 +1,13 @@
 {
+    "csharp.suppressHiddenDiagnostics": false,
+    "razor.format.enable": true,
+    "csharp.testsCodeLens.enabled": true,
+    "csharp.showOmnisharpLogOnError": false,
+    "omnisharp.autoStart": true,
+    "omnisharp.enableEditorConfigSupport": true,
+    "omnisharp.useEditorFormattingSettings": true,
+    "docker.containers.description": [
+        "Status"
+    ],
+    "csharp.semanticHighlighting.enabled": true
 }

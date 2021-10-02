@@ -31,4 +31,31 @@ namespace NHRM_Admin_API.Controllers
             return context.TemplateCategories.ToList();
         }        
     }
+
+     // Gets All Measurements -- this needs to be moved into its own controller prolly at some stage
+        // [HttpGet]
+        // [Route("GetMeasurements")]
+        // public IEnumerable<MeasurementViewModel> GetMeasurements(){
+            
+        //     var measurments = context.Measurements.ToList();
+
+        //     List<MeasurementViewModel> outputlist = new List<MeasurementViewModel>();
+        //     foreach(var m in measurments){
+               
+        //         var mc = new MeasurementViewModel() { 
+        //            MeasurementId = m.MeasurementId,
+        //            MeasurementName = m.MeasurementName
+        //         };
+                
+        //       outputlist.Add(mc);
+        //     }
+            
+        //     return outputlist;
+        // }
+
+        
+
+        // //todo make a categoriesView 
+        // //todo make a measurementsView in db 
+        // //todo work on inser
 }
