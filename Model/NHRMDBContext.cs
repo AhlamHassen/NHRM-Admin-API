@@ -16,10 +16,13 @@ namespace NHRM_Admin_API.Model
         public NHRMDBContext(DbContextOptions<NHRMDBContext> options)
             : base(options)
         {
-        }        
+        }
 
-        //gets all categories in the database
+        //all categories in the database
         public DbSet<AllCategoriesView> AllCategoriesView { get; set; }
+
+        //gets all category measurements in db
+        public DbSet<CategoryMeasurementsView> CategoryMeasurements { get; set; }
 
         //----------------------Entity Frame work stuff don't change VVVVVVV -----------------------
         public virtual DbSet<ConditionDetail> ConditionDetails { get; set; }
@@ -58,6 +61,20 @@ namespace NHRM_Admin_API.Model
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+                
+            modelBuilder.Entity<AllCategoriesView>(entity =>
+            {
+                entity.HasNoKey();
+            });
+
+            modelBuilder.Entity<CategoryMeasurementsView>(entity =>
+            {
+                entity.HasNoKey();
+            });
+
+
+
             //--------------------------- Entity Frame work don't change VVVV-------------------------------------------->
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
 

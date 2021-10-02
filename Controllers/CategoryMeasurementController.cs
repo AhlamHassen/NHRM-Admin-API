@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NHRM_Admin_API.Model;
+using NHRM_Admin_API.ViewModels;
 using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
@@ -25,14 +26,30 @@ namespace NHRM_Admin_API.Controllers
     //Get categories from DB
         [HttpGet]
         [Route("Categories")]
-        public IEnumerable<TemplateCategory> GetAllCategories()
+        public IEnumerable<AllCategoriesView> GetAllCategories()
         {
             
-            return context.TemplateCategories.ToList();
-        }        
+            return context.AllCategoriesView.ToList();
+        }
+
+
+         //Get category measurements based on Category Id's passed into the endpoint
+        [HttpPut]
+        [Route("CategoryMeasurements")]
+        public IEnumerable<CategoryMeasurementsView> GetMeasurementsViews([FromBody] int[] categoryId){
+
+
+            return context.CategoryMeasurements
+            .Where(c => categoryId.Contains(c.CategoryID))
+            .ToList();
+        }
     }
 
+   
+        
+
      // Gets All Measurements -- this needs to be moved into its own controller prolly at some stage
+     //I think this will be for the measurements view table data
         // [HttpGet]
         // [Route("GetMeasurements")]
         // public IEnumerable<MeasurementViewModel> GetMeasurements(){

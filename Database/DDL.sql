@@ -4,7 +4,7 @@ Go
 
 DROP VIEW IF EXISTS AllCategoriesView;
 
-DROP VIEW IF EXISTS MeasurementCategories;
+DROP VIEW IF EXISTS CategoryMeasurements;
 
 DROP TABLE IF EXISTS DataPointRecord;
 
@@ -330,7 +330,7 @@ CREATE TABLE ResourceDialog(
 
 GO
 
-CREATE VIEW MeasurementCategories
+CREATE VIEW CategoryMeasurements
 
 AS
 
