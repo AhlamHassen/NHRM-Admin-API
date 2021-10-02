@@ -1,5 +1,10 @@
 USE NHRMDB;
+
 Go
+
+DROP VIEW IF EXISTS AllCategoriesView;
+
+DROP VIEW IF EXISTS MeasurementCategories;
 
 DROP TABLE IF EXISTS DataPointRecord;
 
@@ -322,3 +327,21 @@ CREATE TABLE ResourceDialog(
     CONSTRAINT PK_ResourceDialog PRIMARY KEY (ResourceDialogID),
     CONSTRAINT FK_ResourceDialog_Resource FOREIGN KEY (ResourceID) REFERENCES [Resource]
 )
+
+GO
+
+CREATE VIEW MeasurementCategories
+
+AS
+
+SELECT m.MeasurementID, m.MeasurementName, tc.CategoryID, tc.CategoryName, m.Frequency FROM Measurement AS m
+INNER JOIN TemplateMeasurement as tm ON tm.MeasurementID = m.MeasurementID
+INNER JOIN TemplateCategory as tc on tc.CategoryID = tm.CategoryID;
+
+GO
+
+CREATE VIEW AllCategoriesView
+
+AS 
+
+SELECT * FROM TemplateCategory;

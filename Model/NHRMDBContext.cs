@@ -18,7 +18,10 @@ namespace NHRM_Admin_API.Model
         {
         }        
 
-        //----------------------Entity Frame work stuff don't change VVVVVVV
+        //gets all categories in the database
+        public DbSet<AllCategoriesView> AllCategoriesView { get; set; }
+
+        //----------------------Entity Frame work stuff don't change VVVVVVV -----------------------
         public virtual DbSet<ConditionDetail> ConditionDetails { get; set; }
         public virtual DbSet<DataPoint> DataPoints { get; set; }
         public virtual DbSet<DataPointRecord> DataPointRecords { get; set; }

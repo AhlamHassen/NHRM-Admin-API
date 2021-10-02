@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "7DIKEEBouyQELNGHMZqRKJRw0eEoNWxLZEHgvIT2K9UTlYDYdPcSNZMSJMEk0u2MgS7UtD3vPEPjighpe90B/w==",
+  "dgSpecHash": "uTpDdgclsA9AsjSyGnFnwBEOJ4WLmbs9hY6uOZuY9jP6EqTy/4U0QN129ebXCK7eSCAroeupSknPlwJoa07Dfg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\dnadi\\Desktop\\main api\\NHRM-Admin-API\\NHRM-Admin-API.csproj",
+  "projectFilePath": "C:\\Users\\dnadi\\Desktop\\dan-dev api\\NHRM-Admin-API\\NHRM-Admin-API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\dnadi\\.nuget\\packages\\automapper\\10.1.1\\automapper.10.1.1.nupkg.sha512",
     "C:\\Users\\dnadi\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",

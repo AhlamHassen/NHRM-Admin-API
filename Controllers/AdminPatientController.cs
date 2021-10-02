@@ -23,6 +23,15 @@ namespace NHRM_Admin_API.Controllers
             context = _context;            
         }
 
+
+        //Gets All Patients
+        //todo maybe make this a view
+        [HttpGet]
+        [Route("GetAllPatients")]
+        public IEnumerable<Patient> GetAllPatients(){
+            return context.Patients.ToList();
+        }
+
         //Gets a Patient using a URNumber -- still needs a bit of work to display categories and measurements
         [HttpGet]
         [Route("GetPatient")]
