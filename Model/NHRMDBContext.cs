@@ -40,6 +40,7 @@ namespace NHRM_Admin_API.Model
         public virtual DbSet<TemplateResource> TemplateResources { get; set; }
         public virtual DbSet<Treating> Treatings { get; set; }
         public virtual DbSet<staff> staff { get; set; }
+        public DbSet<ViewTableData> ViewTableData { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -612,6 +613,13 @@ namespace NHRM_Admin_API.Model
                     .HasForeignKey(d => d.RoleId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Staff_StaffRole");
+            });
+
+            modelBuilder.Entity<ViewTableData>(entity =>
+            {
+                entity.HasNoKey();
+                entity.ToView("ViewTableData");
+                entity.Property(v => v.URNumber).HasColumnName("URNumber");
             });
 
             OnModelCreatingPartial(modelBuilder);
