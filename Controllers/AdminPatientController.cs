@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using NHRM_Admin_API.ViewModels;
 using System.Text;
+using Microsoft.Extensions.Configuration;
 
 
 namespace NHRM_Admin_API.Controllers
@@ -19,10 +20,13 @@ namespace NHRM_Admin_API.Controllers
     public class AdminPatientController : ControllerBase
     {
         private readonly NHRMDBContext context;
+        public IConfiguration Configuration { get; }
 
-        public AdminPatientController(NHRMDBContext _context){
+        public AdminPatientController(NHRMDBContext _context, IConfiguration configuration){
             context = _context;
+            Configuration = configuration;
         }
+
 
         //Gets All Patients
         [HttpGet]
@@ -117,7 +121,7 @@ namespace NHRM_Admin_API.Controllers
                 return BadRequest("The Patient is not assigned to a patient category");
             }
             
-            HashSaltReturnModel hashsalt = GetPepperedHashSalt(pm.Patient.Password);
+            HashSaltReturnModel hashsalt = GetPepperedHashSalt(pm.Patient.Password, context, Configuration);
             var p = pm.Patient;
 
             Patient newPatient = new Patient(p.Urnumber, p.Email, p.Title, p.FirstName, p.SurName, p.Gender, p.Dob,
@@ -131,26 +135,31 @@ namespace NHRM_Admin_API.Controllers
                 context.PatientCategories.Add(patientCategory);
             }
 
-            foreach(var m in pm.PatientMeasurements){
+            if(pm.PatientMeasurements != null){
+                foreach(var m in pm.PatientMeasurements){
                 var patientMeasurement = new PatientMeasurement(m.MeasurementId, m.CategoryId, pm.Patient.Urnumber,
                 m.Frequency, DateTime.Now);
                 context.PatientMeasurements.Add(patientMeasurement);
+                }
             }
- 
+            
             context.SaveChanges();
             return Ok("Patient was added successfully");
         }
 
-
-        //if we will enable password edit in the edit mode, will the actuall password will be shown? 
-        //what password return is needed? cause sending the actual password is not safe!!!
+        
+        
         [HttpPost]
         [Route("EditPatient")]
         public async Task<ActionResult> EditPatient([FromBody] AddPatientModel pm){
         
             var patient = await context.Patients.FirstOrDefaultAsync(p => p.Urnumber == pm.Patient.Urnumber);
-            HashSaltReturnModel hashsalt = GetPepperedHashSalt(pm.Patient.Password);
+            HashSaltReturnModel hashsalt = GetPepperedHashSalt(pm.Patient.Password, context, Configuration);
             var p = pm.Patient;
+
+            if(patient == null){
+                return NotFound("The requested patient does not exist");
+            }
 
             if(pm.PatientCategories.Count == 0){
                 return BadRequest("The Patient is not assigned to a patient category");
@@ -198,12 +207,14 @@ namespace NHRM_Admin_API.Controllers
             }
 
             //Add new patient measurements
-            foreach(var m in pm.PatientMeasurements){
+            if(pm.PatientMeasurements != null){
+                foreach(var m in pm.PatientMeasurements){
                 var patientMeasurement = new PatientMeasurement(m.MeasurementId, m.CategoryId, pm.Patient.Urnumber,
                 m.Frequency, DateTime.Now);
                 context.PatientMeasurements.Add(patientMeasurement);
+                }
             }
-
+            
             context.SaveChanges();
             return Ok("Patient was editted successfully");
         }
@@ -245,10 +256,44 @@ namespace NHRM_Admin_API.Controllers
         }
 
 
+        // just checking if authorization would work for patients
+        [HttpPost, Route("PatientLogin")]
+        public async Task<IActionResult> Login([FromQuery] string email, string password)
+        {
+            var patient = await context.Patients.Where(p => p.Email == email).Select(p => new Patient
+            {
+                Urnumber = p.Urnumber,
+                Salt = p.Salt,
+                Password = p.Password
+            }).SingleOrDefaultAsync();
+
+            if (patient != null)
+            {
+                var passwordHash = SHA512.Create();
+
+                passwordHash.ComputeHash(Encoding.UTF8.GetBytes(password + patient.Salt + Configuration.GetValue<string>("EnvironmentVariables:Pepper")));
+
+                if (passwordHash.Hash.SequenceEqual(patient.Password))
+                {
+                    return Ok("Success");
+                   
+                }
+                else
+                {
+                    return Unauthorized();
+                }
+            }
+            else
+            {
+                return NotFound(new { message = "Patient not found" });
+            }
+        }
+
+
         //*************************** STATIC METHODS FOR PASSWORD HASSHING ****************************************************
 
         //password hashing using hash, salt and pepper. returns password hash and salt string
-        public static HashSaltReturnModel GetPepperedHashSalt(string password){
+        public static HashSaltReturnModel GetPepperedHashSalt(string password , NHRMDBContext context, IConfiguration config){
             //Create the salt value with a cryptographic PRNG:
             byte[] salt;
             new RNGCryptoServiceProvider().GetBytes(salt = new byte[16]);
@@ -257,8 +302,10 @@ namespace NHRM_Admin_API.Controllers
             //Creates an instance of the default implementation of SHA512
             var passwordHash = SHA512.Create();
 
+            var ad = new AdminPatientController(context, config);
+
             //password hash 
-            byte[] hashedPassword = passwordHash.ComputeHash(Encoding.UTF8.GetBytes(password + saltString + Environment.GetEnvironmentVariable("Pepper")));
+            byte[] hashedPassword = passwordHash.ComputeHash(Encoding.UTF8.GetBytes(password + saltString + ad.Configuration.GetValue<string>("EnvironmentVariables:Pepper")));
             
             return new HashSaltReturnModel(hashedPassword, saltString);
         }

@@ -1,31 +1,34 @@
 USE NHRMDB;
 
-SELECT * FROM MeasurementRecord;
-SELECT * FROM DataPointRecord;
-SELECT * FROM DataPoint;
+-- SELECT * FROM MeasurementRecord;
+-- SELECT * FROM DataPointRecord;
+-- SELECT * FROM DataPoint;
+-- SELECT * FROM Measurement;
+GO
+
+DROP VIEW IF EXISTS uniqueDates;
 GO
 
 -- Unique Dates
--- CREATE VIEW UniqueDates AS
+CREATE VIEW UniqueDates AS
 SELECT CAST(DateTimeRecorded AS DATE) AS Dates FROM MeASurementRecord
 GROUP BY CAST(DateTimeRecorded AS DATE);
 GO
 
-SELECT * FROM UniqueDates;
+-- SELECT * FROM UniqueDates;
 
 -- update only day to be able to do several measurements on the same day
 -- update MeasurementRecord
 -- SET DateTimeRecorded = dateFROMparts(year(DateTimeRecorded), 
 -- month(09), 30);
 
-SELECT DISTINCT CAST(DateTimeRecorded AS DATE) AS Dates , MeasurementRecordID
-FROM MeASurementRecord;
+
+
+DROP VIEW IF EXISTS ViewData;
 GO
 
 -- View that contains all the data needed for the view table
--- DROP VIEW IF EXISTS ViewData;
-
--- CREATE VIEW ViewData AS
+CREATE VIEW ViewData AS
 SELECT L.URNumber, L.Dates, N.* FROM
 (
     SELECT URNumber, MeasurementRecordID, CAST(DateTimeRecorded AS DATE) AS Dates
@@ -120,27 +123,18 @@ LEFT JOIN
 ON D.dates = UR.Dates;
 GO
 
--- *************************************************************************
-SELECT * FROM MeasurementRecord;
-SELECT * FROM DataPointRecord;
-
-SELECT * FROM ViewTableData
-WHERE URNumber = '123456789';
-
-SELECT * FROM PatientMeasurement;
-
 
 -- To see view columns and data types
-select schema_name(v.schema_id) as schema_name,
-       object_name(c.object_id) as view_name,
-       c.column_id,
-       c.name as column_name,
-       type_name(user_type_id) as data_type,
-       c.max_length,
-       c.precision
-from sys.columns c
-join sys.views v 
-     on v.object_id = c.object_id
-order by schema_name,
-         view_name,
-         column_id;
+-- select schema_name(v.schema_id) as schema_name,
+--        object_name(c.object_id) as view_name,
+--        c.column_id,
+--        c.name as column_name,
+--        type_name(user_type_id) as data_type,
+--        c.max_length,
+--        c.precision
+-- from sys.columns c
+-- join sys.views v 
+--      on v.object_id = c.object_id
+-- order by schema_name,
+--          view_name,
+--          column_id;
