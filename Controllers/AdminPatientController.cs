@@ -117,7 +117,6 @@ namespace NHRM_Admin_API.Controllers
                 return BadRequest("The Patient is not assigned to a patient category");
             }
             
-
             HashSaltReturnModel hashsalt = GetPepperedHashSalt(pm.Patient.Password);
             var p = pm.Patient;
 
@@ -143,20 +142,19 @@ namespace NHRM_Admin_API.Controllers
         }
 
 
-        ///********************************* NOT DONE **********************************************************
         //if we will enable password edit in the edit mode, will the actuall password will be shown? 
-        //what password return is needed?
+        //what password return is needed? cause sending the actual password is not safe!!!
         [HttpPost]
         [Route("EditPatient")]
         public async Task<ActionResult> EditPatient([FromBody] AddPatientModel pm){
-
+        
             var patient = await context.Patients.FirstOrDefaultAsync(p => p.Urnumber == pm.Patient.Urnumber);
-            // List<string> hashsalt = GetHashandSalt(pm.patient.Password);
+            HashSaltReturnModel hashsalt = GetPepperedHashSalt(pm.Patient.Password);
             var p = pm.Patient;
 
-            // if(pm.patientCategory.Count == 0){
-            //     return BadRequest("The Patient is not assigned to a patient category");
-            // }
+            if(pm.PatientCategories.Count == 0){
+                return BadRequest("The Patient is not assigned to a patient category");
+            }
 
             if(patient != null){
                 patient.Urnumber = p.Urnumber;
@@ -172,8 +170,8 @@ namespace NHRM_Admin_API.Controllers
                 patient.MobileNumber = p.MobileNumber;
                 patient.CountryOfBirth = p.CountryOfBirth;
                 patient.PreferredLanguage = p.PreferredLanguage;
-                // patient.Password = hashsalt[0];
-                // patient.Salt = hashsalt[1];
+                patient.Password = hashsalt.Password;
+                patient.Salt = hashsalt.Salt;
                 patient.LivesAlone = p.LivesAlone;
                 patient.RegisteredBy = p.RegisteredBy;
                 patient.Active = p.Active;
@@ -193,22 +191,25 @@ namespace NHRM_Admin_API.Controllers
                 context.PatientCategories.Remove(c);
             }
 
-            // //Add new patient categories
-            //  foreach(var c in pm.patientCategory){
-            //     context.PatientCategories.Add(c);
-            // }
+            //Add new patient categories
+             foreach(var c in pm.PatientCategories){
+                var patientCategory = new PatientCategory(c, pm.Patient.Urnumber);
+                context.PatientCategories.Add(patientCategory);
+            }
 
-            // //Add new patient measurements
-            // foreach(var m in pm.patientMeasurement){
-            //     context.PatientMeasurements.Add(m);
-            // }
+            //Add new patient measurements
+            foreach(var m in pm.PatientMeasurements){
+                var patientMeasurement = new PatientMeasurement(m.MeasurementId, m.CategoryId, pm.Patient.Urnumber,
+                m.Frequency, DateTime.Now);
+                context.PatientMeasurements.Add(patientMeasurement);
+            }
 
             context.SaveChanges();
             return Ok("Patient was editted successfully");
         }
 
 
-        //Search a patient using either a urnumber, given name or family name or all
+        //Search a patient using either a urnumber, givenName or familyName or all
         [HttpGet]
         [Route("SearchPatient")]
         public async Task<ActionResult<IEnumerable<Patient>>> SearchPatient([FromQuery] string searchurnumber, Boolean isExactUr, string searchgivenname,
@@ -217,7 +218,6 @@ namespace NHRM_Admin_API.Controllers
             if(searchurnumber == null && searchgivenname == null && searchfamilyname ==null){
                 return BadRequest("No search string was provided");
             }
-            //
 
             var Qurn = isExactUr == true? searchurnumber : searchurnumber+"%";
             var Qgname = isExactGivenName == true ? searchgivenname : searchgivenname+"%";
@@ -225,18 +225,9 @@ namespace NHRM_Admin_API.Controllers
             
             var result = await context.Patients.Where(p => EF.Functions.Like(p.Urnumber, $"{Qurn}") ||
                 EF.Functions.Like(p.FirstName, $"{Qgname}") ||
-                EF.Functions.Like(p.SurName, $"{Qfname}")).ToListAsync();
-
-            //-------------------------------------------------------------------------------------------
-            // TODO --Hey Ahlam maybe we can use something like this to limit passing the DB whole entity
-            //--------------------------------------------------------------------------------------------
-            // var result = await context.Patients.Where(p => EF.Functions.Like(p.Urnumber, $"{Qurn}") ||
-            //     EF.Functions.Like(p.FirstName, $"{Qgname}") ||
-            //     EF.Functions.Like(p.SurName, $"{Qfname}")).Select( x => new PatientSearchViewModel{ 
-            //     Urnumber = x.Urnumber, FirstName = x.FirstName, SurName = x.SurName}).ToListAsync(); 
-            //   
-            //----------------------------- this is not tested yet--------------------------------------
-
+                EF.Functions.Like(p.SurName, $"{Qfname}")).Select( x => new PatientSearchViewModel{ 
+                Urnumber = x.Urnumber, FirstName = x.FirstName, SurName = x.SurName}).ToListAsync(); 
+              
             return Ok(result);
         }
 
@@ -246,13 +237,12 @@ namespace NHRM_Admin_API.Controllers
         [Route("ViewPatient")]
         public async Task<ActionResult<IEnumerable<ViewTableData>>> ViewPatient([FromQuery] String urnumber){
             var result = await context.ViewTableData.Where(p => p.URNumber == urnumber).ToListAsync();
-            if(result == null){
+            if(result.Count == 0){
                 return NotFound("Patient has no recorded measurements");
             }
 
             return Ok(result);
         }
-
 
 
         //*************************** STATIC METHODS FOR PASSWORD HASSHING ****************************************************
