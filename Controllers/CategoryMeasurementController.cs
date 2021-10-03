@@ -29,7 +29,9 @@ namespace NHRM_Admin_API.Controllers
         public IEnumerable<AllCategoriesView> GetAllCategories()
         {
             
-            return context.AllCategoriesView.ToList();
+            return context.AllCategoriesView
+            .OrderBy(c => c.CategoryID)
+            .ToList();
         }
 
 
@@ -39,8 +41,8 @@ namespace NHRM_Admin_API.Controllers
         public IEnumerable<CategoryMeasurementsView> GetMeasurementsViews([FromBody] int[] categoryId){
 
 
-            return context.CategoryMeasurements
-            .Where(c => categoryId.Contains(c.CategoryID))
+            return context.CategoryMeasurements            
+            .Where(c => categoryId.Contains(c.CategoryID))                        
             .ToList();
         }
     }
@@ -48,8 +50,8 @@ namespace NHRM_Admin_API.Controllers
    
         
 
-     // Gets All Measurements -- this needs to be moved into its own controller prolly at some stage
-     //I think this will be for the measurements view table data
+    //  Gets All Measurements -- this needs to be moved into its own controller prolly at some stage
+    //  I think this will be for the measurements view table data
         // [HttpGet]
         // [Route("GetMeasurements")]
         // public IEnumerable<MeasurementViewModel> GetMeasurements(){

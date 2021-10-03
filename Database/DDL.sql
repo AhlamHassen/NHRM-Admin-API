@@ -336,7 +336,8 @@ AS
 
 SELECT m.MeasurementID, m.MeasurementName, tc.CategoryID, tc.CategoryName, m.Frequency FROM Measurement AS m
 INNER JOIN TemplateMeasurement as tm ON tm.MeasurementID = m.MeasurementID
-INNER JOIN TemplateCategory as tc on tc.CategoryID = tm.CategoryID;
+INNER JOIN TemplateCategory as tc on tc.CategoryID = tm.CategoryID
+
 
 GO
 
@@ -344,4 +345,5 @@ CREATE VIEW AllCategoriesView
 
 AS 
 
-SELECT * FROM TemplateCategory;
+SELECT * FROM TemplateCategory
+ORDER BY CategoryID ASC;
