@@ -1,8 +1,11 @@
 using System;
+using System.Collections.Generic;
 
-namespace NHRM_Admin_API.ViewModels
+#nullable disable
+
+namespace NHRM_Admin_API.Model
 {
-    public class PatientViewModel
+    public class NewPatientModel
     {
         public string Urnumber { get; set; }
         public string Email { get; set; }
@@ -19,12 +22,15 @@ namespace NHRM_Admin_API.ViewModels
         public string CountryOfBirth { get; set; }
         public string PreferredLanguage { get; set; }
         public string Password { get; set; }
-        public string Salt { get; set; }
         public bool LivesAlone { get; set; }
         public int RegisteredBy { get; set; }
         public bool Active { get; set; }
 
-         public PatientViewModel(string urnumber, string email, string title, string firstName, string surName, string gender, DateTime dob, string address, string suburb, string postCode, string mobileNumber, string homeNumber, string countryOfBirth, string preferredLanguage, string password, string salt, bool livesAlone, int registeredBy, bool active)
+        public NewPatientModel()
+        {
+        }
+
+        public NewPatientModel(string urnumber, string email, string title, string firstName, string surName, string gender, DateTime dob, string address, string suburb, string postCode, string mobileNumber, string homeNumber, string countryOfBirth, string preferredLanguage, string password, bool livesAlone, int registeredBy, bool active)
         {
             Urnumber = urnumber;
             Email = email;
@@ -41,12 +47,10 @@ namespace NHRM_Admin_API.ViewModels
             CountryOfBirth = countryOfBirth;
             PreferredLanguage = preferredLanguage;
             Password = password;
-            Salt = salt;
             LivesAlone = livesAlone;
             RegisteredBy = registeredBy;
             Active = active;
         }
-    }
 
-    
+    }
 }

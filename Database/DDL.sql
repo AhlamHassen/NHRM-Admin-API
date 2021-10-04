@@ -1,5 +1,4 @@
 USE NHRMDB;
-
 Go
 
 DROP VIEW IF EXISTS AllCategoriesView;
@@ -142,7 +141,7 @@ CREATE TABLE Patient(
     HomeNumber NVARCHAR(10),
     CountryOfBirth NVARCHAR(50) NOT NULL,
     PreferredLanguage NVARCHAR(50) NOT NULL,
-    [Password] NVARCHAR(MAX) NOT NULL, -- Changed it from BINARY(64) to string
+    [Password] BINARY(64) NOT NULL, 
     Salt NVARCHAR(MAX) NOT NULL,
     LivesAlone BIT NOT NULL,    
     RegisteredBy INT NOT NULL,
@@ -345,5 +344,4 @@ CREATE VIEW AllCategoriesView
 
 AS 
 
-SELECT * FROM TemplateCategory
-ORDER BY CategoryID ASC;
+SELECT * FROM TemplateCategory;

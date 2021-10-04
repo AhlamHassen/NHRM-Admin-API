@@ -14,12 +14,6 @@ VALUES('staff@staff.com', 'Staff', 'One', HASHBYTES('SHA2_512', CONCAT('password
 
 -- For when the password in Patient table is of type binary
 
--- INSERT INTO Patient
---     (URNumber,Email,Title,SurName,FirstName,Gender,DOB,[Address],Suburb,PostCode,MobileNumber,HomeNumber,CountryOfBirth,PreferredLanguage,[Password],Salt,LivesAlone,RegisteredBy,Active)
--- VALUES('123456789', 'patient@patient.com', 'Mrs', 'Doe', 'Jane', 'Female', GETDATE(), '123 Evergreen Terrace', 'Springfield', '1234', '0123456789', '0123456789', 'Australia', 'English', HASHBYTES('SHA2_512', CONCAT('password', 'salt', 'this15myp3pper')), 'salt', 0, 1, 1),
---     ('987654321', 'patient2@patient.com', 'Mr', 'Doe', 'John', 'Male', GETDATE(), '123 Evergreen Terrace', 'Springfield', '1234', '0123456789', '0123456789', 'Australia', 'English', HASHBYTES('SHA2_512', CONCAT('password', 'salt', 'this15myp3pper')), 'salt', 0, 1, 1);
-
-
 INSERT INTO Patient
     (URNumber,Email,Title,SurName,FirstName,Gender,DOB,[Address],Suburb,PostCode,MobileNumber,HomeNumber,CountryOfBirth,PreferredLanguage,[Password],Salt,LivesAlone,RegisteredBy,Active)
 VALUES('123456789', 'patient@patient.com', 'Mrs', 'Doe', 'Jane', 'Female', GETDATE(), '123 Evergreen Terrace', 'Springfield', '1234', '0123456789', '0123456789', 'Australia', 'English', HASHBYTES('SHA2_512', CONCAT('password', 'salt', 'this15myp3pper')), 'salt', 0, 1, 1),
@@ -124,9 +118,13 @@ INSERT INTO Patient (URNumber, Email, Title, SurName, FirstName, Gender, DOB, [A
 INSERT INTO Patient (URNumber, Email, Title, SurName, FirstName, Gender, DOB, [Address], Suburb, PostCode, MobileNumber, HomeNumber, CountryOfBirth, PreferredLanguage, [Password], Salt, LivesAlone, RegisteredBy, Active) values ('98', 'pharrow2p@about.me', 'Mr', 'Harrow', 'Percy', 'Male', '1986-09-18', '353 Walton Plaza', 'South Australia', '8672', '8104389763', '5618814211', 'Australia', 'Montenegrin', HASHBYTES('SHA2_512', CONCAT('password', 'salt', 'this15myp3pper')),'salt',1, 1, 1);
 INSERT INTO Patient (URNumber, Email, Title, SurName, FirstName, Gender, DOB, [Address], Suburb, PostCode, MobileNumber, HomeNumber, CountryOfBirth, PreferredLanguage, [Password], Salt, LivesAlone, RegisteredBy, Active) values ('99', 'cphelip2q@parallels.com', 'Rev', 'Phelip', 'Cristin', 'Female', '1985-05-05', '712 Straubel Junction', 'South Australia', '2298', '9854569546', '4336213932', 'Australia', 'Moldovan', HASHBYTES('SHA2_512', CONCAT('password', 'salt', 'this15myp3pper')),'salt',0, 1, 1);
 INSERT INTO Patient (URNumber, Email, Title, SurName, FirstName, Gender, DOB, [Address], Suburb, PostCode, MobileNumber, HomeNumber, CountryOfBirth, PreferredLanguage, [Password], Salt, LivesAlone, RegisteredBy, Active) values ('100', 'fkharchinski2r@jugem.jp', 'Mrs', 'Kharchinski', 'Fidelia', 'Female', '1988-08-25', '98 Straubel Place', 'South Australia', '1010', '6541123971', '8529819100', 'Australia', 'Chinese', HASHBYTES('SHA2_512', CONCAT('password', 'salt', 'this15myp3pper')),'salt',0, 1, 1);
+   
 
-
-
+-- For when the password in Patient table is of type Nvarchar
+-- INSERT INTO Patient
+--     (URNumber,Email,Title,SurName,FirstName,Gender,DOB,[Address],Suburb,PostCode,MobileNumber,HomeNumber,CountryOfBirth,PreferredLanguage,[Password],Salt,LivesAlone,RegisteredBy,Active)
+-- VALUES('123456789', 'patient@patient.com', 'Mrs', 'Doe', 'Jane', 'Female', GETDATE(), '123 Evergreen Terrace', 'Springfield', '1234', '0123456789', '0123456789', 'Australia', 'English', convert(nvarchar(max),HASHBYTES('SHA2_512', CONCAT('password', 'salt', 'this15myp3pper')), 1), 'salt', 0, 1, 1),
+--     ('987654321', 'patient2@patient.com', 'Mr', 'Doe', 'John', 'Male', GETDATE(), '123 Evergreen Terrace', 'Springfield', '1234', '0123456789', '0123456789', 'Australia', 'English', convert(nvarchar(max),HASHBYTES('SHA2_512', CONCAT('password', 'salt', 'this15myp3pper')), 1), 'salt', 0, 1, 1);
 
 
 INSERT INTO Measurement

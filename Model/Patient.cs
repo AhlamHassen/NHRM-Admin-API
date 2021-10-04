@@ -21,7 +21,7 @@ namespace NHRM_Admin_API.Model
         public string HomeNumber { get; set; }
         public string CountryOfBirth { get; set; }
         public string PreferredLanguage { get; set; }
-        public string Password { get; set; }
+        public byte[] Password { get; set; }
         public string Salt { get; set; }
         public bool LivesAlone { get; set; }
         public int RegisteredBy { get; set; }
@@ -34,7 +34,7 @@ namespace NHRM_Admin_API.Model
             Treatings = new HashSet<Treating>();
         }
 
-        public Patient(string urnumber, string email, string title, string firstName, string surName, string gender, DateTime dob, string address, string suburb, string postCode, string mobileNumber, string homeNumber, string countryOfBirth, string preferredLanguage, string password, string salt, bool livesAlone, int registeredBy, bool active)
+        public Patient(string urnumber, string email, string title, string firstName, string surName, string gender, DateTime dob, string address, string suburb, string postCode, string mobileNumber, string homeNumber, string countryOfBirth, string preferredLanguage, byte[] password, string salt, bool livesAlone, int registeredBy, bool active)
         {
             Urnumber = urnumber;
             Email = email;
