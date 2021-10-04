@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\dnadi\\Desktop\\mergedAhlamAPI\\NHRM-Admin-API\\NHRM-Admin-API.csproj": {}
+    "C:\\Users\\dnadi\\Desktop\\dan dev api\\NHRM-Admin-API\\NHRM-Admin-API.csproj": {}
   },
   "projects": {
-    "C:\\Users\\dnadi\\Desktop\\mergedAhlamAPI\\NHRM-Admin-API\\NHRM-Admin-API.csproj": {
+    "C:\\Users\\dnadi\\Desktop\\dan dev api\\NHRM-Admin-API\\NHRM-Admin-API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\dnadi\\Desktop\\mergedAhlamAPI\\NHRM-Admin-API\\NHRM-Admin-API.csproj",
+        "projectUniqueName": "C:\\Users\\dnadi\\Desktop\\dan dev api\\NHRM-Admin-API\\NHRM-Admin-API.csproj",
         "projectName": "NHRM-Admin-API",
-        "projectPath": "C:\\Users\\dnadi\\Desktop\\mergedAhlamAPI\\NHRM-Admin-API\\NHRM-Admin-API.csproj",
+        "projectPath": "C:\\Users\\dnadi\\Desktop\\dan dev api\\NHRM-Admin-API\\NHRM-Admin-API.csproj",
         "packagesPath": "C:\\Users\\dnadi\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\dnadi\\Desktop\\mergedAhlamAPI\\NHRM-Admin-API\\obj\\",
+        "outputPath": "C:\\Users\\dnadi\\Desktop\\dan dev api\\NHRM-Admin-API\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\dnadi\\AppData\\Roaming\\NuGet\\NuGet.Config",
