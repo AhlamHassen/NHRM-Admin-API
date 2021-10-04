@@ -1,6 +1,10 @@
 USE NHRMDB;
 Go
 
+DROP VIEW IF EXISTS AllCategoriesView;
+
+DROP VIEW IF EXISTS CategoryMeasurements;
+
 DROP TABLE IF EXISTS DataPointRecord;
 
 DROP TABLE IF EXISTS SurveyAnswer;
@@ -137,7 +141,7 @@ CREATE TABLE Patient(
     HomeNumber NVARCHAR(10),
     CountryOfBirth NVARCHAR(50) NOT NULL,
     PreferredLanguage NVARCHAR(50) NOT NULL,
-    [Password] NVARCHAR(MAX) NOT NULL, -- Changed it from BINARY(64) to string
+    [Password] BINARY(64) NOT NULL, 
     Salt NVARCHAR(MAX) NOT NULL,
     LivesAlone BIT NOT NULL,    
     RegisteredBy INT NOT NULL,
@@ -322,3 +326,22 @@ CREATE TABLE ResourceDialog(
     CONSTRAINT PK_ResourceDialog PRIMARY KEY (ResourceDialogID),
     CONSTRAINT FK_ResourceDialog_Resource FOREIGN KEY (ResourceID) REFERENCES [Resource]
 )
+
+GO
+
+CREATE VIEW CategoryMeasurements
+
+AS
+
+SELECT m.MeasurementID, m.MeasurementName, tc.CategoryID, tc.CategoryName, m.Frequency FROM Measurement AS m
+INNER JOIN TemplateMeasurement as tm ON tm.MeasurementID = m.MeasurementID
+INNER JOIN TemplateCategory as tc on tc.CategoryID = tm.CategoryID
+
+
+GO
+
+CREATE VIEW AllCategoriesView
+
+AS 
+
+SELECT * FROM TemplateCategory;

@@ -38,6 +38,7 @@
           "Microsoft.EntityFrameworkCore.SqlServer": "5.0.10",
           "Swashbuckle.AspNetCore": "6.2.2",
           "System.Security.Cryptography.Csp": "4.3.0",
+          "System.Text.Encoding": "4.3.0",
           "Microsoft.AspNetCore.Antiforgery": "5.0.0.0",
           "Microsoft.AspNetCore.Authentication.Abstractions": "5.0.0.0",
           "Microsoft.AspNetCore.Authentication.Cookies": "5.0.0.0",

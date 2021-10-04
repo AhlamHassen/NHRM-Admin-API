@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 #nullable disable
 
 namespace NHRM_Admin_API.Model
 {
-    public partial class Patient
+    public class NewPatientModel
     {
         public string Urnumber { get; set; }
         public string Email { get; set; }
@@ -21,20 +21,16 @@ namespace NHRM_Admin_API.Model
         public string HomeNumber { get; set; }
         public string CountryOfBirth { get; set; }
         public string PreferredLanguage { get; set; }
-        public byte[] Password { get; set; }
-        public string Salt { get; set; }
+        public string Password { get; set; }
         public bool LivesAlone { get; set; }
         public int RegisteredBy { get; set; }
         public bool Active { get; set; }
 
-        public Patient()
+        public NewPatientModel()
         {
-            PatientCategories = new HashSet<PatientCategory>();
-            PatientRecords = new HashSet<PatientRecord>();
-            Treatings = new HashSet<Treating>();
         }
 
-        public Patient(string urnumber, string email, string title, string firstName, string surName, string gender, DateTime dob, string address, string suburb, string postCode, string mobileNumber, string homeNumber, string countryOfBirth, string preferredLanguage, byte[] password, string salt, bool livesAlone, int registeredBy, bool active)
+        public NewPatientModel(string urnumber, string email, string title, string firstName, string surName, string gender, DateTime dob, string address, string suburb, string postCode, string mobileNumber, string homeNumber, string countryOfBirth, string preferredLanguage, string password, bool livesAlone, int registeredBy, bool active)
         {
             Urnumber = urnumber;
             Email = email;
@@ -51,15 +47,10 @@ namespace NHRM_Admin_API.Model
             CountryOfBirth = countryOfBirth;
             PreferredLanguage = preferredLanguage;
             Password = password;
-            Salt = salt;
             LivesAlone = livesAlone;
             RegisteredBy = registeredBy;
             Active = active;
         }
 
-        public virtual staff RegisteredByNavigation { get; set; }
-        public virtual ICollection<PatientCategory> PatientCategories { get; set; }
-        public virtual ICollection<PatientRecord> PatientRecords { get; set; }
-        public virtual ICollection<Treating> Treatings { get; set; }
     }
 }

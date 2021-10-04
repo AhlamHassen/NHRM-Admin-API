@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using NHRM_Admin_API.ViewModels;
 
 #nullable disable
 
@@ -16,6 +17,12 @@ namespace NHRM_Admin_API.Model
             : base(options)
         {
         }
+
+        //all categories in the database
+        public DbSet<AllCategoriesView> AllCategoriesView { get; set; }
+
+        //gets all category measurements in db
+        public DbSet<CategoryMeasurementsView> CategoryMeasurements { get; set; }
 
         public virtual DbSet<ConditionDetail> ConditionDetails { get; set; }
         public virtual DbSet<DataPoint> DataPoints { get; set; }
@@ -40,6 +47,7 @@ namespace NHRM_Admin_API.Model
         public virtual DbSet<TemplateResource> TemplateResources { get; set; }
         public virtual DbSet<Treating> Treatings { get; set; }
         public virtual DbSet<staff> staff { get; set; }
+        public DbSet<ViewTableData> ViewTableData { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -53,6 +61,19 @@ namespace NHRM_Admin_API.Model
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //model builder for AllCategoriesView
+             modelBuilder.Entity<AllCategoriesView>(entity =>
+            {
+                entity.HasNoKey();
+            });
+
+            //model builder for AllCategoriesView
+            modelBuilder.Entity<CategoryMeasurementsView>(entity =>
+            {
+                entity.HasNoKey();
+            });
+
+
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
 
             modelBuilder.Entity<ConditionDetail>(entity =>
@@ -612,6 +633,13 @@ namespace NHRM_Admin_API.Model
                     .HasForeignKey(d => d.RoleId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Staff_StaffRole");
+            });
+
+            modelBuilder.Entity<ViewTableData>(entity =>
+            {
+                entity.HasNoKey();
+                entity.ToView("ViewTableData");
+                entity.Property(v => v.URNumber).HasColumnName("URNumber");
             });
 
             OnModelCreatingPartial(modelBuilder);

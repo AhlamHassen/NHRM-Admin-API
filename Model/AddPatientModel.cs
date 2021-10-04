@@ -5,44 +5,34 @@ namespace NHRM_Admin_API.Model
 {
     public class AddPatientModel
     {
-        public Patient patient {get; set;}
-        public List<PatientCategory> patientCategory {get; set;} = new List<PatientCategory>();        // list of ints
-        public List<PatientMeasurement> patientMeasurement {get; set;}
-        
-        public AddPatientModel(Patient patient, List<PatientCategory> patientCategory, List<PatientMeasurement> patientMeasurement)
+        public NewPatientModel Patient {get; set;}
+        public List<int> PatientCategories { get; set; } = new List<int>();// List of int, each int represents a category id
+        #nullable enable
+
+        //initialize list to return empty array instead of null
+        public List<PatientMeasurementViewModel>? PatientMeasurements { get; set; }
+
+        public AddPatientModel(NewPatientModel patient, List<int> patientCategories, List<PatientMeasurementViewModel>? patientMeasurements)
         {
-            this.patient = patient;
-            this.patientCategory = patientCategory;
-            this.patientMeasurement = patientMeasurement;
+            Patient = patient;
+            PatientCategories = patientCategories;
+            PatientMeasurements = patientMeasurements;
         }
         
     }
 
     public class PatientMeasurementViewModel
     {
-        // categoryId
-        // measurement id
-        // freq
-    }
+        public int MeasurementId { get; set; }
+        public int CategoryId { get; set; }
+        public int Frequency { get; set; }
 
-    public class PatientViewModel
-    {
-        public string Urnumber { get; set; }
-        public string Email { get; set; }
-        public string Title { get; set; }
-        public string FirstName { get; set; }
-        public string SurName { get; set; }
-        public string Gender { get; set; }
-        public DateTime Dob { get; set; }
-        public string Address { get; set; }
-        public string Suburb { get; set; }
-        public string PostCode { get; set; }
-        public string MobileNumber { get; set; }
-        public string HomeNumber { get; set; }
-        public string CountryOfBirth { get; set; }
-        public string PreferredLanguage { get; set; }
-        public bool LivesAlone { get; set; }
-        public int RegisteredBy { get; set; }
-        public bool Active { get; set; }
+        public PatientMeasurementViewModel(int measurementId, int categoryId, int frequency)
+        {
+            MeasurementId = measurementId;
+            CategoryId = categoryId;
+            Frequency = frequency;
+        }
     }
+  
 }
