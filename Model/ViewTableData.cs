@@ -32,5 +32,9 @@ namespace NHRM_Admin_API.Model
             AnxietyDepressinon = anxietyDepressinon;
             HealthSlider = healthSlider;
         }
+
     }
+
+    
+    
 }

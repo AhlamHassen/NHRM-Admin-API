@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "f2Jc8KOdh4gJBD/gOgQn9i84Ih+TkK5+Z7Poy1Sbsq3/lZDxoQ1+BOsHxdsGw3uTyC1JTkaMoevDJld/srTgwA==",
+  "dgSpecHash": "z+38B3gSoXBZDLXCDLzxKpkGBTJY9s/5XX7Y/9JK8AITnbyuJiwmOdo+gcm3mXVGoqBwZk/qxpV7hC6aEw5SCg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Cooler Master\\Source\\Repos\\NHRM-Admin-API\\NHRM-Admin-API.csproj",
+  "projectFilePath": "C:\\Users\\Cooler Master\\source\\repos\\NHRM-Admin-API\\NHRM-Admin-API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Cooler Master\\.nuget\\packages\\automapper\\10.1.1\\automapper.10.1.1.nupkg.sha512",
     "C:\\Users\\Cooler Master\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",

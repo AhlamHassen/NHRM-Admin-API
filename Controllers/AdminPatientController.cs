@@ -259,6 +259,7 @@ namespace NHRM_Admin_API.Controllers
         public async Task<ActionResult<IEnumerable<ViewTableData>>> ViewPatient([FromQuery] String urnumber){
             
             var result = await context.ViewTableData.Where(p => p.URNumber == urnumber).ToListAsync();
+            
             if(result.Count == 0){
                 ///this has been changed to a 204 - no content rather than bad request
                 //bad reuest means the url is mal-formed
