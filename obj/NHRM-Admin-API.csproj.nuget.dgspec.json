@@ -1,27 +1,28 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\dnadi\\Desktop\\dan dev api\\NHRM-Admin-API\\NHRM-Admin-API.csproj": {}
+    "C:\\Users\\Cooler Master\\Source\\Repos\\NHRM-Admin-API\\NHRM-Admin-API.csproj": {}
   },
   "projects": {
-    "C:\\Users\\dnadi\\Desktop\\dan dev api\\NHRM-Admin-API\\NHRM-Admin-API.csproj": {
+    "C:\\Users\\Cooler Master\\Source\\Repos\\NHRM-Admin-API\\NHRM-Admin-API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\dnadi\\Desktop\\dan dev api\\NHRM-Admin-API\\NHRM-Admin-API.csproj",
+        "projectUniqueName": "C:\\Users\\Cooler Master\\Source\\Repos\\NHRM-Admin-API\\NHRM-Admin-API.csproj",
         "projectName": "NHRM-Admin-API",
-        "projectPath": "C:\\Users\\dnadi\\Desktop\\dan dev api\\NHRM-Admin-API\\NHRM-Admin-API.csproj",
-        "packagesPath": "C:\\Users\\dnadi\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\dnadi\\Desktop\\dan dev api\\NHRM-Admin-API\\obj\\",
+        "projectPath": "C:\\Users\\Cooler Master\\Source\\Repos\\NHRM-Admin-API\\NHRM-Admin-API.csproj",
+        "packagesPath": "C:\\Users\\Cooler Master\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Cooler Master\\Source\\Repos\\NHRM-Admin-API\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\dnadi\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Cooler Master\\NuGet.Config",
+          "C:\\Users\\Cooler Master\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net5.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Users\\Cooler Master\\Documents\\swinburne\\2021_project\\packages": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -77,12 +78,6 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.NETCore.App.Host.win-x64",
-              "version": "[5.0.8, 5.0.8]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -91,7 +86,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100-preview.7.21379.14\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.303\\RuntimeIdentifierGraph.json"
         }
       }
     }

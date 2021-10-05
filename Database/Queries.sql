@@ -1,4 +1,5 @@
-USE NHRMDB;
+--USE NHRMDB;
+USE NH;
 
 -- SELECT * FROM MeasurementRecord;
 -- SELECT * FROM DataPointRecord;
