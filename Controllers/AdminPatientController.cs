@@ -257,14 +257,42 @@ namespace NHRM_Admin_API.Controllers
         [HttpGet]
         [Route("ViewPatient")]
         public async Task<ActionResult<IEnumerable<ViewTableData>>> ViewPatient([FromQuery] String urnumber){
+            
             var result = await context.ViewTableData.Where(p => p.URNumber == urnumber).ToListAsync();
             if(result.Count == 0){
-                return NotFound("Patient has no recorded measurements");
+                ///this has been changed to a 204 - no content rather than bad request
+                //bad reuest means the url is mal-formed
+                return NoContent();
             }
 
             return Ok(result);
         }
 
+        // it returns the table data for the view patient mode
+        [HttpGet]
+        [Route("ViewPatientInfo")]
+        public async Task<ActionResult<IEnumerable<ViewPatientInfoModel>>> ViewPatientInfo([FromQuery] String urnumber){
+            
+            var result = await context.Patients.Where(p => p.Urnumber == urnumber).FirstOrDefaultAsync();
+        
+            if(result == null){
+                ///this has been changed to a 204 - no content rather than bad request
+                //bad reuest means the url is mal-formed
+                return NotFound();
+            }
+
+            ViewPatientInfoModel patientOutput = new ViewPatientInfoModel(
+                result.Urnumber,
+                result.Title,
+                result.SurName,
+                result.FirstName,
+                result.Active,
+                result.Dob
+            );
+
+
+            return Ok(patientOutput);
+        }
 
         // just checking if authorization would work for patients
         [HttpPost, Route("PatientLogin")]
