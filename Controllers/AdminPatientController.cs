@@ -226,21 +226,27 @@ namespace NHRM_Admin_API.Controllers
         //Search a patient using either a urnumber, givenName or familyName or all
         [HttpGet]
         [Route("SearchPatient")]
-        public async Task<ActionResult<IEnumerable<Patient>>> SearchPatient([FromQuery] string searchurnumber, Boolean isExactUr, string searchgivenname,
+        public async Task<ActionResult<IEnumerable<PatientSearchViewModel>>> SearchPatient([FromQuery] string searchurnumber, Boolean isExactUr, string searchgivenname,
             Boolean isExactGivenName, string searchfamilyname, Boolean isExactFamilyName){
             
             if(searchurnumber == null && searchgivenname == null && searchfamilyname ==null){
                 return BadRequest("No search string was provided");
             }
 
-            var Qurn = isExactUr == true? searchurnumber : searchurnumber+"%";
-            var Qgname = isExactGivenName == true ? searchgivenname : searchgivenname+"%";
-            var Qfname = isExactFamilyName == true ? searchfamilyname : searchfamilyname+"%";
+         //   var Qurn = isExactUr == true? searchurnumber : searchurnumber+"%";
+        //    var Qgname = isExactGivenName == true ? searchgivenname : searchgivenname+"%";
+        //    var Qfname = isExactFamilyName == true ? searchfamilyname : searchfamilyname+"%";
             
-            var result = await context.Patients.Where(p => EF.Functions.Like(p.Urnumber, $"{Qurn}") ||
-                EF.Functions.Like(p.FirstName, $"{Qgname}") ||
-                EF.Functions.Like(p.SurName, $"{Qfname}")).Select( x => new PatientSearchViewModel{ 
-                Urnumber = x.Urnumber, FirstName = x.FirstName, SurName = x.SurName}).ToListAsync(); 
+           // var result = await context.Patients.Where(p => EF.Functions.Like(p.Urnumber, $"{Qurn}") ||
+            //    EF.Functions.Like(p.FirstName, $"{Qgname}") ||
+            //    EF.Functions.Like(p.SurName, $"{Qfname}")).Select( x => new PatientSearchViewModel{ 
+            //    Urnumber = x.Urnumber, FirstName = x.FirstName, SurName = x.SurName}).ToListAsync(); 
+
+            var result = await context.Patients.Where(p => 
+            isExactGivenName? p.FirstName == searchgivenname : p.FirstName.Contains(searchgivenname) &&
+            isExactUr? p.Urnumber == searchurnumber : p.FirstName.Contains(searchurnumber) && 
+            isExactFamilyName? p.SurName == searchfamilyname : p.SurName.Contains(searchfamilyname))
+            .Select( x => new PatientSearchViewModel{Urnumber = x.Urnumber, FirstName = x.FirstName, SurName =x.SurName}).ToListAsync();
               
             return Ok(result);
         }

@@ -1,4 +1,4 @@
-USE NHRMDB;
+--USE NHRMDB;
 Go
 
 INSERT INTO StaffRole

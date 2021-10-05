@@ -1,4 +1,4 @@
-USE NHRMDB;
+--USE NHRMDB;
 Go
 
 DROP VIEW IF EXISTS AllCategoriesView;
