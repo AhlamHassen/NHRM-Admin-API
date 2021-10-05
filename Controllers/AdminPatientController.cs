@@ -284,8 +284,8 @@ namespace NHRM_Admin_API.Controllers
             ViewPatientInfoModel patientOutput = new ViewPatientInfoModel(
                 result.Urnumber,
                 result.Title,
-                result.SurName,
                 result.FirstName,
+                result.SurName,
                 result.Active,
                 result.Dob
             );
