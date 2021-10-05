@@ -256,16 +256,41 @@ namespace NHRM_Admin_API.Controllers
         // it returns the table data for the view patient mode
         [HttpGet]
         [Route("ViewPatient")]
-        public async Task<ActionResult<IEnumerable<ViewTableData>>> ViewPatient([FromQuery] String urnumber){
+        public async Task<ActionResult<IEnumerable<ViewTableDataNoUr>>> ViewPatient([FromQuery] String urnumber){
             
             var result = await context.ViewTableData.Where(p => p.URNumber == urnumber).ToListAsync();
+
             if(result.Count == 0){
-                ///this has been changed to a 204 - no content rather than bad request
-                //bad reuest means the url is mal-formed
-                return NoContent();
+            ///this has been changed to a 204 - no content rather than bad request
+            //bad reuest means the url is mal-formed
+            return NoContent();
             }
 
-            return Ok(result);
+            List<ViewTableDataNoUr> outputlist = new List<ViewTableDataNoUr>();
+            foreach(var m in result){
+               
+                var data = new ViewTableDataNoUr( 
+                    m.DateTimeRecorded,
+                    m.EcogStatus,
+                    m.Breathlessness,
+                    m.LevelOfPain,
+                    m.FluidDrain,
+                    m.Mobility,
+                    m.SelfCare,
+                    m.UsualActivities,
+                    m.QolPainDiscomfort,
+                    m.AnxietyDepressinon,
+                    m.HealthSlider
+                );
+                
+              outputlist.Add(data);
+            }
+            
+            return Ok(outputlist);
+            
+
+        
+
         }
 
         // it returns the table data for the view patient mode
