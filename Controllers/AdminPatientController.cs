@@ -157,9 +157,9 @@ namespace NHRM_Admin_API.Controllers
         public async Task<ActionResult> EditPatient([FromBody] AddPatientModel pm){
         
             var patient = await context.Patients.FirstOrDefaultAsync(p => p.Urnumber == pm.Patient.Urnumber);
-            HashSaltReturnModel hashsalt = GetPepperedHashSalt(pm.Patient.Password, context, Configuration);
-            var p = pm.Patient;
-
+            var password = patient.Password;
+            var salt = patient.Salt;
+        
             if(patient == null){
                 return NotFound("The requested patient does not exist");
             }
@@ -168,26 +168,57 @@ namespace NHRM_Admin_API.Controllers
                 return BadRequest("The Patient is not assigned to a patient category");
             }
 
-            if(patient != null){
-                patient.Urnumber = p.Urnumber;
-                patient.Email = p.Email;
-                patient.Title = p.Title;
-                patient.FirstName = p.FirstName;
-                patient.SurName = p.SurName;
-                patient.Gender = p.Gender;
-                patient.Dob = p.Dob;
-                patient.Address = p.Address;
-                patient.Suburb = p.Suburb;
-                patient.PostCode = p.PostCode;
-                patient.MobileNumber = p.MobileNumber;
-                patient.CountryOfBirth = p.CountryOfBirth;
-                patient.PreferredLanguage = p.PreferredLanguage;
-                patient.Password = hashsalt.Password;
-                patient.Salt = hashsalt.Salt;
-                patient.LivesAlone = p.LivesAlone;
-                patient.RegisteredBy = p.RegisteredBy;
-                patient.Active = p.Active;
+            if(pm.Patient.Password != string.Empty){
+
+                HashSaltReturnModel hashsalt = GetPepperedHashSalt(pm.Patient.Password, context, Configuration);
+                var p = pm.Patient;
+            
+
+                if(patient != null){
+                    patient.Urnumber = p.Urnumber;
+                    patient.Email = p.Email;
+                    patient.Title = p.Title;
+                    patient.FirstName = p.FirstName;
+                    patient.SurName = p.SurName;
+                    patient.Gender = p.Gender;
+                    patient.Dob = p.Dob;
+                    patient.Address = p.Address;
+                    patient.Suburb = p.Suburb;
+                    patient.PostCode = p.PostCode;
+                    patient.MobileNumber = p.MobileNumber;
+                    patient.CountryOfBirth = p.CountryOfBirth;
+                    patient.PreferredLanguage = p.PreferredLanguage;
+                    patient.Password = hashsalt.Password;
+                    patient.Salt = hashsalt.Salt;
+                    patient.LivesAlone = p.LivesAlone;
+                    patient.RegisteredBy = p.RegisteredBy;
+                    patient.Active = p.Active;
+                }
+            } else {
+                var p = pm.Patient;
+                if(patient != null){
+                    patient.Urnumber = p.Urnumber;
+                    patient.Email = p.Email;
+                    patient.Title = p.Title;
+                    patient.FirstName = p.FirstName;
+                    patient.SurName = p.SurName;
+                    patient.Gender = p.Gender;
+                    patient.Dob = p.Dob;
+                    patient.Address = p.Address;
+                    patient.Suburb = p.Suburb;
+                    patient.PostCode = p.PostCode;
+                    patient.MobileNumber = p.MobileNumber;
+                    patient.CountryOfBirth = p.CountryOfBirth;
+                    patient.PreferredLanguage = p.PreferredLanguage;
+                    patient.Password = password;
+                    patient.Salt = salt;
+                    patient.LivesAlone = p.LivesAlone;
+                    patient.RegisteredBy = p.RegisteredBy;
+                    patient.Active = p.Active;
+                }
+
             }
+
 
             var pCategories = await context.PatientCategories.Where(p => p.Urnumber == pm.Patient.Urnumber).ToListAsync();
             var pMeasurements = await context.PatientMeasurements.Where(p => p.Urnumber == pm.Patient.Urnumber).ToListAsync();
