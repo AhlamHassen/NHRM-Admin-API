@@ -15,6 +15,15 @@
           "lib/netstandard2.0/AutoMapper.dll": {}
         }
       },
+      "CsvHelper/27.1.1": {
+        "type": "package",
+        "compile": {
+          "lib/net5.0/CsvHelper.dll": {}
+        },
+        "runtime": {
+          "lib/net5.0/CsvHelper.dll": {}
+        }
+      },
       "Humanizer.Core/2.8.26": {
         "type": "package",
         "compile": {
@@ -1831,6 +1840,28 @@
         "lib/net461/AutoMapper.xml",
         "lib/netstandard2.0/AutoMapper.dll",
         "lib/netstandard2.0/AutoMapper.xml"
+      ]
+    },
+    "CsvHelper/27.1.1": {
+      "sha512": "lo5yypClBORR2XiWPRxQApaA4C2R4GVCIPVRt9HfaLxLmVQtg/KZiOYsd4luLgyOxkUatF9R0QdFQYk7Y2l0cw==",
+      "type": "package",
+      "path": "csvhelper/27.1.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "csvhelper.27.1.1.nupkg.sha512",
+        "csvhelper.nuspec",
+        "lib/net45/CsvHelper.dll",
+        "lib/net45/CsvHelper.xml",
+        "lib/net47/CsvHelper.dll",
+        "lib/net47/CsvHelper.xml",
+        "lib/net5.0/CsvHelper.dll",
+        "lib/net5.0/CsvHelper.xml",
+        "lib/netstandard2.0/CsvHelper.dll",
+        "lib/netstandard2.0/CsvHelper.xml",
+        "lib/netstandard2.1/CsvHelper.dll",
+        "lib/netstandard2.1/CsvHelper.xml"
       ]
     },
     "Humanizer.Core/2.8.26": {
@@ -6508,6 +6539,7 @@
   "projectFileDependencyGroups": {
     "net5.0": [
       "AutoMapper >= 10.1.1",
+      "CsvHelper >= 27.1.1",
       "Microsoft.EntityFrameworkCore.Design >= 5.0.10",
       "Microsoft.EntityFrameworkCore.SqlServer >= 5.0.10",
       "Swashbuckle.AspNetCore >= 6.2.2",
@@ -6516,27 +6548,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Cooler Master\\.nuget\\packages\\": {}
+    "C:\\Users\\zammy\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Cooler Master\\Source\\Repos\\NHRM-Admin-API\\NHRM-Admin-API.csproj",
+      "projectUniqueName": "D:\\Users\\zammy\\Desktop\\test\\NHRM-Admin-API\\NHRM-Admin-API.csproj",
       "projectName": "NHRM-Admin-API",
-      "projectPath": "C:\\Users\\Cooler Master\\Source\\Repos\\NHRM-Admin-API\\NHRM-Admin-API.csproj",
-      "packagesPath": "C:\\Users\\Cooler Master\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Cooler Master\\Source\\Repos\\NHRM-Admin-API\\obj\\",
+      "projectPath": "D:\\Users\\zammy\\Desktop\\test\\NHRM-Admin-API\\NHRM-Admin-API.csproj",
+      "packagesPath": "C:\\Users\\zammy\\.nuget\\packages\\",
+      "outputPath": "D:\\Users\\zammy\\Desktop\\test\\NHRM-Admin-API\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Cooler Master\\NuGet.Config",
-        "C:\\Users\\Cooler Master\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\zammy\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net5.0"
       ],
       "sources": {
-        "C:\\Users\\Cooler Master\\Documents\\swinburne\\2021_project\\packages": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -6558,6 +6587,10 @@
           "AutoMapper": {
             "target": "Package",
             "version": "[10.1.1, )"
+          },
+          "CsvHelper": {
+            "target": "Package",
+            "version": "[27.1.1, )"
           },
           "Microsoft.EntityFrameworkCore.Design": {
             "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
@@ -6600,7 +6633,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.303\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.401\\RuntimeIdentifierGraph.json"
       }
     }
   }

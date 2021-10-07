@@ -1,28 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Cooler Master\\source\\repos\\NHRM-Admin-API\\NHRM-Admin-API.csproj": {}
+    "D:\\Users\\zammy\\Desktop\\test\\NHRM-Admin-API\\NHRM-Admin-API.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Cooler Master\\source\\repos\\NHRM-Admin-API\\NHRM-Admin-API.csproj": {
+    "D:\\Users\\zammy\\Desktop\\test\\NHRM-Admin-API\\NHRM-Admin-API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Cooler Master\\source\\repos\\NHRM-Admin-API\\NHRM-Admin-API.csproj",
+        "projectUniqueName": "D:\\Users\\zammy\\Desktop\\test\\NHRM-Admin-API\\NHRM-Admin-API.csproj",
         "projectName": "NHRM-Admin-API",
-        "projectPath": "C:\\Users\\Cooler Master\\source\\repos\\NHRM-Admin-API\\NHRM-Admin-API.csproj",
-        "packagesPath": "C:\\Users\\Cooler Master\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Cooler Master\\source\\repos\\NHRM-Admin-API\\obj\\",
+        "projectPath": "D:\\Users\\zammy\\Desktop\\test\\NHRM-Admin-API\\NHRM-Admin-API.csproj",
+        "packagesPath": "C:\\Users\\zammy\\.nuget\\packages\\",
+        "outputPath": "D:\\Users\\zammy\\Desktop\\test\\NHRM-Admin-API\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Cooler Master\\NuGet.Config",
-          "C:\\Users\\Cooler Master\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\zammy\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net5.0"
         ],
         "sources": {
-          "C:\\Users\\Cooler Master\\Documents\\swinburne\\2021_project\\packages": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -44,6 +41,10 @@
             "AutoMapper": {
               "target": "Package",
               "version": "[10.1.1, )"
+            },
+            "CsvHelper": {
+              "target": "Package",
+              "version": "[27.1.1, )"
             },
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
@@ -86,7 +87,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.303\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.401\\RuntimeIdentifierGraph.json"
         }
       }
     }

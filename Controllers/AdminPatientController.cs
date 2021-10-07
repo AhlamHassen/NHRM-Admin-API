@@ -24,7 +24,8 @@ namespace NHRM_Admin_API.Controllers
         private readonly NHRMDBContext context;
         public IConfiguration Configuration { get; }
 
-        public AdminPatientController(NHRMDBContext _context, IConfiguration configuration){
+        public AdminPatientController(NHRMDBContext _context, IConfiguration configuration)
+        {
             context = _context;
             Configuration = configuration;
         }
@@ -33,12 +34,14 @@ namespace NHRM_Admin_API.Controllers
         //Gets All Patients
         [HttpGet]
         [Route("GetAllPatients")]
-        public ActionResult<IEnumerable<NewPatientModel>> GetAllPatients(){
+        public ActionResult<IEnumerable<NewPatientModel>> GetAllPatients()
+        {
             // return context.Patients.ToList();
             var patients = context.Patients.ToList();
             var patientList = new List<NewPatientModel>();
 
-            if(patients == null){
+            if (patients == null)
+            {
                 return NotFound("No patients were found ");
             }
 
@@ -47,7 +50,7 @@ namespace NHRM_Admin_API.Controllers
                 NewPatientModel patient = new NewPatientModel(
                     p.Urnumber, p.Email, p.Title, p.FirstName, p.SurName, p.Gender, p.Dob, p.Address,
                     p.Suburb, p.PostCode, p.MobileNumber, p.HomeNumber, p.CountryOfBirth, p.PreferredLanguage,
-                    Convert.ToBase64String(p.Password), p.LivesAlone, p.RegisteredBy, p.Active 
+                    Convert.ToBase64String(p.Password), p.LivesAlone, p.RegisteredBy, p.Active
                 );
 
                 patientList.Add(patient);
@@ -56,21 +59,23 @@ namespace NHRM_Admin_API.Controllers
             return Ok(patientList);
         }
 
-        
+
         //Gets AddPatientModel which includes patient, patientCategories and patientMeasurements using a URNumber 
         [HttpGet]
         [Route("GetPatient")]
-        public async Task<ActionResult<AddPatientModel>> GetPatient([FromQuery] string urnumber){
+        public async Task<ActionResult<AddPatientModel>> GetPatient([FromQuery] string urnumber)
+        {
             var p = await context.Patients.FirstOrDefaultAsync(p => p.Urnumber == urnumber);
-            
-            if(p == null){
+
+            if (p == null)
+            {
                 return NotFound("Patient does not exist!");
             }
 
             NewPatientModel patient = new NewPatientModel(
                 p.Urnumber, p.Email, p.Title, p.FirstName, p.SurName, p.Gender, p.Dob, p.Address,
                 p.Suburb, p.PostCode, p.MobileNumber, p.HomeNumber, p.CountryOfBirth, p.PreferredLanguage,
-                Convert.ToBase64String(p.Password), p.LivesAlone, p.RegisteredBy, p.Active 
+                Convert.ToBase64String(p.Password), p.LivesAlone, p.RegisteredBy, p.Active
             );
 
             //If the patient exists then that patient is assigned to atleast 1 patient category b/c when adding a patient,
@@ -88,12 +93,13 @@ namespace NHRM_Admin_API.Controllers
             var pMeasurementsList = new List<PatientMeasurementViewModel>();
 
             //Check if patient measurements exist, this is because you can add a patient and not assign measurements to them
-            if(pMeasurements != null){
+            if (pMeasurements != null)
+            {
                 foreach (var pm in pMeasurements)
                 {
-                   pMeasurementsList.Add(
-                       new PatientMeasurementViewModel(pm.MeasurementId, pm.CategoryId, pm.Frequency)
-                    );
+                    pMeasurementsList.Add(
+                        new PatientMeasurementViewModel(pm.MeasurementId, pm.CategoryId, pm.Frequency)
+                     );
                 }
 
                 var addPatientModel = new AddPatientModel(patient, patientCategories, pMeasurementsList);
@@ -111,18 +117,21 @@ namespace NHRM_Admin_API.Controllers
         //adds patient to patient table, patient category and patient measurements
         [HttpPost]
         [Route("AddPatient")]
-        public async Task<ActionResult> AddPatient([FromBody] AddPatientModel pm){            
+        public async Task<ActionResult> AddPatient([FromBody] AddPatientModel pm)
+        {
 
             Patient patientExists = await context.Patients.FirstOrDefaultAsync(p => p.Urnumber == pm.Patient.Urnumber);
-            
-            if(patientExists != null){
+
+            if (patientExists != null)
+            {
                 return BadRequest("Patient already exists");
             }
 
-            if(pm.PatientCategories.Count == 0){
+            if (pm.PatientCategories.Count == 0)
+            {
                 return BadRequest("The Patient is not assigned to a patient category");
             }
-            
+
             HashSaltReturnModel hashsalt = GetPepperedHashSalt(pm.Patient.Password, context, Configuration);
             var p = pm.Patient;
 
@@ -131,50 +140,58 @@ namespace NHRM_Admin_API.Controllers
             hashsalt.Password, hashsalt.Salt, p.LivesAlone, p.RegisteredBy, p.Active);
 
             context.Patients.Add(newPatient);
-            
-            foreach(var c in pm.PatientCategories){
+
+            foreach (var c in pm.PatientCategories)
+            {
                 var patientCategory = new PatientCategory(c, pm.Patient.Urnumber);
                 context.PatientCategories.Add(patientCategory);
             }
 
-            if(pm.PatientMeasurements != null){
-                foreach(var m in pm.PatientMeasurements){
-                var patientMeasurement = new PatientMeasurement(m.MeasurementId, m.CategoryId, pm.Patient.Urnumber,
-                m.Frequency, DateTime.Now);
-                context.PatientMeasurements.Add(patientMeasurement);
+            if (pm.PatientMeasurements != null)
+            {
+                foreach (var m in pm.PatientMeasurements)
+                {
+                    var patientMeasurement = new PatientMeasurement(m.MeasurementId, m.CategoryId, pm.Patient.Urnumber,
+                    m.Frequency, DateTime.Now);
+                    context.PatientMeasurements.Add(patientMeasurement);
                 }
             }
 
-        
+
             context.SaveChanges();
             return Ok(JsonSerializer.Serialize("Patient Added Successfully"));
         }
 
-        
-        
+
+
         [HttpPost]
         [Route("EditPatient")]
-        public async Task<ActionResult> EditPatient([FromBody] AddPatientModel pm){
-        
+        public async Task<ActionResult> EditPatient([FromBody] AddPatientModel pm)
+        {
+
             var patient = await context.Patients.FirstOrDefaultAsync(p => p.Urnumber == pm.Patient.Urnumber);
             var password = patient.Password;
             var salt = patient.Salt;
-        
-            if(patient == null){
+
+            if (patient == null)
+            {
                 return NotFound("The requested patient does not exist");
             }
 
-            if(pm.PatientCategories.Count == 0){
+            if (pm.PatientCategories.Count == 0)
+            {
                 return BadRequest("The Patient is not assigned to a patient category");
             }
 
-            if(pm.Patient.Password != string.Empty){
+            if (pm.Patient.Password != string.Empty)
+            {
 
                 HashSaltReturnModel hashsalt = GetPepperedHashSalt(pm.Patient.Password, context, Configuration);
                 var p = pm.Patient;
-            
 
-                if(patient != null){
+
+                if (patient != null)
+                {
                     patient.Urnumber = p.Urnumber;
                     patient.Email = p.Email;
                     patient.Title = p.Title;
@@ -194,9 +211,12 @@ namespace NHRM_Admin_API.Controllers
                     patient.RegisteredBy = p.RegisteredBy;
                     patient.Active = p.Active;
                 }
-            } else {
+            }
+            else
+            {
                 var p = pm.Patient;
-                if(patient != null){
+                if (patient != null)
+                {
                     patient.Urnumber = p.Urnumber;
                     patient.Email = p.Email;
                     patient.Title = p.Title;
@@ -223,32 +243,37 @@ namespace NHRM_Admin_API.Controllers
             var pCategories = await context.PatientCategories.Where(p => p.Urnumber == pm.Patient.Urnumber).ToListAsync();
             var pMeasurements = await context.PatientMeasurements.Where(p => p.Urnumber == pm.Patient.Urnumber).ToListAsync();
 
-           
+
             //Remove current patient measurements
-            foreach(var m in pMeasurements){
+            foreach (var m in pMeasurements)
+            {
                 context.PatientMeasurements.Remove(m);
             }
 
             //Remove current patient categories 
-            foreach(var c in pCategories){
+            foreach (var c in pCategories)
+            {
                 context.PatientCategories.Remove(c);
             }
 
             //Add new patient categories
-             foreach(var c in pm.PatientCategories){
+            foreach (var c in pm.PatientCategories)
+            {
                 var patientCategory = new PatientCategory(c, pm.Patient.Urnumber);
                 context.PatientCategories.Add(patientCategory);
             }
 
             //Add new patient measurements
-            if(pm.PatientMeasurements != null){
-                foreach(var m in pm.PatientMeasurements){
-                var patientMeasurement = new PatientMeasurement(m.MeasurementId, m.CategoryId, pm.Patient.Urnumber,
-                m.Frequency, DateTime.Now);
-                context.PatientMeasurements.Add(patientMeasurement);
+            if (pm.PatientMeasurements != null)
+            {
+                foreach (var m in pm.PatientMeasurements)
+                {
+                    var patientMeasurement = new PatientMeasurement(m.MeasurementId, m.CategoryId, pm.Patient.Urnumber,
+                    m.Frequency, DateTime.Now);
+                    context.PatientMeasurements.Add(patientMeasurement);
                 }
             }
-            
+
             context.SaveChanges();
             return Ok(JsonSerializer.Serialize("Patient was editted successfully"));
         }
@@ -258,25 +283,27 @@ namespace NHRM_Admin_API.Controllers
         [HttpGet]
         [Route("SearchPatient")]
         public async Task<ActionResult<IEnumerable<PatientSearchViewModel>>> SearchPatient([FromQuery] string searchurnumber, Boolean isExactUr, string searchgivenname,
-            Boolean isExactGivenName, string searchfamilyname, Boolean isExactFamilyName){
-            
+            Boolean isExactGivenName, string searchfamilyname, Boolean isExactFamilyName)
+        {
+
             var patientList = new List<PatientSearchViewModel>();
-            if(searchurnumber == null && searchgivenname == null && searchfamilyname ==null){
+            if (searchurnumber == null && searchgivenname == null && searchfamilyname == null)
+            {
                 return BadRequest("No search string was provided");
             }
-            
+
             // var Qurn = isExactUr == true? searchurnumber : searchurnumber+"%";
             // var Qgname = isExactGivenName == true ? searchgivenname : searchgivenname+"%";
             // var Qfname = isExactFamilyName == true ? searchfamilyname : searchfamilyname+"%";
-            
+
             // var result = await context.Patients.Where(p => EF.Functions.Like(p.Urnumber, $"{Qurn}") ||
             //    EF.Functions.Like(p.FirstName, $"{Qgname}") ||
             //    EF.Functions.Like(p.SurName, $"{Qfname}")).Select( x => new PatientSearchViewModel{ 
             //    Urnumber = x.Urnumber, FirstName = x.FirstName, SurName = x.SurName}).ToListAsync(); 
 
-            var Qurn = await context.Patients.Where(p => isExactUr? p.Urnumber == searchurnumber : p.Urnumber.Contains(searchurnumber)).ToListAsync();
-            var Qgname = await context.Patients.Where(p => isExactGivenName? p.FirstName == searchgivenname : p.FirstName.Contains(searchgivenname)).ToListAsync();
-            var Qfname = await context.Patients.Where(p => isExactFamilyName? p.SurName == searchfamilyname : p.SurName.Contains(searchfamilyname)).ToListAsync();
+            var Qurn = await context.Patients.Where(p => isExactUr ? p.Urnumber == searchurnumber : p.Urnumber.Contains(searchurnumber)).ToListAsync();
+            var Qgname = await context.Patients.Where(p => isExactGivenName ? p.FirstName == searchgivenname : p.FirstName.Contains(searchgivenname)).ToListAsync();
+            var Qfname = await context.Patients.Where(p => isExactFamilyName ? p.SurName == searchfamilyname : p.SurName.Contains(searchfamilyname)).ToListAsync();
 
             var result = Qurn.Concat(Qgname).Concat(Qfname);
 
@@ -287,20 +314,23 @@ namespace NHRM_Admin_API.Controllers
         // it returns the table data for the view patient mode
         [HttpGet]
         [Route("ViewPatient")]
-        public async Task<ActionResult<IEnumerable<ViewTableDataNoUr>>> ViewPatient([FromQuery] String urnumber){
-            
+        public async Task<ActionResult<IEnumerable<ViewTableDataNoUr>>> ViewPatient([FromQuery] String urnumber)
+        {
+
             var result = await context.ViewTableData.Where(p => p.URNumber == urnumber).ToListAsync();
 
-            if(result.Count == 0){
-            ///this has been changed to a 204 - no content rather than bad request
-            //bad reuest means the url is mal-formed
-            return NoContent();
+            if (result.Count == 0)
+            {
+                ///this has been changed to a 204 - no content rather than bad request
+                //bad reuest means the url is mal-formed
+                return NoContent();
             }
 
             List<ViewTableDataNoUr> outputlist = new List<ViewTableDataNoUr>();
-            foreach(var m in result){
-               
-                var data = new ViewTableDataNoUr( 
+            foreach (var m in result)
+            {
+
+                var data = new ViewTableDataNoUr(
                     m.DateTimeRecorded,
                     m.EcogStatus,
                     m.Breathlessness,
@@ -313,25 +343,27 @@ namespace NHRM_Admin_API.Controllers
                     m.AnxietyDepressinon,
                     m.HealthSlider
                 );
-                
-              outputlist.Add(data);
-            }
-            
-            return Ok(outputlist);
-            
 
-        
+                outputlist.Add(data);
+            }
+
+            return Ok(outputlist);
+
+
+
 
         }
 
         // it returns the table data for the view patient mode
         [HttpGet]
         [Route("ViewPatientInfo")]
-        public async Task<ActionResult<IEnumerable<ViewPatientInfoModel>>> ViewPatientInfo([FromQuery] String urnumber){
-            
+        public async Task<ActionResult<IEnumerable<ViewPatientInfoModel>>> ViewPatientInfo([FromQuery] String urnumber)
+        {
+
             var result = await context.Patients.Where(p => p.Urnumber == urnumber).FirstOrDefaultAsync();
-        
-            if(result == null){
+
+            if (result == null)
+            {
                 ///this has been changed to a 204 - no content rather than bad request
                 //bad reuest means the url is mal-formed
                 return NotFound();
@@ -370,7 +402,7 @@ namespace NHRM_Admin_API.Controllers
                 if (passwordHash.Hash.SequenceEqual(patient.Password))
                 {
                     return Ok("Success");
-                   
+
                 }
                 else
                 {
@@ -387,7 +419,8 @@ namespace NHRM_Admin_API.Controllers
         //*************************** STATIC METHODS FOR PASSWORD HASSHING ****************************************************
 
         //password hashing using hash, salt and pepper. returns password hash and salt string
-        public static HashSaltReturnModel GetPepperedHashSalt(string password , NHRMDBContext context, IConfiguration config){
+        public static HashSaltReturnModel GetPepperedHashSalt(string password, NHRMDBContext context, IConfiguration config)
+        {
             //Create the salt value with a cryptographic PRNG:
             byte[] salt;
             new RNGCryptoServiceProvider().GetBytes(salt = new byte[16]);
@@ -400,13 +433,14 @@ namespace NHRM_Admin_API.Controllers
 
             //password hash 
             byte[] hashedPassword = passwordHash.ComputeHash(Encoding.UTF8.GetBytes(password + saltString + ad.Configuration.GetValue<string>("EnvironmentVariables:Pepper")));
-            
+
             return new HashSaltReturnModel(hashedPassword, saltString);
         }
 
 
         //password hashing using hash and salt only, returns the password hash and salt string
-        public static List<string> GetHashandSalt(string password){
+        public static List<string> GetHashandSalt(string password)
+        {
 
             //Create the salt value with a cryptographic PRNG:
             byte[] salt;
@@ -424,10 +458,10 @@ namespace NHRM_Admin_API.Controllers
 
             string hashBytesString = Convert.ToBase64String(hashBytes);
 
-            List<string> HashSalt = new List<string>(){hashBytesString, saltString};
+            List<string> HashSalt = new List<string>() { hashBytesString, saltString };
 
             return HashSalt;
         }
-        
+
     }
 }
