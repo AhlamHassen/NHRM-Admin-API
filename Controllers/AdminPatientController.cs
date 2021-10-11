@@ -124,12 +124,12 @@ namespace NHRM_Admin_API.Controllers
 
             if (patientExists != null)
             {
-                return BadRequest("Patient already exists");
+                return UnprocessableEntity("Patient already exists");
             }
 
             if (pm.PatientCategories.Count == 0)
             {
-                return BadRequest("The Patient is not assigned to a patient category");
+                return UnprocessableEntity("The Patient is not assigned to a patient category");
             }
 
             HashSaltReturnModel hashsalt = GetPepperedHashSalt(pm.Patient.Password, context, Configuration);
@@ -175,12 +175,12 @@ namespace NHRM_Admin_API.Controllers
 
             if (patient == null)
             {
-                return NotFound("The requested patient does not exist");
+                return UnprocessableEntity("The requested patient does not exist");
             }
 
             if (pm.PatientCategories.Count == 0)
             {
-                return BadRequest("The Patient is not assigned to a patient category");
+                return UnprocessableEntity("The Patient is not assigned to a patient category");
             }
 
             if (pm.Patient.Password != string.Empty)
