@@ -369,3 +369,5 @@ D:\Users\zammy\Desktop\test\NHRM-Admin-API\obj\Debug\net5.0\ref\NHRM-Admin-API.d
 D:\Users\zammy\Desktop\test\NHRM-Admin-API\obj\Debug\net5.0\NHRM-Admin-API.pdb
 D:\Users\zammy\Desktop\test\NHRM-Admin-API\obj\Debug\net5.0\NHRM-Admin-API.genruntimeconfig.cache
 D:\Users\zammy\Desktop\test\NHRM-Admin-API\bin\Debug\net5.0\CsvHelper.dll
+C:\Users\User\Desktop\myRepositories\NHRM-Admin-API\bin\Debug\net5.0\package-lock.json
+C:\Users\User\Desktop\myRepositories\NHRM-Admin-API\bin\Debug\net5.0\CsvHelper.dll

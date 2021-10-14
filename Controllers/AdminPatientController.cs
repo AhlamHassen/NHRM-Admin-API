@@ -132,6 +132,18 @@ namespace NHRM_Admin_API.Controllers
                 return BadRequest("The Patient is not assigned to a patient category");
             }
 
+            var allPatients = await context.Patients.ToListAsync();
+            var emailList = new List<string>();
+
+            foreach(var pa in allPatients){
+                emailList.Add(pa.Email);
+            }
+
+            //To allow only unique emails
+            if(emailList.Contains(pm.Patient.Email)){
+                return BadRequest("Entered email is already in use");
+            }
+
             HashSaltReturnModel hashsalt = GetPepperedHashSalt(pm.Patient.Password, context, Configuration);
             var p = pm.Patient;
 
@@ -170,20 +182,39 @@ namespace NHRM_Admin_API.Controllers
         {
 
             var patient = await context.Patients.FirstOrDefaultAsync(p => p.Urnumber == pm.Patient.Urnumber);
-            var password = patient.Password;
-            var salt = patient.Salt;
 
             if (patient == null)
             {
                 return NotFound("The requested patient does not exist");
             }
 
+            var currentEmail = patient.Email;
+            var password = patient.Password;
+            var salt = patient.Salt;
+
             if (pm.PatientCategories.Count == 0)
             {
                 return BadRequest("The Patient is not assigned to a patient category");
             }
+            
+            var allPatients = await context.Patients.ToListAsync();
+            var emailList = new List<string>();
+            var urnumberList = new List<string>();
 
-            if (pm.Patient.Password != string.Empty)
+            if(pm.Patient.Email != currentEmail){
+
+                foreach(var pa in allPatients){
+                   emailList.Add(pa.Email);
+                   urnumberList.Add(pa.Urnumber);
+                }
+
+                //To allow only unique emails
+                if(emailList.Contains(pm.Patient.Email)){
+                    return BadRequest("Entered email is already in use");
+                }
+            }
+
+            if (pm.Patient.Password != "")
             {
 
                 HashSaltReturnModel hashsalt = GetPepperedHashSalt(pm.Patient.Password, context, Configuration);
@@ -230,8 +261,6 @@ namespace NHRM_Admin_API.Controllers
                     patient.MobileNumber = p.MobileNumber;
                     patient.CountryOfBirth = p.CountryOfBirth;
                     patient.PreferredLanguage = p.PreferredLanguage;
-                    patient.Password = password;
-                    patient.Salt = salt;
                     patient.LivesAlone = p.LivesAlone;
                     patient.RegisteredBy = p.RegisteredBy;
                     patient.Active = p.Active;
