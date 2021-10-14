@@ -135,6 +135,7 @@ namespace NHRM_Admin_API.Controllers
             {
                 return UnprocessableEntity("The Patient is not assigned to a patient category");
             }
+
             var allPatients = await context.Patients.ToListAsync();
             var emailList = new List<string>();
 
@@ -146,6 +147,7 @@ namespace NHRM_Admin_API.Controllers
             if(emailList.Contains(pm.Patient.Email)){
                 return BadRequest("Entered email is already in use");
             }
+
             HashSaltReturnModel hashsalt = GetPepperedHashSalt(pm.Patient.Password, context, Configuration);
             var p = pm.Patient;
 
@@ -190,22 +192,23 @@ namespace NHRM_Admin_API.Controllers
             {
                 return UnprocessableEntity("The requested patient does not exist");
             }
+
             var currentEmail = patient.Email;
             var password = patient.Password;
             var salt = patient.Salt;
+
             if (pm.PatientCategories.Count == 0)
             {
                 return UnprocessableEntity("The Patient is not assigned to a patient category");
             }
+
             var allPatients = await context.Patients.ToListAsync();
             var emailList = new List<string>();
-            var urnumberList = new List<string>();
 
             if(pm.Patient.Email != currentEmail){
 
                 foreach(var pa in allPatients){
                    emailList.Add(pa.Email);
-                   urnumberList.Add(pa.Urnumber);
                 }
 
                 //To allow only unique emails
@@ -379,10 +382,8 @@ namespace NHRM_Admin_API.Controllers
 
             return Ok(outputlist);
 
-
-
-
         }
+        
 
         // it returns the table data for the view patient mode
         [HttpGet]
