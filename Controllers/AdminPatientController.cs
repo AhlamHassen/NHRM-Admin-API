@@ -37,6 +37,8 @@ namespace NHRM_Admin_API.Controllers
         public ActionResult<IEnumerable<NewPatientModel>> GetAllPatients()
         {
             // return context.Patients.ToList();
+            //TODO -Lee convert to async 
+            //TODO -Lee look at limiting the amount of records returned, also use.Select(transofrm to the model).toListAsync to avoid using foreach below 
             var patients = context.Patients.ToList();
             var patientList = new List<NewPatientModel>();
 
@@ -65,6 +67,7 @@ namespace NHRM_Admin_API.Controllers
         [Route("GetPatient")]
         public async Task<ActionResult<AddPatientModel>> GetPatient([FromQuery] string urnumber)
         {
+            //TODO -Lee also use.Select(transofrm to the model).toListAsync to avoid using foreach below 
             var p = await context.Patients.FirstOrDefaultAsync(p => p.Urnumber == urnumber);
 
             if (p == null)
@@ -80,7 +83,7 @@ namespace NHRM_Admin_API.Controllers
 
             //If the patient exists then that patient is assigned to atleast 1 patient category b/c when adding a patient,
             //patient category is required
-
+            //TODO -Lee also use.Select(transofrm to the model).toListAsync to avoid using foreach below 
             var pCategories = await context.PatientCategories.Where(p => p.Urnumber == urnumber).ToListAsync();
             var patientCategories = new List<int>();
 
@@ -93,6 +96,7 @@ namespace NHRM_Admin_API.Controllers
             var pMeasurementsList = new List<PatientMeasurementViewModel>();
 
             //Check if patient measurements exist, this is because you can add a patient and not assign measurements to them
+            //TODO -Lee - Ternery operator
             if (pMeasurements != null)
             {
                 foreach (var pm in pMeasurements)
@@ -124,14 +128,13 @@ namespace NHRM_Admin_API.Controllers
 
             if (patientExists != null)
             {
-                return BadRequest("Patient already exists");
+                return UnprocessableEntity("Patient already exists");
             }
 
             if (pm.PatientCategories.Count == 0)
             {
-                return BadRequest("The Patient is not assigned to a patient category");
+                return UnprocessableEntity("The Patient is not assigned to a patient category");
             }
-
             var allPatients = await context.Patients.ToListAsync();
             var emailList = new List<string>();
 
@@ -143,7 +146,6 @@ namespace NHRM_Admin_API.Controllers
             if(emailList.Contains(pm.Patient.Email)){
                 return BadRequest("Entered email is already in use");
             }
-
             HashSaltReturnModel hashsalt = GetPepperedHashSalt(pm.Patient.Password, context, Configuration);
             var p = pm.Patient;
 
@@ -169,7 +171,7 @@ namespace NHRM_Admin_API.Controllers
                 }
             }
 
-
+            //TODO -Lee SaveChangesAsync
             context.SaveChanges();
             return Ok(JsonSerializer.Serialize("Patient Added Successfully"));
         }
@@ -182,21 +184,19 @@ namespace NHRM_Admin_API.Controllers
         {
 
             var patient = await context.Patients.FirstOrDefaultAsync(p => p.Urnumber == pm.Patient.Urnumber);
+            
 
             if (patient == null)
             {
-                return NotFound("The requested patient does not exist");
+                return UnprocessableEntity("The requested patient does not exist");
             }
-
             var currentEmail = patient.Email;
             var password = patient.Password;
             var salt = patient.Salt;
-
             if (pm.PatientCategories.Count == 0)
             {
-                return BadRequest("The Patient is not assigned to a patient category");
+                return UnprocessableEntity("The Patient is not assigned to a patient category");
             }
-            
             var allPatients = await context.Patients.ToListAsync();
             var emailList = new List<string>();
             var urnumberList = new List<string>();
@@ -352,6 +352,7 @@ namespace NHRM_Admin_API.Controllers
             {
                 ///this has been changed to a 204 - no content rather than bad request
                 //bad reuest means the url is mal-formed
+                // should we return 
                 return NoContent();
             }
 
