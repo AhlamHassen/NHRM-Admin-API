@@ -23,26 +23,9 @@ GO
 -- SET DateTimeRecorded = dateFROMparts(year(DateTimeRecorded), 
 -- month(09), 30);
 
-
-
-DROP VIEW IF EXISTS ViewData;
-GO
-
--- View that contains all the data needed for the view table
--- CREATE VIEW ViewData AS
--- SELECT L.URNumber, L.Dates, N.* FROM
--- (
---     SELECT URNumber, MeasurementRecordID, CAST(DateTimeRecorded AS DATE) AS Dates
---     FROM MeASurementRecord
--- ) L
--- INNER JOIN
--- (
---     SELECT MeasurementRecordID, MeasurementID, DataPointNumber, [Value] 
---     FROM DataPointRecord
--- )N
--- ON L.MeasurementRecordID = N.MeasurementRecordID;
--- GO
-
+--------------------------------------------------------------------------------------------------------------------------------
+--Gets Patient Measuremnt Data -- created by T.Baird
+--------------------------------------------------------------------------------------------------------------------------------
 drop VIEW IF EXISTS ViewTableData;
 GO
 Create view ViewTableData as 
@@ -66,6 +49,8 @@ pivot(
 
 GO
 
+---------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------
 
 -- To see view columns and data types
 -- select schema_name(v.schema_id) as schema_name,
