@@ -27,7 +27,7 @@ namespace NHRM_Admin_API.Controllers
         public ActionResult<IEnumerable<ViewAlerts>> GetAlerts()
         {
             IEnumerable<ViewAlerts> alerts = context.view_Alerts
-                                                .OrderByDescending(a => a.DateTimeRaised)
+                                                .OrderBy(a => a.DateTimeRaised)
                                                 .ToList();
 
             return Ok(alerts);
