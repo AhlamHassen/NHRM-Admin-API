@@ -1,8 +1,8 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using NHRM_Admin_API.Model.AlertModels;
 using NHRM_Admin_API.ViewModels;
+using NHRM_Admin_API.ViewModels.AlertModels;
 
 #nullable disable
 

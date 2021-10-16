@@ -3,7 +3,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using NHRM_Admin_API.Model;
-using NHRM_Admin_API.Model.AlertModels;
+using NHRM_Admin_API.ViewModels.AlertModels;
 
 namespace NHRM_Admin_API.Controllers
 {
