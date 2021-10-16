@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using NHRM_Admin_API.Model.AlertModels;
 using NHRM_Admin_API.ViewModels;
 
 #nullable disable
@@ -23,6 +24,9 @@ namespace NHRM_Admin_API.Model
 
         //gets all category measurements in db
         public DbSet<CategoryMeasurementsView> CategoryMeasurements { get; set; }
+
+        //gets all Alerts in db
+        public DbSet<ViewAlerts> view_Alerts { get; set; }
 
         public virtual DbSet<ConditionDetail> ConditionDetails { get; set; }
         public virtual DbSet<DataPoint> DataPoints { get; set; }
@@ -61,6 +65,12 @@ namespace NHRM_Admin_API.Model
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //model builder for Viewing Alerts
+             modelBuilder.Entity<ViewAlerts>(entity =>
+            {
+                entity.HasNoKey();
+            });
+
             //model builder for AllCategoriesView
              modelBuilder.Entity<AllCategoriesView>(entity =>
             {
