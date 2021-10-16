@@ -59,7 +59,8 @@ namespace NHRM_Admin_API.Controllers
 
             if (!isValidStatus)
             {
-                response = new UpdateAlertResponse(null, false, alertReq.Status + " " + "is not valid as a Status");
+                response = new UpdateAlertResponse(null, false, alertReq.Status 
+                                                    + " " + "is not a valid Status Please enter either Actioned,Snooze or Dismiss");
 
                 return Ok(response);
             } 
