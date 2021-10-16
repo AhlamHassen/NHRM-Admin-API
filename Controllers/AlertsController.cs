@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.ObjectPool;
 using NHRM_Admin_API.Model;
 using NHRM_Admin_API.ViewModels.AlertModels;
 
@@ -20,13 +21,16 @@ namespace NHRM_Admin_API.Controllers
             Configuration = configuration;
         }
 
-        //Gets All Patients
+        //Gets All Alerts
         [HttpGet]
         [Route("GetAlerts")]
         public ActionResult<IEnumerable<ViewAlerts>> GetAlerts()
         {
-            
-            return Ok(context.view_Alerts.ToList());
+            IEnumerable<ViewAlerts> alerts = context.view_Alerts
+                                                .OrderByDescending(a => a.DateTimeRaised)
+                                                .ToList();
+
+            return Ok(alerts);
         }
 
     }
