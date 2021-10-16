@@ -28,6 +28,9 @@ namespace NHRM_Admin_API.Model
         //gets all Alerts in db
         public DbSet<ViewAlerts> view_Alerts { get; set; }
 
+        //Alerts Table
+        public DbSet<Alert> tbl_Alert { get; set; }
+
         public virtual DbSet<ConditionDetail> ConditionDetails { get; set; }
         public virtual DbSet<DataPoint> DataPoints { get; set; }
         public virtual DbSet<DataPointRecord> DataPointRecords { get; set; }
