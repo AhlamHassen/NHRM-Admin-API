@@ -25,14 +25,14 @@ namespace NHRM_Admin_API.Controllers
             Configuration = configuration;
         }
 
-        //Gets All Alerts orders by Date time raised
+        //Gets All new or snoozed Alerts orders by Date time raised
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ViewAlerts>>> GetAlerts()
         {
             
             IEnumerable<ViewAlerts> alerts = await context.view_Alerts
                                                 //Potential Option if actioned or dissmissed don't need to be shown
-                                                //.Where(a => a.Status == null || a.Status == "Snooze")                                                                                     
+                                                .Where(a => a.Status == null || a.Status == "Snooze")                                                                                     
                                                 .OrderBy(a => a.DateTimeRaised)
                                                 .ToListAsync();
             return Ok(alerts);
