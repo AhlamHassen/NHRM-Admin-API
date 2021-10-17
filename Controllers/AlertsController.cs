@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -26,17 +27,56 @@ namespace NHRM_Admin_API.Controllers
 
         //Gets All Alerts orders by Date time raised
         [HttpGet]
-        public ActionResult<IEnumerable<ViewAlerts>> GetAlerts()
+        public async Task<ActionResult<IEnumerable<ViewAlerts>>> GetAlerts()
         {
             
-            IEnumerable<ViewAlerts> alerts = context.view_Alerts
+            IEnumerable<ViewAlerts> alerts = await context.view_Alerts
+                                                //Potential Option if actioned or dissmissed don't need to be shown
+                                                //.Where(a => a.Status == null || a.Status == "Snooze")                                                                                     
                                                 .OrderBy(a => a.DateTimeRaised)
-                                                .ToList();
+                                                .ToListAsync();
             return Ok(alerts);
         }
 
-        
-         [HttpPut]         
+        //gets alert logs for the logs page
+        [HttpGet]
+        [Route("Log")]
+        public async Task<ActionResult<IEnumerable<AlertsLog>>> GetAlertsLog()
+        {
+            List<AlertLogResponse> alertsLogResponse = new List<AlertLogResponse>();
+
+            IEnumerable<AlertsLog> alerts = await context.view_Log
+                                                //Potential Option if null don't show in log
+                                                .Where(a => a.Proceeding != null)                                                                                     
+                                                .OrderBy(a => a.Date)
+                                                .OrderBy(a => a.Time)                                        
+                                                .ToListAsync();
+
+// Will return Time as string instead of time span I don't think is necassary at the moment though
+// this can be converted through the front end
+            // string TimeString;
+            // AlertLogResponse alertLog;
+            // foreach (var alert in alerts)
+            // {
+            //     TimeString = alert.Time.ToString();
+
+            //     alertLog = new AlertLogResponse(
+            //         alert.AlertID,
+            //         alert.URNumber,
+            //         alert.AlertTitle,
+            //         alert.StaffID,
+            //         alert.Proceeding,
+            //         alert.Date,
+            //         TimeString
+            //         );
+
+            //     alertsLogResponse.Add(alertLog);
+            // }                        
+            return Ok(alerts);
+        }
+
+        //Updates alerts
+        [HttpPut]         
         public async Task<ActionResult<UpdateAlertResponse>> UpdateAlert([FromBody] AlertsRequest alertReq)
         {
             var response = new UpdateAlertResponse();            
@@ -60,14 +100,13 @@ namespace NHRM_Admin_API.Controllers
             if (!isValidStatus)
             {
                 response = new UpdateAlertResponse(null, false, alertReq.Status 
-                                                    + " " + "is not a valid Status Please enter either Actioned,Snooze or Dismiss");
+                    + " " + "is not a valid Status Please enter either Actioned,Snooze or Dismiss");
 
                 return Ok(response);
             } 
 
             //change alert if snooze add 30 min current time and that will be the new value
-
-            //potential option for snooze set a time when that time passes the api sends these alerts again
+//-----------potential option for snooze set a time when that time passes the api sends these alerts again--------------------//
             // if(alertReq.Status == "Snooze")
             // {
             //     alert.Status = alertReq.Status;

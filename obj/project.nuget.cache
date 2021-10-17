@@ -1,12 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "h+x40YmN5azjOUzdTba/v/T44uMeLSpFDSvU4FIScDbINbx8SVoRVPu5xcnDELMTSbDljL8f8Vd/wsAmzS2mbg==",
+  "dgSpecHash": "g77zSCEzLSAmnT7GHs+YpQzzsGvt77Uw3qdu03bH1+VfgaNyIcdlEZRvsI9SI16TRevEtZefhal44bsJh2BdLw==",
   "success": true,
   "projectFilePath": "C:\\Users\\dnadi\\Desktop\\dotnet api\\NHRM-Admin-API\\NHRM-Admin-API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\dnadi\\.nuget\\packages\\automapper\\10.1.1\\automapper.10.1.1.nupkg.sha512",
     "C:\\Users\\dnadi\\.nuget\\packages\\csvhelper\\27.1.1\\csvhelper.27.1.1.nupkg.sha512",
     "C:\\Users\\dnadi\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
+    "C:\\Users\\dnadi\\.nuget\\packages\\json.net\\1.0.33\\json.net.1.0.33.nupkg.sha512",
     "C:\\Users\\dnadi\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
     "C:\\Users\\dnadi\\.nuget\\packages\\microsoft.data.sqlclient\\2.0.1\\microsoft.data.sqlclient.2.0.1.nupkg.sha512",
     "C:\\Users\\dnadi\\.nuget\\packages\\microsoft.data.sqlclient.sni.runtime\\2.0.1\\microsoft.data.sqlclient.sni.runtime.2.0.1.nupkg.sha512",
