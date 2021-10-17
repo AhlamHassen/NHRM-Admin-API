@@ -52,26 +52,7 @@ namespace NHRM_Admin_API.Controllers
                                                 .OrderBy(a => a.Time)                                        
                                                 .ToListAsync();
 
-// Will return Time as string instead of time span I don't think is necassary at the moment though
-// this can be converted through the front end
-            // string TimeString;
-            // AlertLogResponse alertLog;
-            // foreach (var alert in alerts)
-            // {
-            //     TimeString = alert.Time.ToString();
-
-            //     alertLog = new AlertLogResponse(
-            //         alert.AlertID,
-            //         alert.URNumber,
-            //         alert.AlertTitle,
-            //         alert.StaffID,
-            //         alert.Proceeding,
-            //         alert.Date,
-            //         TimeString
-            //         );
-
-            //     alertsLogResponse.Add(alertLog);
-            // }                        
+                     
             return Ok(alerts);
         }
 

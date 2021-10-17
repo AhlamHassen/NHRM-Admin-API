@@ -1,6 +1,5 @@
 using System;
 using Newtonsoft.Json;
-using NHRM_Admin_API.Methods;
 
 namespace NHRM_Admin_API.ViewModels.AlertModels
 {
