@@ -43,7 +43,8 @@ namespace NHRM_Admin_API.Controllers
         [Route("Log")]
         public async Task<ActionResult<IEnumerable<AlertsLog>>> GetAlertsLog()
         {
-            List<AlertLogResponse> alertsLogResponse = new List<AlertLogResponse>();
+            //Other option convert time span to string
+            //List<AlertLogResponse> alertsLogResponse = new List<AlertLogResponse>();
 
             IEnumerable<AlertsLog> alerts = await context.view_Log
                                                 //Potential Option if null don't show in log
