@@ -28,101 +28,38 @@ GO
 DROP VIEW IF EXISTS ViewData;
 GO
 
--- View that contains all the data needed for the view table
-CREATE VIEW ViewData AS
-SELECT L.URNumber, L.Dates, N.* FROM
-(
-    SELECT URNumber, MeasurementRecordID, CAST(DateTimeRecorded AS DATE) AS Dates
-    FROM MeASurementRecord
-) L
-INNER JOIN
-(
-    SELECT MeasurementRecordID, MeasurementID, DataPointNumber, [Value] 
-    FROM DataPointRecord
-)N
-ON L.MeasurementRecordID = N.MeasurementRecordID;
-GO
-
 
 Drop VIEW IF EXISTS ViewTableData;
 GO
 
--- Includes all the data we need for the view patient table
-CREATE VIEW ViewTableData AS
-SELECT UR.URNumber as URNumber ,D.Dates AS [DateTimeRecorded], E.Ecog AS EcogStatus, B.Breath AS BreathLessness,
-L.LOP AS LevelOfPain, F.Fluid AS FluidDrain, Mo.Mobility AS Mobility,
-S.SelfC AS SelfCare, U.UA AS UsualActivities, P.Pain AS QolPainDiscomfort,
-Ad.Anxiety AS AnxietyDepressinon, Q.QOLV AS HealthSlider
-FROM
-(((((((((((
-    SELECT DISTINCT Dates FROM ViewData
-)D
-LEFT JOIN
-(
-    SELECT Dates, [Value] AS Ecog FROM ViewData
-    WHERE MeasurementID = 1 AND DataPointNumber=1
-) E
-ON D.Dates = E.Dates)
-LEFT JOIN
-(
-    SELECT Dates, [Value] AS Breath FROM ViewData
-    WHERE MeasurementID = 2 AND DataPointNumber=1
-) B
-ON D.Dates = B.Dates)
-LEFT JOIN
-(
-    SELECT Dates, [Value] AS LOP FROM ViewData
-    WHERE MeasurementID = 3 AND DataPointNumber=1
-) L
-ON D.Dates = L.Dates)
-LEFT JOIN
-(
-    SELECT Dates, [Value] AS Fluid FROM ViewData
-    WHERE MeasurementID = 4 AND DataPointNumber=1
-)F
-ON D.Dates = F.Dates)
-LEFT JOIN
-(
-    SELECT Dates, [Value] AS Mobility FROM ViewData
-    WHERE MeasurementID = 5 AND DataPointNumber=1
-)Mo
-ON D.Dates = Mo.Dates)
-LEFT JOIN
-(
-    SELECT Dates, [Value] AS SelfC FROM ViewData
-    WHERE MeasurementID = 5 AND DataPointNumber=2
-)S
-ON D.Dates = S.Dates)
-LEFT JOIN
-(
-    SELECT Dates, [Value] AS UA FROM ViewData
-    WHERE MeasurementID = 5 AND DataPointNumber=3  
-)U
-ON D.Dates = U.Dates)
-LEFT JOIN
-(
-    SELECT Dates, [Value] AS Pain FROM ViewData
-    WHERE MeasurementID = 5 AND DataPointNumber=4 
-)P
-ON D.Dates = P.Dates)
-LEFT JOIN
-(
-    SELECT Dates, [Value] AS Anxiety FROM ViewData
-    WHERE MeasurementID = 5 AND DataPointNumber=5
-)AD
-ON D.Dates = AD.Dates)
-LEFT JOIN
-(
-    SELECT Dates, [Value] AS QOLV FROM ViewData
-    WHERE MeasurementID = 5 AND DataPointNumber=6
-)Q
-ON D.Dates = Q.Dates)
-LEFT JOIN
-(
-    SELECT Distinct URNumber, Dates FROM ViewData
-) UR
-ON D.dates = UR.Dates;
+--------------------------------------------------------------------------------------------------------------------------------
+--Gets Patient Measuremnt Data -- created by T.Baird
+--------------------------------------------------------------------------------------------------------------------------------
+drop VIEW IF EXISTS ViewTableData;
 GO
+Create view ViewTableData as 
+select URNumber, DateRecorded as [DateTimeRecorded] , [1-1] as EcogStatus, [2-1] as BreathLessness, [3-1] as LevelOfPain,
+       [4-1] as FluidDrain, [5-1] as Mobility, [5-2] as SelfCare , [5-3] as UsualActivities , [5-4] as QolPainDiscomfort , [5-5] as AnxietyDepressinon , [5-6] as HealthSlider
+from
+(   select mr1.urnumber,
+            convert(Date, DateTimeRecorded) as DateRecorded,
+            concat(dr1.MeasurementID, '-', dr1.DataPointNumber) as DataPoint,
+            dr1.Value
+    from MeasurementRecord mr1
+    inner join DataPointRecord dr1
+    on mr1.MeasurementRecordID = dr1.MeasurementRecordID
+) mr
+pivot(
+        sum(mr.Value)
+        for datapoint in(
+            [1-1],[2-1],[3-1],[4-1],[5-1],[5-2],[5-3],[5-4],[5-5],[5-6]
+            )
+)  as pivot_table
+
+GO
+
+---------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------
 
 
 -- To see view columns and data types
