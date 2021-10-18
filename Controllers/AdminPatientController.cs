@@ -324,20 +324,11 @@ namespace NHRM_Admin_API.Controllers
                 return BadRequest("No search string was provided");
             }
 
-            // var Qurn = isExactUr == true? searchurnumber : searchurnumber+"%";
-            // var Qgname = isExactGivenName == true ? searchgivenname : searchgivenname+"%";
-            // var Qfname = isExactFamilyName == true ? searchfamilyname : searchfamilyname+"%";
-
-            // var result = await context.Patients.Where(p => EF.Functions.Like(p.Urnumber, $"{Qurn}") ||
-            //    EF.Functions.Like(p.FirstName, $"{Qgname}") ||
-            //    EF.Functions.Like(p.SurName, $"{Qfname}")).Select( x => new PatientSearchViewModel{ 
-            //    Urnumber = x.Urnumber, FirstName = x.FirstName, SurName = x.SurName}).ToListAsync(); 
-
             var Qurn = await context.Patients.Where(p => isExactUr ? p.Urnumber == searchurnumber : p.Urnumber.Contains(searchurnumber)).ToListAsync();
             var Qgname = await context.Patients.Where(p => isExactGivenName ? p.FirstName == searchgivenname : p.FirstName.Contains(searchgivenname)).ToListAsync();
             var Qfname = await context.Patients.Where(p => isExactFamilyName ? p.SurName == searchfamilyname : p.SurName.Contains(searchfamilyname)).ToListAsync();
-
-            var result = Qurn.Concat(Qgname).Concat(Qfname);
+            // concat and remove any duplicate values in the final list
+            var result = Qurn.Concat(Qgname).Concat(Qfname).Distinct();
 
             return Ok(result);
         }
