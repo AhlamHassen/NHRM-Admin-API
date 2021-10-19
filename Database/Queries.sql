@@ -56,8 +56,6 @@ pivot(
             )
 )  as pivot_table
 
-GO
-
 ---------------------------------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------------------------------
 
@@ -76,3 +74,33 @@ GO
 -- order by schema_name,
 --          view_name,
 --          column_id;
+GO
+
+DROP VIEW IF EXISTS view_Alerts;
+
+GO
+
+CREATE VIEW view_Alerts AS
+
+SELECT ta.AlertID AS Identifier, CONCAT(p.FirstName,' ', p.SurName) AS PatientName,
+ta.URNumber AS PatientID, tat.Title AS AlertTitle, ta.StaffID, ta.Status, ta.DateTimeRaised, ta.DateTimeActioned
+From tbl_Alert AS ta
+INNER JOIN Patient AS p on p.URNumber = ta.URNumber
+INNER JOIN tbl_AlertType AS tat on tat.AlertTypeID = ta.AlertTypeID;
+
+GO
+
+DROP VIEW IF EXISTS view_Log;
+
+GO
+
+CREATE VIEW view_Log AS
+
+SELECT ta.AlertID,ta.URNumber, tat.Title AS AlertTitle, ta.StaffID, ta.Status AS Proceeding,
+cast(ta.DateTimeActioned as date) as [Date],cast(ta.DateTimeActioned as time) as [Time]
+From tbl_Alert AS ta
+INNER JOIN Patient AS p on p.URNumber = ta.URNumber
+INNER JOIN tbl_AlertType AS tat on tat.AlertTypeID = ta.AlertTypeID;
+
+
+

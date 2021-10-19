@@ -1,9 +1,17 @@
 --USE NHRMDB;
 Go
 
+DROP VIEW IF EXISTS view_Alerts;
+
+DROP VIEW IF EXISTS view_Log;
+
 DROP VIEW IF EXISTS AllCategoriesView;
 
 DROP VIEW IF EXISTS CategoryMeasurements;
+
+DROP TABLE IF EXISTS tbl_Alert;
+
+DROP TABLE IF EXISTS tbl_AlertType;
 
 DROP TABLE IF EXISTS DataPointRecord;
 
@@ -328,6 +336,38 @@ CREATE TABLE ResourceDialog(
 )
 
 GO
+
+CREATE TABLE tbl_AlertType(
+	AlertTypeID INT IDENTITY(1,1) NOT NULL,
+	Title NVARCHAR(500) NOT NULL,
+	Details NVARCHAR(600) NOT NULL,
+	TriggerCondition NVARCHAR(400) NOT NULL,
+	TriggerThresholdValue INT NOT NULL,
+	CONSTRAINT PK_AlertTypeID PRIMARY KEY (AlertTypeID)
+)
+
+GO
+
+CREATE TABLE tbl_Alert(
+	AlertID INT IDENTITY(1,1) NOT NULL,
+	[URNumber] NVARCHAR(50) NOT NULL,
+	StaffID INT NOT NULL,
+	AlertTypeID INT NOT NULL,
+	TriggerValue INT NOT NULL,
+	DateTimeRaised DATETIME NOT NULL,
+	DateTimeActioned DATETIME,
+	Status NVARCHAR(15),
+	Notes NVARCHAR(300),
+	CONSTRAINT PK_AlertID  PRIMARY KEY (AlertID),
+	CONSTRAINT FK_URNumber FOREIGN KEY (URNumber) REFERENCES Patient,
+	CONSTRAINT FK_StaffID FOREIGN KEY (StaffID) REFERENCES Staff,
+	CONSTRAINT FK_AlertTypeID  FOREIGN KEY (AlertTypeID) REFERENCES tbl_AlertType,
+	CONSTRAINT CHK_Status CHECK (Status = 'Actioned' OR Status = 'Snooze' OR Status = 'Dismiss')
+)
+
+GO
+
+
 
 CREATE VIEW CategoryMeasurements
 

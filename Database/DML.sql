@@ -314,7 +314,7 @@ values
 (5, 2, 3, 5),
 (5, 3, 5, 5),
 (5, 4, 4, 5),
-(5, 6, 97, 5),
+(5, 5, 97, 5),
 --
 (1, 1, 4, 6),
 (2, 1, 3, 7),
@@ -330,7 +330,7 @@ values
 (5, 2, 3, 15),
 (5, 3, 5, 15),
 (5, 4, 4, 15),
-(5, 6, 97, 15),
+(5, 5, 97, 15),
 -- 
 (1, 1, 2, 16),
 (2, 1, 3, 17),
@@ -340,7 +340,7 @@ values
 (5, 2, 3, 20),
 (5, 3, 4, 20),
 (5, 4, 1, 20),
-(5, 6, 67, 20),
+(5, 5, 67, 20),
 --
 (1, 1, 5, 21),
 (2, 1, 4, 22),
@@ -356,4 +356,14 @@ values
 (5, 2, 3, 30),
 (5, 3, 5, 30),
 (5, 4, 4, 30),
-(5, 6, 97, 30);
+(5, 5, 97, 30);
+
+
+INSERT INTO tbl_AlertType (Title , Details , TriggerCondition, TriggerThresholdValue) values
+('High Fluid Drain', 'The Patiients IPC drains greater than the threshold amouunt', 'IPC_Drainage >', 300),
+('Quality of Life', 'Alert to fire when patient records a QOL reading of <= 2 for (first time after recording higher qol readeings previously)', 'QOL <=', 2 );
+
+
+INSERT INTO tbl_Alert (URNumber, StaffID, AlertTypeID, TriggerValue, DateTimeRaised, DateTimeActioned, [Status], Notes)
+VALUES ('1',  1,    1,     320 ,   '2021-10-13 08:50:12',    null, 'Actioned', null),
+('1',  1,    1,      320 ,  '2015-10-13 08:50:12', '2021-10-13 08:53:10', null , null);
