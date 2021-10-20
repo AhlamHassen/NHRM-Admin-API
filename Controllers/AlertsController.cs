@@ -55,7 +55,7 @@ namespace NHRM_Admin_API.Controllers
 
                      
             return Ok(alerts);
-        }
+        }        
 
         //Updates alerts
         [HttpPut]         
