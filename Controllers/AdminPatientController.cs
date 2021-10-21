@@ -356,7 +356,7 @@ namespace NHRM_Admin_API.Controllers
             {
 
                 var data = new ViewTableDataNoUr(
-                    m.DateTimeRecorded,
+                    m.DateTimeRecorded.ToString("dd/MM/yyyy"),
                     m.EcogStatus,
                     m.Breathlessness,
                     m.LevelOfPain,

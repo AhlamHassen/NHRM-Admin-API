@@ -35,9 +35,9 @@ namespace NHRM_Admin_API.Model
 
     }
 
-     public class ViewTableDataNoUr
+    public class ViewTableDataNoUr
     {
-        public DateTime DateTimeRecorded { get; set; }
+        public string DateTimeRecorded { get; set; }
         public double? EcogStatus { get; set; }
         public double? Breathlessness { get; set; }
         public double? LevelOfPain { get; set; }
@@ -49,7 +49,7 @@ namespace NHRM_Admin_API.Model
         public double? AnxietyDepressinon { get; set; }
         public double? HealthSlider { get; set; }
 
-        public ViewTableDataNoUr(DateTime dateTimeRecorded, double? ecogStatus, double? breathlessness, double? levelOfPain, double? fluidDrain, double? mobility, double? selfCare, double? usualActivities, double? qolPainDiscomfort, double? anxietyDepressinon, double? healthSlider)
+        public ViewTableDataNoUr(string dateTimeRecorded, double? ecogStatus, double? breathlessness, double? levelOfPain, double? fluidDrain, double? mobility, double? selfCare, double? usualActivities, double? qolPainDiscomfort, double? anxietyDepressinon, double? healthSlider)
         {
            
             DateTimeRecorded = dateTimeRecorded;
