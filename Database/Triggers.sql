@@ -106,6 +106,53 @@ END
 
 GO 
 
+DROP PROCEDURE IF EXISTS BreathlessnessTrigger;
+GO
+--procedure if level of pain is greater than or equal to 4 three times in a row 
+CREATE PROCEDURE BreathlessnessTrigger
+@insertedValue int, @URNumber nvarchar(50), @DateTimeRaised datetime
+AS
+BEGIN
+DECLARE @numberOfRecords int
+
+	-- count number of values returned assign to variable
+	SELECT @numberOfRecords
+	= Count(*)
+	from (
+	--get the three latest measurements of pain for the patient
+	select TOP 3 dr.Value from DataPointRecord as dr
+	inner join MeasurementRecord as mr on dr.MeasurementRecordID = mr.MeasurementRecordID
+	where dr.MeasurementID = 2 and mr.URNumber = @URNumber
+	order by mr.DateTimeRecorded desc
+	) as t
+	--from that list get all values greater than 4
+	where t.Value >= 4;
+
+	--IF pain levels where greater than 4 the past three times 	
+	IF (@numberOfRecords) = 3
+	--INSERT an alert into the alert table
+	BEGIN
+		DECLARE @StaffID int;
+		DECLARE @AlertTypeID int;
+
+		SELECT @StaffID = 1;
+		SELECT @AlertTypeID = 4;
+
+		INSERT INTO tbl_Alert
+		(
+			URNumber,
+			StaffID,
+			AlertTypeID,
+			TriggerValue,
+			DateTimeRaised
+		)
+
+		VALUES(@URNumber,@StaffID,@AlertTypeID,@insertedValue,@DateTimeRaised)
+	END
+END
+
+GO 
+
 DROP TRIGGER IF EXISTS trg_InsertAlerts;
 
 GO
@@ -143,6 +190,18 @@ BEGIN
 			SELECT @DateTimeRaised = DateTimeRecorded FROM MeasurementRecord WHERE MeasurementRecordID = (SELECT MeasurementRecordId FROM inserted);
 
 			EXEC PainTrigger @TriggerValue, @URNumber = @URNumber, @DateTimeRaised = @DateTimeRaised
+		END
+
+		IF  (SELECT Value FROM inserted) >= 4 AND (SELECT MeasurementID FROM inserted) = 2
+		BEGIN
+			SELECT @URNumber = URNumber FROM MeasurementRecord WHERE MeasurementRecordID = (SELECT MeasurementRecordId FROM inserted);
+			SELECT @StaffID = 1;
+			SELECT @AlertTypeID = 1;
+			SELECT @TriggerValue = value FROM inserted;
+			SELECT @DateTimeRaised = DateTimeRecorded FROM MeasurementRecord WHERE MeasurementRecordID = (SELECT MeasurementRecordId FROM inserted);
+
+			EXEC BreathlessnessTrigger @TriggerValue, @URNumber = @URNumber, @DateTimeRaised = @DateTimeRaised
+
 		END
 END
 	GO

@@ -362,7 +362,8 @@ values
 INSERT INTO tbl_AlertType (Title , Details , TriggerCondition, TriggerThresholdValue) values
 ('High Fluid Drain', 'The Patiients IPC drains greater than the threshold amouunt', 'IPC_Drainage >', 300),
 ('Quality of Life', 'Alert to fire when patient records a QOL reading of <= 2 for (first time after recording higher qol readeings previously)', 'QOL <=', 2 ),
-('Level of Pain','Level of pain Higher than four three times in a row','Level of Pain >= 4',4);
+('Level of Pain','Level of pain Higher than four three times in a row','Level of Pain >= 4',4),
+('Breathlessness','When breathlessness is greater than or equal to 4 three recordings in a row','Breathlessness >=',4);
 
 
 INSERT INTO tbl_Alert (URNumber, StaffID, AlertTypeID, TriggerValue, DateTimeRaised, DateTimeActioned, [Status], Notes)
