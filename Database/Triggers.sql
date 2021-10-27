@@ -153,6 +153,59 @@ END
 
 GO 
 
+--QOL PROCEDURE I'm working on 
+ DROP PROCEDURE IF EXISTS QOLTrigger;
+ 
+ GO
+ 
+ CREATE PROCEDURE QOLTrigger
+ @insertedValue int, @URNumber nvarchar(50), @DateTimeRaised datetime
+ AS
+ BEGIN
+ DECLARE @numberOfRecords int
+
+ 	-- count number of values returned assign to variable
+ 	SELECT @numberOfRecords
+ 	= Count(*)
+ 	from (
+ 	--get the three latest measurements of pain for the patient
+ 	SELECT TOP 18 dpr.MeasurementID,dpr.DataPointNumber,dpr.Value,dpr.MeasurementRecordID,mr.DateTimeRecorded,mr.URNumber from DataPointRecord as dpr
+ 	INNER JOIN MeasurementRecord as mr ON mr.MeasurementRecordID = dpr.MeasurementRecordID
+ 	WHERE dpr.MeasurementID = 5 AND mr.URNumber = @URNumber
+ 	ORDER BY mr.DateTimeRecorded DESC
+ 	) as t
+ 	--from that list get all values greater than 4
+	WHERE (
+	t.DataPointNumber IN (1,2,3) and t.Value <=3)
+	OR  (t.DataPointNumber IN (4,5) AND t.Value >= 4)
+	OR  (t.DataPointNumber IN (6) AND t.Value <= 20);
+
+	print(@numberOfRecords)
+ 	--IF pain levels where greater than 4 the past three times 	
+ 	IF (@numberOfRecords) = 18
+ 	--INSERT an alert into the alert table
+ 	BEGIN
+ 		DECLARE @StaffID int;
+ 		DECLARE @AlertTypeID int;
+
+ 		SELECT @StaffID = 1;
+ 		SELECT @AlertTypeID = 4;
+
+ 		INSERT INTO tbl_Alert
+ 		(
+ 			URNumber,
+ 			StaffID,
+ 			AlertTypeID,
+ 			TriggerValue,
+ 			DateTimeRaised
+ 		)
+
+ 		VALUES(@URNumber,@StaffID,@AlertTypeID,@insertedValue,@DateTimeRaised)
+ 	END
+ END
+
+GO
+
 DROP TRIGGER IF EXISTS trg_InsertAlerts;
 
 GO
@@ -169,7 +222,7 @@ BEGIN
 	DECLARE @DateTimeRaised datetime;
 
 	-- check if alert is above value threshold and measurement ID is fluid drainage
-	IF  (SELECT Value FROM inserted) > 300 AND (SELECT MeasurementID FROM inserted) = 4
+	IF  (SELECT TOP 1 Value FROM inserted) > 300 AND (SELECT TOP 1 MeasurementID FROM inserted) = 4
 		BEGIN
 			SELECT @URNumber = URNumber FROM MeasurementRecord WHERE MeasurementRecordID = (SELECT MeasurementRecordId FROM inserted);
 			SELECT @StaffID = 1;
@@ -181,7 +234,7 @@ BEGIN
 		END
 
 		-- check if alert is above value threshold and measurement ID is level of pain
-		IF  (SELECT Value FROM inserted) >= 4 AND (SELECT MeasurementID FROM inserted) = 3
+		IF  (SELECT TOP 1 Value FROM inserted) >= 4 AND (SELECT TOP 1 MeasurementID FROM inserted) = 3
 		BEGIN				
 			SELECT @URNumber = URNumber FROM MeasurementRecord WHERE MeasurementRecordID = (SELECT MeasurementRecordId FROM inserted);
 			SELECT @StaffID = 1;
@@ -192,7 +245,8 @@ BEGIN
 			EXEC PainTrigger @TriggerValue, @URNumber = @URNumber, @DateTimeRaised = @DateTimeRaised
 		END
 
-		IF  (SELECT Value FROM inserted) >= 4 AND (SELECT MeasurementID FROM inserted) = 2
+		-- check if alert is above value threshold and measurement ID is Breathlessness
+		IF  (SELECT TOP 1 Value FROM inserted) >= 4 AND (SELECT TOP 1 MeasurementID FROM inserted) = 2
 		BEGIN
 			SELECT @URNumber = URNumber FROM MeasurementRecord WHERE MeasurementRecordID = (SELECT MeasurementRecordId FROM inserted);
 			SELECT @StaffID = 1;
@@ -201,60 +255,41 @@ BEGIN
 			SELECT @DateTimeRaised = DateTimeRecorded FROM MeasurementRecord WHERE MeasurementRecordID = (SELECT MeasurementRecordId FROM inserted);
 
 			EXEC BreathlessnessTrigger @TriggerValue, @URNumber = @URNumber, @DateTimeRaised = @DateTimeRaised
+		END
+
+		IF (
+		SELECT COUNT(Value) FROM inserted
+		WHERE ((DataPointNumber = 1 OR DataPointNumber = 2 OR DataPointNumber = 3) AND Value <= 3)
+ 		OR ((DataPointNumber = 4 OR DataPointNumber = 4) AND Value >= 4)
+ 		OR (DataPointNumber <= 6 AND Value <= 70)
+		) = 6
+		
+		BEGIN
+		SELECT @URNumber = URNumber FROM MeasurementRecord WHERE MeasurementRecordID = (SELECT TOP 1 MeasurementRecordId FROM inserted);
+		SELECT @StaffID = 1;
+		SELECT @AlertTypeID = 1;
+		SELECT @TriggerValue = value FROM inserted;
+		SELECT @DateTimeRaised = DateTimeRecorded FROM MeasurementRecord WHERE MeasurementRecordID = (SELECT TOP 1 MeasurementRecordId FROM inserted);
+
+		EXEC QOLTrigger @TriggerValue, @URNumber = @URNumber, @DateTimeRaised = @DateTimeRaised
 
 		END
+
+		-- To do survey alert
 END
 	GO
 
--- Latest Measurements
--- SELECT mr.MeasurementRecordID, mr.DateTimeRecorded, mr.MeasurementID, mr.CategoryID, mr.URNumber, pm.Frequency
--- FROM MeasurementRecord AS mr
--- INNER JOIN PatientMeasurement AS pm ON pm.MeasurementID = mr.MeasurementID AND pm.URNumber = mr.URNumber AND mr.CategoryID = pm.CategoryID
--- WHERE mr.DateTimeRecorded = (SELECT max(mr2.DateTimeRecorded)
--- 							FROM MeasurementRecord mr2
--- 							where mr2.MeasurementID = mr.MeasurementID
--- 							);
 
---USE [NHOriginalDB]
---GO
+--insert statement for measurement ID 5 VVV
 
---INSERT INTO [dbo].[MeasurementRecord]
---           ([DateTimeRecorded]
---           ,[MeasurementID]
---           ,[CategoryID]
---           ,[URNumber])
---     VALUES
---           ('2025-01-10'
---           ,4
---           ,1
---           ,123456789)
---GO
+-- insert into MeasurementRecord (DateTimeRecorded,MeasurementID,CategoryID,URNumber)
+-- values ('2023-01-08',5,1,'123456789')
 
---select * from MeasurementRecord
-
---SELECT * FROM DataPointRecord;
-
---delete from DataPointRecord where MeasurementRecordID = 58;
-
---delete from MeasurementRecord where MeasurementRecordID = 58;
-
-
---USE [NHOriginalDB]
---GO
-
---INSERT INTO [dbo].[DataPointRecord]
---           ([MeasurementID]
---           ,[DataPointNumber]
---           ,[Value]
---           ,[MeasurementRecordID])
---     VALUES
---           (4
---           ,1
---           ,305
---           ,59)
---GO
-
---select * from tbl_Alert;
---select * from [DataPointRecord];
---SELECT * FROM MeasurementRecord;
---select * from view_DataValuesALERTS where MeasurementID = 4;
+-- insert into DataPointRecord (MeasurementID, DataPointNumber, Value,MeasurementRecordID)
+-- VALUES 
+-- 	(5,1,3,38),
+-- 	(5,2,3,38),
+-- 	(5,3,3,38),
+-- 	(5,4,4,38),
+-- 	(5,5,4,38),
+-- 	(5,6,20,38)
