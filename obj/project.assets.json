@@ -6570,19 +6570,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\User\\.nuget\\packages\\": {}
+    "C:\\Users\\dnadi\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\User\\Desktop\\myRepositories\\NHRM-Admin-API\\NHRM-Admin-API.csproj",
+      "projectUniqueName": "C:\\Users\\dnadi\\Desktop\\dotnet api\\NHRM-Admin-API\\NHRM-Admin-API.csproj",
       "projectName": "NHRM-Admin-API",
-      "projectPath": "C:\\Users\\User\\Desktop\\myRepositories\\NHRM-Admin-API\\NHRM-Admin-API.csproj",
-      "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\User\\Desktop\\myRepositories\\NHRM-Admin-API\\obj\\",
+      "projectPath": "C:\\Users\\dnadi\\Desktop\\dotnet api\\NHRM-Admin-API\\NHRM-Admin-API.csproj",
+      "packagesPath": "C:\\Users\\dnadi\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\dnadi\\Desktop\\dotnet api\\NHRM-Admin-API\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\dnadi\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -6653,6 +6653,12 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.NETCore.App.Host.win-x64",
+            "version": "[5.0.8, 5.0.8]"
+          }
+        ],
         "frameworkReferences": {
           "Microsoft.AspNetCore.App": {
             "privateAssets": "none"
@@ -6661,7 +6667,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.301\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100-preview.7.21379.14\\RuntimeIdentifierGraph.json"
       }
     }
   }

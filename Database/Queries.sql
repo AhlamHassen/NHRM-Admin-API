@@ -100,7 +100,8 @@ SELECT ta.AlertID,ta.URNumber, tat.Title AS AlertTitle, ta.StaffID, ta.Status AS
 cast(ta.DateTimeActioned as date) as [Date],cast(ta.DateTimeActioned as time) as [Time]
 From tbl_Alert AS ta
 INNER JOIN Patient AS p on p.URNumber = ta.URNumber
-INNER JOIN tbl_AlertType AS tat on tat.AlertTypeID = ta.AlertTypeID;
+INNER JOIN tbl_AlertType AS tat on tat.AlertTypeID = ta.AlertTypeID
+WHERE ta.DateTimeActioned is not null;
 
 
 
