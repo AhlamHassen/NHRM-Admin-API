@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.ObjectPool;
+using NHRM_Admin_API.Methods;
 using NHRM_Admin_API.Model;
 using NHRM_Admin_API.ViewModels.AlertModels;
 
@@ -18,6 +19,8 @@ namespace NHRM_Admin_API.Controllers
     {
        private readonly NHRMDBContext context;
         public IConfiguration Configuration { get; }
+
+        private AlertMethods alertMethods = new AlertMethods();
 
         public AlertsController(NHRMDBContext _context, IConfiguration configuration)
         {
@@ -61,29 +64,23 @@ namespace NHRM_Admin_API.Controllers
         [HttpPut]         
         public async Task<ActionResult<UpdateAlertResponse>> UpdateAlert([FromBody] AlertsRequest alertReq)
         {
-            var response = new UpdateAlertResponse();            
-
+            var response = new UpdateAlertResponse();
             //Find alert
             Alert alert = await context.tbl_Alert
                 .FirstOrDefaultAsync(a => a.AlertID == alertReq.Identifier);
 
-            //check alert is not null
+            //check alert is null
             if (alert == null)
             {
-                response = new UpdateAlertResponse(null, false, "Alert ID: "+ alertReq.Identifier +" does not exist");
+                response = alertMethods.AlertIsNull(alertReq);
 
                 return Ok(response);
             }
 
-            //Check if status is valid
-            var statusOptions = new List<string>() {"Actioned","Snooze","Dismiss"};
-            Boolean isValidStatus = statusOptions.Contains(alertReq.Status);
-
-            if (!isValidStatus)
+            //Check if status is valid                        
+            if (!alertMethods.isValidStatus(alertReq))
             {
-                response = new UpdateAlertResponse(null, false, alertReq.Status 
-                    + " " + "is not a valid Status Please enter either Actioned,Snooze or Dismiss");
-
+                response = alertMethods.AlertNotValid(alertReq);
                 return Ok(response);
             } 
 
