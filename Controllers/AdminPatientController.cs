@@ -324,12 +324,33 @@ namespace NHRM_Admin_API.Controllers
                 return BadRequest("No search string was provided");
             }
 
-            var Qurn = await context.Patients.Where(p => isExactUr ? p.Urnumber == searchurnumber : p.Urnumber.Contains(searchurnumber)).ToListAsync();
-            var Qgname = await context.Patients.Where(p => isExactGivenName ? p.FirstName == searchgivenname : p.FirstName.Contains(searchgivenname)).ToListAsync();
-            var Qfname = await context.Patients.Where(p => isExactFamilyName ? p.SurName == searchfamilyname : p.SurName.Contains(searchfamilyname)).ToListAsync();
+            ///changed the contains to starts with 
+            var Qurn = await context.Patients.Where(p => isExactUr ? p.Urnumber == searchurnumber : p.Urnumber.StartsWith(searchurnumber)).ToListAsync();
+            var Qgname = await context.Patients.Where(p => isExactGivenName ? p.FirstName == searchgivenname : p.FirstName.StartsWith(searchgivenname)).ToListAsync();
+            var Qfname = await context.Patients.Where(p => isExactFamilyName ? p.SurName == searchfamilyname : p.SurName.StartsWith(searchfamilyname)).ToListAsync();
 
+            //intersect to make sure both lists match ¯\_(ツ)_/¯
+            if(searchurnumber != null && searchgivenname != null && searchfamilyname == null){
+                var output = Qurn.Intersect(Qgname);
+                return Ok(output);
+            }
+
+            if(searchurnumber != null && searchgivenname == null && searchfamilyname != null){
+                var output = Qurn.Intersect(Qfname);
+                return Ok(output);
+            }
+
+             if(searchurnumber != null && searchgivenname != null && searchfamilyname != null){
+
+                var output = Qurn.Intersect(Qfname).Intersect(Qgname);
+                return Ok(output);
+            }
+
+
+            // it the above arent caught it jsut returns one of these and re
             // concat and remove any duplicate values in the final list
             var result = Qurn.Concat(Qgname).Concat(Qfname).Distinct();
+         
 
             return Ok(result);
         }
