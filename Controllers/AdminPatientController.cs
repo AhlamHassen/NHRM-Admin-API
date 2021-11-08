@@ -14,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using System.Text.Json;
 using System.Net.Http;
 using System.Net;
+using Microsoft.AspNetCore.Identity;
 
 namespace NHRM_Admin_API.Controllers
 {
@@ -588,7 +589,7 @@ namespace NHRM_Admin_API.Controllers
             return HashSalt;
         }
 
-        
+
         public IEnumerable<PatientSearchViewModel> ConvertPatientList(List<Patient> patients)
         {
             var patientSearchModelOutput = patients.Select(p => new PatientSearchViewModel { Urnumber = p.Urnumber, FirstName = p.FirstName, SurName = p.SurName, Dob = p.Dob.ToString("dd/MM/yyyy") }).ToList();
