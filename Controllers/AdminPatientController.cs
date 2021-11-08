@@ -22,12 +22,12 @@ namespace NHRM_Admin_API.Controllers
     public class AdminPatientController : ControllerBase
     {
         private readonly NHRMDBContext context;
-        public AdminPatientController(IConfiguration configuration) 
+        public AdminPatientController(IConfiguration configuration)
         {
             this.Configuration = configuration;
-               
+
         }
-                public IConfiguration Configuration { get; }
+        public IConfiguration Configuration { get; }
 
         public AdminPatientController(NHRMDBContext _context, IConfiguration configuration)
         {
@@ -144,12 +144,14 @@ namespace NHRM_Admin_API.Controllers
             var allPatients = await context.Patients.ToListAsync();
             var emailList = new List<string>();
 
-            foreach(var pa in allPatients){
+            foreach (var pa in allPatients)
+            {
                 emailList.Add(pa.Email);
             }
 
             //To allow only unique emails
-            if(emailList.Contains(pm.Patient.Email)){
+            if (emailList.Contains(pm.Patient.Email))
+            {
                 return BadRequest("Entered email is already in use");
             }
 
@@ -191,7 +193,7 @@ namespace NHRM_Admin_API.Controllers
         {
 
             var patient = await context.Patients.FirstOrDefaultAsync(p => p.Urnumber == pm.Patient.Urnumber);
-            
+
 
             if (patient == null)
             {
@@ -210,14 +212,17 @@ namespace NHRM_Admin_API.Controllers
             var allPatients = await context.Patients.ToListAsync();
             var emailList = new List<string>();
 
-            if(pm.Patient.Email != currentEmail){
+            if (pm.Patient.Email != currentEmail)
+            {
 
-                foreach(var pa in allPatients){
-                   emailList.Add(pa.Email);
+                foreach (var pa in allPatients)
+                {
+                    emailList.Add(pa.Email);
                 }
 
                 //To allow only unique emails
-                if(emailList.Contains(pm.Patient.Email)){
+                if (emailList.Contains(pm.Patient.Email))
+                {
                     return BadRequest("Entered email is already in use");
                 }
             }
@@ -324,96 +329,110 @@ namespace NHRM_Admin_API.Controllers
         {
 
             var searchDobDate = new DateTime(searchdob.Year, searchdob.Month, searchdob.Day);
-            
+
             if (searchurnumber == null && searchgivenname == null && searchfamilyname == null && searchDobDate == DateTime.MinValue)
             {
                 return BadRequest("No search string was provided");
             }
 
-            
+
             var Qdob = new List<Patient>();
             var Qurnumber = new List<Patient>();
             var Qgivenname = new List<Patient>();
             var Qfamilyname = new List<Patient>();
 
-          
+
             //only hit the database for the provided search terms?
-            if(searchDobDate != DateTime.MinValue){
+            if (searchDobDate != DateTime.MinValue)
+            {
                 Qdob = await context.Patients.Where(p => p.Dob == searchDobDate).ToListAsync();
             }
 
-            if(searchurnumber != null){
+            if (searchurnumber != null)
+            {
                 Qurnumber = await context.Patients.Where(p => isExactUr ? p.Urnumber == searchurnumber : p.Urnumber.StartsWith(searchurnumber))
                 .ToListAsync();
             }
 
-            if(searchgivenname != null){
+            if (searchgivenname != null)
+            {
                 Qgivenname = await context.Patients.Where(p => isExactGivenName ? p.FirstName == searchgivenname : p.FirstName.StartsWith(searchgivenname))
                 .ToListAsync();
             }
 
-            if(searchfamilyname != null){
+            if (searchfamilyname != null)
+            {
                 Qfamilyname = await context.Patients.Where(p => isExactFamilyName ? p.SurName == searchfamilyname : p.SurName.StartsWith(searchfamilyname))
                 .ToListAsync();
             }
-            
+
 
             //returning the single feilds//---------------------------------------------------------------------------
-            if(searchurnumber != null && searchgivenname == null && searchfamilyname == null && searchDobDate == DateTime.MinValue){
+            if (searchurnumber != null && searchgivenname == null && searchfamilyname == null && searchDobDate == DateTime.MinValue)
+            {
                 return Ok(ConvertPatientList(Qurnumber));
             }
 
-            if(searchurnumber == null && searchgivenname != null && searchfamilyname == null && searchDobDate == DateTime.MinValue){
+            if (searchurnumber == null && searchgivenname != null && searchfamilyname == null && searchDobDate == DateTime.MinValue)
+            {
                 return Ok(ConvertPatientList(Qgivenname));
             }
 
-            if(searchurnumber == null && searchgivenname == null && searchfamilyname != null && searchDobDate == DateTime.MinValue){
+            if (searchurnumber == null && searchgivenname == null && searchfamilyname != null && searchDobDate == DateTime.MinValue)
+            {
                 return Ok(ConvertPatientList(Qfamilyname));
             }
 
-            if(searchurnumber == null && searchgivenname == null && searchfamilyname == null && searchDobDate != DateTime.MinValue){
+            if (searchurnumber == null && searchgivenname == null && searchfamilyname == null && searchDobDate != DateTime.MinValue)
+            {
                 return Ok(ConvertPatientList(Qdob));
             }
             //-------------------------------------------------------------------------------------------------------//
             //----------------------------------SEARCH UR BASE POSSIBLE                   ---------------------------//
-            if(searchurnumber != null && searchgivenname != null && searchfamilyname == null && searchDobDate == DateTime.MinValue){
+            if (searchurnumber != null && searchgivenname != null && searchfamilyname == null && searchDobDate == DateTime.MinValue)
+            {
                 var output = Qurnumber.Intersect(Qgivenname);
                 return Ok(ConvertPatientListEnumerable(output));
             }
 
-            if(searchurnumber != null && searchgivenname == null && searchfamilyname != null && searchDobDate == DateTime.MinValue){
+            if (searchurnumber != null && searchgivenname == null && searchfamilyname != null && searchDobDate == DateTime.MinValue)
+            {
                 var output = Qurnumber.Intersect(Qfamilyname);
-                 return Ok(ConvertPatientListEnumerable(output));
+                return Ok(ConvertPatientListEnumerable(output));
             }
 
-            if(searchurnumber != null && searchgivenname == null && searchfamilyname == null && searchDobDate != DateTime.MinValue){
+            if (searchurnumber != null && searchgivenname == null && searchfamilyname == null && searchDobDate != DateTime.MinValue)
+            {
                 var output = Qurnumber.Intersect(Qdob);
-                 return Ok(ConvertPatientListEnumerable(output));
+                return Ok(ConvertPatientListEnumerable(output));
             }
 
             //-------------------------------------------------------------------------------------------------------//
             //----------------------------------SEARCH GIVENNAE BASE POSSIBLE             ---------------------------//
 
-            if(searchurnumber == null && searchgivenname != null && searchfamilyname != null && searchDobDate == DateTime.MinValue){
+            if (searchurnumber == null && searchgivenname != null && searchfamilyname != null && searchDobDate == DateTime.MinValue)
+            {
                 var output = Qgivenname.Intersect(Qfamilyname);
                 return Ok(ConvertPatientListEnumerable(output));
             }
 
-            if(searchurnumber == null && searchgivenname != null && searchfamilyname == null && searchDobDate != DateTime.MinValue){
+            if (searchurnumber == null && searchgivenname != null && searchfamilyname == null && searchDobDate != DateTime.MinValue)
+            {
                 var output = Qgivenname.Intersect(Qdob);
-                 return Ok(ConvertPatientListEnumerable(output));
+                return Ok(ConvertPatientListEnumerable(output));
             }
             //-------------------------------------------------------------------------------------------------------//
             //----------------------------------SEARCH FAMILY BASE POSSIBLE             ---------------------------//
 
-            if(searchurnumber == null && searchgivenname == null && searchfamilyname != null && searchDobDate != DateTime.MinValue){
+            if (searchurnumber == null && searchgivenname == null && searchfamilyname != null && searchDobDate != DateTime.MinValue)
+            {
                 var output = Qfamilyname.Intersect(Qdob);
-            
+
                 return Ok(ConvertPatientListEnumerable(output));
             }
 
             var result = Qurnumber.Concat(Qgivenname).Concat(Qfamilyname).Concat(Qdob);
-             return Ok(ConvertPatientListEnumerable(result));
+            return Ok(ConvertPatientListEnumerable(result));
 
         }
 
@@ -458,7 +477,7 @@ namespace NHRM_Admin_API.Controllers
             return Ok(outputlist);
 
         }
-        
+
 
         // it returns the table data for the view patient mode
         [HttpGet]
@@ -569,38 +588,18 @@ namespace NHRM_Admin_API.Controllers
             return HashSalt;
         }
 
-         public IEnumerable<PatientSearchViewModel> ConvertPatientList(List<Patient> patients)
+        
+        public IEnumerable<PatientSearchViewModel> ConvertPatientList(List<Patient> patients)
         {
-            List<PatientSearchViewModel> patientSearchViewModels = new List<PatientSearchViewModel>();
-            foreach (Patient patient in patients)
-            {
-                patientSearchViewModels.Add(new PatientSearchViewModel
-                {
-                    Urnumber = patient.Urnumber,
-                    FirstName = patient.FirstName,
-                    SurName = patient.SurName,
-                    //convert patient dob to a string
-                    Dob = patient.Dob.ToString("dd/MM/yyyy")
-                });
-            }
-            return patientSearchViewModels;
+            var patientSearchModelOutput = patients.Select(p => new PatientSearchViewModel { Urnumber = p.Urnumber, FirstName = p.FirstName, SurName = p.SurName, Dob = p.Dob.ToString("dd/MM/yyyy") }).ToList();
+            return patientSearchModelOutput;
         }
 
-          public IEnumerable<PatientSearchViewModel> ConvertPatientListEnumerable(IEnumerable<Patient> patients)
+        public IEnumerable<PatientSearchViewModel> ConvertPatientListEnumerable(IEnumerable<Patient> patients)
         {
-            List<PatientSearchViewModel> patientSearchViewModels = new List<PatientSearchViewModel>();
-            foreach (Patient patient in patients)
-            {
-                patientSearchViewModels.Add(new PatientSearchViewModel
-                {
-                    Urnumber = patient.Urnumber,
-                    FirstName = patient.FirstName,
-                    SurName = patient.SurName,
-                    //convert patient dob to a string
-                    Dob = patient.Dob.ToString("dd/MM/yyyy")
-                });
-            }
-            return patientSearchViewModels;
+            var patientSearchModelOutput = patients.Select(p => new PatientSearchViewModel { Urnumber = p.Urnumber, FirstName = p.FirstName, SurName = p.SurName, Dob = p.Dob.ToString("dd/MM/yyyy") }).ToList();
+
+            return patientSearchModelOutput;
         }
 
     }
