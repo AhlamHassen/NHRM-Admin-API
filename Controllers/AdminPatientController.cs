@@ -22,7 +22,12 @@ namespace NHRM_Admin_API.Controllers
     public class AdminPatientController : ControllerBase
     {
         private readonly NHRMDBContext context;
-        public IConfiguration Configuration { get; }
+        public AdminPatientController(IConfiguration configuration) 
+        {
+            this.Configuration = configuration;
+               
+        }
+                public IConfiguration Configuration { get; }
 
         public AdminPatientController(NHRMDBContext _context, IConfiguration configuration)
         {
@@ -355,35 +360,35 @@ namespace NHRM_Admin_API.Controllers
 
             //returning the single feilds//---------------------------------------------------------------------------
             if(searchurnumber != null && searchgivenname == null && searchfamilyname == null && searchDobDate == DateTime.MinValue){
-                return Ok(Qurnumber);
+                return Ok(ConvertPatientList(Qurnumber));
             }
 
             if(searchurnumber == null && searchgivenname != null && searchfamilyname == null && searchDobDate == DateTime.MinValue){
-                return Ok(Qgivenname);
+                return Ok(ConvertPatientList(Qgivenname));
             }
 
             if(searchurnumber == null && searchgivenname == null && searchfamilyname != null && searchDobDate == DateTime.MinValue){
-                return Ok(Qfamilyname);
+                return Ok(ConvertPatientList(Qfamilyname));
             }
 
             if(searchurnumber == null && searchgivenname == null && searchfamilyname == null && searchDobDate != DateTime.MinValue){
-                return Ok(Qdob);
+                return Ok(ConvertPatientList(Qdob));
             }
             //-------------------------------------------------------------------------------------------------------//
             //----------------------------------SEARCH UR BASE POSSIBLE                   ---------------------------//
             if(searchurnumber != null && searchgivenname != null && searchfamilyname == null && searchDobDate == DateTime.MinValue){
                 var output = Qurnumber.Intersect(Qgivenname);
-                return Ok(output);
+                return Ok(ConvertPatientListEnumerable(output));
             }
 
             if(searchurnumber != null && searchgivenname == null && searchfamilyname != null && searchDobDate == DateTime.MinValue){
                 var output = Qurnumber.Intersect(Qfamilyname);
-                return Ok(output);
+                 return Ok(ConvertPatientListEnumerable(output));
             }
 
             if(searchurnumber != null && searchgivenname == null && searchfamilyname == null && searchDobDate != DateTime.MinValue){
                 var output = Qurnumber.Intersect(Qdob);
-                return Ok(output);
+                 return Ok(ConvertPatientListEnumerable(output));
             }
 
             //-------------------------------------------------------------------------------------------------------//
@@ -391,26 +396,26 @@ namespace NHRM_Admin_API.Controllers
 
             if(searchurnumber == null && searchgivenname != null && searchfamilyname != null && searchDobDate == DateTime.MinValue){
                 var output = Qgivenname.Intersect(Qfamilyname);
-                return Ok(output);
+                return Ok(ConvertPatientListEnumerable(output));
             }
 
             if(searchurnumber == null && searchgivenname != null && searchfamilyname == null && searchDobDate != DateTime.MinValue){
                 var output = Qgivenname.Intersect(Qdob);
-                return Ok(output);
+                 return Ok(ConvertPatientListEnumerable(output));
             }
             //-------------------------------------------------------------------------------------------------------//
             //----------------------------------SEARCH FAMILY BASE POSSIBLE             ---------------------------//
 
             if(searchurnumber == null && searchgivenname == null && searchfamilyname != null && searchDobDate != DateTime.MinValue){
                 var output = Qfamilyname.Intersect(Qdob);
-                return Ok(output);
+            
+                return Ok(ConvertPatientListEnumerable(output));
             }
 
             var result = Qurnumber.Concat(Qgivenname).Concat(Qfamilyname).Concat(Qdob);
-            return Ok(result);
+             return Ok(ConvertPatientListEnumerable(result));
 
         }
-        
 
 
         // it returns the table data for the view patient mode
@@ -562,6 +567,40 @@ namespace NHRM_Admin_API.Controllers
             List<string> HashSalt = new List<string>() { hashBytesString, saltString };
 
             return HashSalt;
+        }
+
+         public IEnumerable<PatientSearchViewModel> ConvertPatientList(List<Patient> patients)
+        {
+            List<PatientSearchViewModel> patientSearchViewModels = new List<PatientSearchViewModel>();
+            foreach (Patient patient in patients)
+            {
+                patientSearchViewModels.Add(new PatientSearchViewModel
+                {
+                    Urnumber = patient.Urnumber,
+                    FirstName = patient.FirstName,
+                    SurName = patient.SurName,
+                    //convert patient dob to a string
+                    Dob = patient.Dob.ToString("dd/MM/yyyy")
+                });
+            }
+            return patientSearchViewModels;
+        }
+
+          public IEnumerable<PatientSearchViewModel> ConvertPatientListEnumerable(IEnumerable<Patient> patients)
+        {
+            List<PatientSearchViewModel> patientSearchViewModels = new List<PatientSearchViewModel>();
+            foreach (Patient patient in patients)
+            {
+                patientSearchViewModels.Add(new PatientSearchViewModel
+                {
+                    Urnumber = patient.Urnumber,
+                    FirstName = patient.FirstName,
+                    SurName = patient.SurName,
+                    //convert patient dob to a string
+                    Dob = patient.Dob.ToString("dd/MM/yyyy")
+                });
+            }
+            return patientSearchViewModels;
         }
 
     }
