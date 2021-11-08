@@ -315,45 +315,102 @@ namespace NHRM_Admin_API.Controllers
         [HttpGet]
         [Route("SearchPatient")]
         public async Task<ActionResult<IEnumerable<PatientSearchViewModel>>> SearchPatient([FromQuery] string searchurnumber, Boolean isExactUr, string searchgivenname,
-            Boolean isExactGivenName, string searchfamilyname, Boolean isExactFamilyName)
+            Boolean isExactGivenName, string searchfamilyname, Boolean isExactFamilyName, DateTime searchdob)
         {
 
-            var patientList = new List<PatientSearchViewModel>();
-            if (searchurnumber == null && searchgivenname == null && searchfamilyname == null)
+            var searchDobDate = new DateTime(searchdob.Year, searchdob.Month, searchdob.Day);
+            
+            if (searchurnumber == null && searchgivenname == null && searchfamilyname == null && searchDobDate == DateTime.MinValue)
             {
                 return BadRequest("No search string was provided");
             }
 
-            ///changed the contains to starts with 
-            var Qurn = await context.Patients.Where(p => isExactUr ? p.Urnumber == searchurnumber : p.Urnumber.StartsWith(searchurnumber)).ToListAsync();
-            var Qgname = await context.Patients.Where(p => isExactGivenName ? p.FirstName == searchgivenname : p.FirstName.StartsWith(searchgivenname)).ToListAsync();
-            var Qfname = await context.Patients.Where(p => isExactFamilyName ? p.SurName == searchfamilyname : p.SurName.StartsWith(searchfamilyname)).ToListAsync();
+            
+            var Qdob = new List<Patient>();
+            var Qurnumber = new List<Patient>();
+            var Qgivenname = new List<Patient>();
+            var Qfamilyname = new List<Patient>();
 
-            //intersect to make sure both lists match ¯\_(ツ)_/¯
-            if(searchurnumber != null && searchgivenname != null && searchfamilyname == null){
-                var output = Qurn.Intersect(Qgname);
+          
+            //only hit the database for the provided search terms?
+            if(searchDobDate != DateTime.MinValue){
+                Qdob = await context.Patients.Where(p => p.Dob == searchDobDate).ToListAsync();
+            }
+
+            if(searchurnumber != null){
+                Qurnumber = await context.Patients.Where(p => isExactUr ? p.Urnumber == searchurnumber : p.Urnumber.StartsWith(searchurnumber))
+                .ToListAsync();
+            }
+
+            if(searchgivenname != null){
+                Qgivenname = await context.Patients.Where(p => isExactGivenName ? p.FirstName == searchgivenname : p.FirstName.StartsWith(searchgivenname))
+                .ToListAsync();
+            }
+
+            if(searchfamilyname != null){
+                Qfamilyname = await context.Patients.Where(p => isExactFamilyName ? p.SurName == searchfamilyname : p.SurName.StartsWith(searchfamilyname))
+                .ToListAsync();
+            }
+            
+
+            //returning the single feilds//---------------------------------------------------------------------------
+            if(searchurnumber != null && searchgivenname == null && searchfamilyname == null && searchDobDate == DateTime.MinValue){
+                return Ok(Qurnumber);
+            }
+
+            if(searchurnumber == null && searchgivenname != null && searchfamilyname == null && searchDobDate == DateTime.MinValue){
+                return Ok(Qgivenname);
+            }
+
+            if(searchurnumber == null && searchgivenname == null && searchfamilyname != null && searchDobDate == DateTime.MinValue){
+                return Ok(Qfamilyname);
+            }
+
+            if(searchurnumber == null && searchgivenname == null && searchfamilyname == null && searchDobDate != DateTime.MinValue){
+                return Ok(Qdob);
+            }
+            //-------------------------------------------------------------------------------------------------------//
+            //----------------------------------SEARCH UR BASE POSSIBLE                   ---------------------------//
+            if(searchurnumber != null && searchgivenname != null && searchfamilyname == null && searchDobDate == DateTime.MinValue){
+                var output = Qurnumber.Intersect(Qgivenname);
                 return Ok(output);
             }
 
-            if(searchurnumber != null && searchgivenname == null && searchfamilyname != null){
-                var output = Qurn.Intersect(Qfname);
+            if(searchurnumber != null && searchgivenname == null && searchfamilyname != null && searchDobDate == DateTime.MinValue){
+                var output = Qurnumber.Intersect(Qfamilyname);
                 return Ok(output);
             }
 
-             if(searchurnumber != null && searchgivenname != null && searchfamilyname != null){
-
-                var output = Qurn.Intersect(Qfname).Intersect(Qgname);
+            if(searchurnumber != null && searchgivenname == null && searchfamilyname == null && searchDobDate != DateTime.MinValue){
+                var output = Qurnumber.Intersect(Qdob);
                 return Ok(output);
             }
 
+            //-------------------------------------------------------------------------------------------------------//
+            //----------------------------------SEARCH GIVENNAE BASE POSSIBLE             ---------------------------//
 
-            // it the above arent caught it jsut returns one of these and re
-            // concat and remove any duplicate values in the final list
-            var result = Qurn.Concat(Qgname).Concat(Qfname).Distinct();
-         
+            if(searchurnumber == null && searchgivenname != null && searchfamilyname != null && searchDobDate == DateTime.MinValue){
+                var output = Qgivenname.Intersect(Qfamilyname);
+                return Ok(output);
+            }
 
+            if(searchurnumber == null && searchgivenname != null && searchfamilyname == null && searchDobDate != DateTime.MinValue){
+                var output = Qgivenname.Intersect(Qdob);
+                return Ok(output);
+            }
+            //-------------------------------------------------------------------------------------------------------//
+            //----------------------------------SEARCH FAMILY BASE POSSIBLE             ---------------------------//
+
+            if(searchurnumber == null && searchgivenname == null && searchfamilyname != null && searchDobDate != DateTime.MinValue){
+                var output = Qfamilyname.Intersect(Qdob);
+                return Ok(output);
+            }
+
+            var result = Qurnumber.Concat(Qgivenname).Concat(Qfamilyname).Concat(Qdob);
             return Ok(result);
+
         }
+        
 
 
         // it returns the table data for the view patient mode
