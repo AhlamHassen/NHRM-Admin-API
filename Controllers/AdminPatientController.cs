@@ -368,22 +368,22 @@ namespace NHRM_Admin_API.Controllers
             //returning the single feilds//---------------------------------------------------------------------------
             if (searchurnumber != null && searchgivenname == null && searchfamilyname == null && searchDobDate == DateTime.MinValue)
             {
-                return Ok(ConvertPatientList(Qurnumber));
+                return Ok(PatientListFixer(Qurnumber));
             }
 
             if (searchurnumber == null && searchgivenname != null && searchfamilyname == null && searchDobDate == DateTime.MinValue)
             {
-                return Ok(ConvertPatientList(Qgivenname));
+                return Ok(PatientListFixer(Qgivenname));
             }
 
             if (searchurnumber == null && searchgivenname == null && searchfamilyname != null && searchDobDate == DateTime.MinValue)
             {
-                return Ok(ConvertPatientList(Qfamilyname));
+                return Ok(PatientListFixer(Qfamilyname));
             }
 
             if (searchurnumber == null && searchgivenname == null && searchfamilyname == null && searchDobDate != DateTime.MinValue)
             {
-                return Ok(ConvertPatientList(Qdob));
+                return Ok(PatientListFixer(Qdob));
             }
             
             //-------------------------------------------------------------------------------------------------------//
@@ -393,13 +393,13 @@ namespace NHRM_Admin_API.Controllers
             if (searchurnumber == null && searchgivenname != null && searchfamilyname != null && searchDobDate == DateTime.MinValue)
             {
                 var output = Qgivenname.Intersect(Qfamilyname);
-                return Ok(ConvertPatientListEnumerable(output));
+                return Ok(PatientListEnumerableFixer(output));
             }
 
             if (searchurnumber == null && searchgivenname != null && searchfamilyname == null && searchDobDate != DateTime.MinValue)
             {
                 var output = Qgivenname.Intersect(Qdob);
-                return Ok(ConvertPatientListEnumerable(output));
+                return Ok(PatientListEnumerableFixer(output));
             }
          
 
@@ -407,18 +407,18 @@ namespace NHRM_Admin_API.Controllers
             {
                 var output = Qfamilyname.Intersect(Qdob);
 
-                return Ok(ConvertPatientListEnumerable(output));
+                return Ok(PatientListEnumerableFixer(output));
             }
 
             if (searchurnumber == null && searchgivenname != null && searchfamilyname != null && searchDobDate != DateTime.MinValue)
             {
                 var output = Qfamilyname.Intersect(Qdob).Intersect(Qgivenname);
 
-                return Ok(ConvertPatientListEnumerable(output));
+                return Ok(PatientListEnumerableFixer(output));
             }
 
             var result = Qurnumber.Concat(Qgivenname).Concat(Qfamilyname).Concat(Qdob);
-            return Ok(ConvertPatientListEnumerable(result));
+            return Ok(PatientListEnumerableFixer(result));
 
         }
 
@@ -575,18 +575,7 @@ namespace NHRM_Admin_API.Controllers
         }
 
 
-        public IEnumerable<PatientSearchViewModel> ConvertPatientList(List<Patient> patients)
-        {
-            var patientSearchModelOutput = patients.Select(p => new PatientSearchViewModel { Urnumber = p.Urnumber, FirstName = p.FirstName, SurName = p.SurName, Dob = p.Dob.ToString("dd/MM/yyyy") }).ToList();
-            return patientSearchModelOutput;
-        }
-
-        public IEnumerable<PatientSearchViewModel> ConvertPatientListEnumerable(IEnumerable<Patient> patients)
-        {
-            var patientSearchModelOutput = patients.Select(p => new PatientSearchViewModel { Urnumber = p.Urnumber, FirstName = p.FirstName, SurName = p.SurName, Dob = p.Dob.ToString("dd/MM/yyyy") }).ToList();
-
-            return patientSearchModelOutput;
-        }
+     
 
     }
 }
