@@ -7,7 +7,7 @@ namespace NHRM_Admin_API.Methods
 {
     public class SearchHelper
     {
-          public IEnumerable<PatientSearchViewModel> PatientListFixer(List<Patient> patients)
+        public IEnumerable<PatientSearchViewModel> PatientListFixer(List<Patient> patients)
         {
             var patientSearchModelOutput = patients.Select(p => new PatientSearchViewModel { Urnumber = p.Urnumber, FirstName = p.FirstName, SurName = p.SurName, Dob = p.Dob.ToString("dd/MM/yyyy") }).ToList();
             return patientSearchModelOutput;
