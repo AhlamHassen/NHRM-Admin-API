@@ -52,7 +52,7 @@ namespace NHRM_Admin_API.Controllers
                 NewPatientModel patient = new NewPatientModel(
                     p.Urnumber, p.Email, p.Title, p.FirstName, p.SurName, p.Gender, p.Dob, p.Address,
                     p.Suburb, p.PostCode, p.MobileNumber, p.HomeNumber, p.CountryOfBirth, p.PreferredLanguage,
-                    Convert.ToBase64String(p.Password), p.LivesAlone, p.RegisteredBy, p.Active
+                    Convert.ToBase64String(p.Password), p.LivesAlone, p.RegisteredBy, p.Active, p.Deceased
                 );
 
                 patientList.Add(patient);
@@ -78,7 +78,7 @@ namespace NHRM_Admin_API.Controllers
             NewPatientModel patient = new NewPatientModel(
                 p.Urnumber, p.Email, p.Title, p.FirstName, p.SurName, p.Gender, p.Dob, p.Address,
                 p.Suburb, p.PostCode, p.MobileNumber, p.HomeNumber, p.CountryOfBirth, p.PreferredLanguage,
-                Convert.ToBase64String(p.Password), p.LivesAlone, p.RegisteredBy, p.Active
+                Convert.ToBase64String(p.Password), p.LivesAlone, p.RegisteredBy, p.Active, p.Deceased
             );
 
             //If the patient exists then that patient is assigned to atleast 1 patient category b/c when adding a patient,
@@ -153,7 +153,7 @@ namespace NHRM_Admin_API.Controllers
 
             Patient newPatient = new Patient(p.Urnumber, p.Email, p.Title, p.FirstName, p.SurName, p.Gender, p.Dob,
             p.Address, p.Suburb, p.PostCode, p.MobileNumber, p.HomeNumber, p.CountryOfBirth, p.PreferredLanguage,
-            hashsalt.Password, hashsalt.Salt, p.LivesAlone, p.RegisteredBy, p.Active);
+            hashsalt.Password, hashsalt.Salt, p.LivesAlone, p.RegisteredBy, p.Active, p.Deceased);
 
             context.Patients.Add(newPatient);
 

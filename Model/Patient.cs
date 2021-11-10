@@ -27,6 +27,9 @@ namespace NHRM_Admin_API.Model
         public int RegisteredBy { get; set; }
         public bool Active { get; set; }
 
+        public bool Deceased { get; set; }
+        
+
         public Patient()
         {
             PatientCategories = new HashSet<PatientCategory>();
@@ -34,7 +37,7 @@ namespace NHRM_Admin_API.Model
             Treatings = new HashSet<Treating>();
         }
 
-        public Patient(string urnumber, string email, string title, string firstName, string surName, string gender, DateTime dob, string address, string suburb, string postCode, string mobileNumber, string homeNumber, string countryOfBirth, string preferredLanguage, byte[] password, string salt, bool livesAlone, int registeredBy, bool active)
+        public Patient(string urnumber, string email, string title, string firstName, string surName, string gender, DateTime dob, string address, string suburb, string postCode, string mobileNumber, string homeNumber, string countryOfBirth, string preferredLanguage, byte[] password, string salt, bool livesAlone, int registeredBy, bool active, bool deceased)
         {
             Urnumber = urnumber;
             Email = email;
@@ -55,6 +58,7 @@ namespace NHRM_Admin_API.Model
             LivesAlone = livesAlone;
             RegisteredBy = registeredBy;
             Active = active;
+            Deceased = deceased;
         }
 
         public virtual staff RegisteredByNavigation { get; set; }
