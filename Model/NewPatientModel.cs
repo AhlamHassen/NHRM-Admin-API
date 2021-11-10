@@ -24,13 +24,15 @@ namespace NHRM_Admin_API.Model
         public string Password { get; set; }
         public bool LivesAlone { get; set; }
         public int RegisteredBy { get; set; }
+
         public bool Active { get; set; }
+        public bool Deceased { get; set; }
 
         public NewPatientModel()
         {
         }
 
-        public NewPatientModel(string urnumber, string email, string title, string firstName, string surName, string gender, DateTime dob, string address, string suburb, string postCode, string mobileNumber, string homeNumber, string countryOfBirth, string preferredLanguage, string password, bool livesAlone, int registeredBy, bool active)
+        public NewPatientModel(string urnumber, string email, string title, string firstName, string surName, string gender, DateTime dob, string address, string suburb, string postCode, string mobileNumber, string homeNumber, string countryOfBirth, string preferredLanguage, string password, bool livesAlone, int registeredBy, bool active, bool deceased)
         {
             Urnumber = urnumber;
             Email = email;
@@ -50,6 +52,7 @@ namespace NHRM_Admin_API.Model
             LivesAlone = livesAlone;
             RegisteredBy = registeredBy;
             Active = active;
+            Deceased = deceased;
         }
 
     }
