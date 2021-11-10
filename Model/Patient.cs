@@ -26,7 +26,6 @@ namespace NHRM_Admin_API.Model
         public bool LivesAlone { get; set; }
         public int RegisteredBy { get; set; }
         public bool Active { get; set; }
-
         public bool Deceased { get; set; }
         
 

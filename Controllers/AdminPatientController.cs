@@ -244,6 +244,7 @@ namespace NHRM_Admin_API.Controllers
                     patient.LivesAlone = p.LivesAlone;
                     patient.RegisteredBy = p.RegisteredBy;
                     patient.Active = p.Active;
+                    patient.Deceased = p.Deceased;
                 }
             }
             else
@@ -267,6 +268,7 @@ namespace NHRM_Admin_API.Controllers
                     patient.LivesAlone = p.LivesAlone;
                     patient.RegisteredBy = p.RegisteredBy;
                     patient.Active = p.Active;
+                    patient.Deceased = p.Deceased;
                 }
 
             }
