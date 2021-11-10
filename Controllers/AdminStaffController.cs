@@ -50,7 +50,7 @@ namespace NHRM_Admin_API.Controllers
             }
             else
             {
-                return NotFound("Staff Member not found");
+                return Unauthorized("Staff Member not found");
             }
             
               
@@ -59,26 +59,29 @@ namespace NHRM_Admin_API.Controllers
         //create an endpoint that takes a staff object and creates a new staff
         [HttpPost]
         [Route("CreateStaff")]
-        public IActionResult CreateStaff([FromBody] staff staff)
+        public ActionResult<CreateStaffSuccessViewModel> CreateStaff([FromBody] staff staff)
         {
-            // hash and salt the staff password 
-
+            CreateStaffSuccessViewModel response = new CreateStaffSuccessViewModel();
 
             var staffList = context.staff.ToList();
             var staffFound = staffList.Find(x => x.StaffId == staff.StaffId);
             if (staffFound != null)
             {
-                return BadRequest("Staff ID already exists");
+                response.Message = "Staff Member Not Created";
+                response.Status = "Failure";
+                return BadRequest(response);
             }
             else
             {
                 context.staff.Add(staff);
                 context.SaveChanges();
-                return Ok(staff);
+                response.Message = "Staff Member Created";
+                response.Status = "Success";
+                return Ok(response);   
             }
         }
 
-        
+
         //create an endpoint that takes a staff object and updates a staff
         [HttpPut]
         [Route("UpdateStaff")]

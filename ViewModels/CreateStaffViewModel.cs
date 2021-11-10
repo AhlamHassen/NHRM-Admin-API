@@ -1,10 +1,12 @@
+using System.Runtime;
+
 namespace NHRM_Admin_API.ViewModels
 {
-    public class CreateStaffViewModel
+    public class CreateStaffSuccessViewModel
     {
       
-         public string FirstName { get; set; }
-        public string Surname { get; set; }
+        public string Status { get; set; }
+        public string Message { get; set; } 
         
     }
 
