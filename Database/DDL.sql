@@ -154,6 +154,7 @@ CREATE TABLE Patient(
     LivesAlone BIT NOT NULL,    
     RegisteredBy INT NOT NULL,
     Active BIT NOT NULL,
+    Deceased BIT NOT NULL,
     CONSTRAINT PK_Patient PRIMARY KEY (URNumber),
     CONSTRAINT FK_Patient_Staff FOREIGN KEY (RegisteredBy) REFERENCES Staff,
     CONSTRAINT UQ_Email UNIQUE (Email),
