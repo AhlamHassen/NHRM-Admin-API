@@ -75,7 +75,7 @@ pivot(
 --          view_name,
 --          column_id;
 GO
-
+-- original view_Alerts
 DROP VIEW IF EXISTS view_Alerts;
 
 GO
@@ -105,3 +105,7 @@ WHERE ta.DateTimeActioned is not null;
 
 
 
+    identifier: number,
+    patientName: string,
+    patientID: number,
+    alertTitle: string,

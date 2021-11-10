@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.ObjectPool;
+using Microsoft.OpenApi.Any;
 using NHRM_Admin_API.Methods;
 using NHRM_Admin_API.Model;
 using NHRM_Admin_API.ViewModels.AlertModels;
@@ -33,10 +34,11 @@ namespace NHRM_Admin_API.Controllers
         public async Task<ActionResult<IEnumerable<ViewAlerts>>> GetAlerts()
         {
             
-            IEnumerable<ViewAlerts> alerts = await context.view_Alerts
+            var alerts = await context.view_Alerts
                                                 //Potential Option if actioned or dissmissed don't need to be shown
                                                 .Where(a => a.Status == null || a.Status == "Snooze")                                                                                     
                                                 .OrderBy(a => a.DateTimeRaised)
+                                                .Select(va => new {va.Identifier, va.PatientName, va.PatientID, va.AlertTitle})
                                                 .ToListAsync();
             return Ok(alerts);
         }
