@@ -102,10 +102,3 @@ From tbl_Alert AS ta
 INNER JOIN Patient AS p on p.URNumber = ta.URNumber
 INNER JOIN tbl_AlertType AS tat on tat.AlertTypeID = ta.AlertTypeID
 WHERE ta.DateTimeActioned is not null;
-
-
-
-    identifier: number,
-    patientName: string,
-    patientID: number,
-    alertTitle: string,

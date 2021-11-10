@@ -41,7 +41,7 @@ DECLARE @numberOfRecords int
 		DECLARE @StaffID int;
 		DECLARE @AlertTypeID int;
 
-		SELECT @StaffID = 1;
+		SELECT @StaffID = null;
 		SELECT @AlertTypeID = 1;
 
 		INSERT INTO tbl_Alert
@@ -88,7 +88,7 @@ DECLARE @numberOfRecords int
 		DECLARE @StaffID int;
 		DECLARE @AlertTypeID int;
 
-		SELECT @StaffID = 1;
+		SELECT @StaffID = null;
 		SELECT @AlertTypeID = 3;
 
 		INSERT INTO tbl_Alert
@@ -135,7 +135,7 @@ DECLARE @numberOfRecords int
 		DECLARE @StaffID int;
 		DECLARE @AlertTypeID int;
 
-		SELECT @StaffID = 1;
+		SELECT @StaffID = null;
 		SELECT @AlertTypeID = 4;
 
 		INSERT INTO tbl_Alert
@@ -188,7 +188,7 @@ GO
  		DECLARE @StaffID int;
  		DECLARE @AlertTypeID int;
 
- 		SELECT @StaffID = 1;
+ 		SELECT @StaffID = null;
  		SELECT @AlertTypeID = 2;
 
  		INSERT INTO tbl_Alert
@@ -217,7 +217,7 @@ CREATE PROCEDURE QOLTriggerVeryPoor
 	DECLARE @StaffID int;
 	DECLARE @AlertTypeID int;
 
-	SELECT @StaffID = 1;
+	SELECT @StaffID = null;
 	SELECT @AlertTypeID = 5;
 
 	INSERT INTO tbl_Alert
@@ -252,7 +252,7 @@ BEGIN
 	IF  (SELECT TOP 1 Value FROM inserted) > 300 AND (SELECT TOP 1 MeasurementID FROM inserted) = 4
 		BEGIN
 			SELECT @URNumber = URNumber FROM MeasurementRecord WHERE MeasurementRecordID = (SELECT MeasurementRecordId FROM inserted);
-			SELECT @StaffID = 1;
+			SELECT @StaffID = null;
 			SELECT @AlertTypeID = 1;
 			SELECT @TriggerValue = value FROM inserted;
 			SELECT @DateTimeRaised = DateTimeRecorded FROM MeasurementRecord WHERE MeasurementRecordID = (SELECT MeasurementRecordId FROM inserted);
@@ -264,7 +264,7 @@ BEGIN
 		IF  (SELECT TOP 1 Value FROM inserted) >= 4 AND (SELECT TOP 1 MeasurementID FROM inserted) = 3
 		BEGIN				
 			SELECT @URNumber = URNumber FROM MeasurementRecord WHERE MeasurementRecordID = (SELECT MeasurementRecordId FROM inserted);
-			SELECT @StaffID = 1;
+			SELECT @StaffID = null;
 			SELECT @AlertTypeID = 3;
 			SELECT @TriggerValue = value FROM inserted;
 			SELECT @DateTimeRaised = DateTimeRecorded FROM MeasurementRecord WHERE MeasurementRecordID = (SELECT MeasurementRecordId FROM inserted);
@@ -276,7 +276,7 @@ BEGIN
 		IF  (SELECT TOP 1 Value FROM inserted) >= 4 AND (SELECT TOP 1 MeasurementID FROM inserted) = 2
 		BEGIN
 			SELECT @URNumber = URNumber FROM MeasurementRecord WHERE MeasurementRecordID = (SELECT MeasurementRecordId FROM inserted);
-			SELECT @StaffID = 1;
+			SELECT @StaffID = null;
 			SELECT @AlertTypeID = 4;
 			SELECT @TriggerValue = value FROM inserted;
 			SELECT @DateTimeRaised = DateTimeRecorded FROM MeasurementRecord WHERE MeasurementRecordID = (SELECT MeasurementRecordId FROM inserted);
@@ -294,7 +294,7 @@ BEGIN
 		
 		BEGIN
 		SELECT @URNumber = URNumber FROM MeasurementRecord WHERE MeasurementRecordID = (SELECT TOP 1 MeasurementRecordId FROM inserted);
-		SELECT @StaffID = 1;
+		SELECT @StaffID = null;
 		SELECT @AlertTypeID = 2;
 		SELECT @TriggerValue = value FROM inserted;
 		SELECT @DateTimeRaised = DateTimeRecorded FROM MeasurementRecord WHERE MeasurementRecordID = (SELECT TOP 1 MeasurementRecordId FROM inserted);
@@ -312,7 +312,7 @@ BEGIN
 
 		BEGIN
 		SELECT @URNumber = URNumber FROM MeasurementRecord WHERE MeasurementRecordID = (SELECT TOP 1 MeasurementRecordId FROM inserted);
-		SELECT @StaffID = 1;
+		SELECT @StaffID = null;
 		SELECT @AlertTypeID = 5;
 		SELECT @TriggerValue = value FROM inserted;
 		SELECT @DateTimeRaised = DateTimeRecorded FROM MeasurementRecord WHERE MeasurementRecordID = (SELECT TOP 1 MeasurementRecordId FROM inserted);

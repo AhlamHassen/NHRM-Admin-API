@@ -366,7 +366,8 @@ INSERT INTO tbl_AlertType (Title , Details , TriggerCondition, TriggerThresholdV
 ('Breathlessness','When breathlessness is greater than or equal to 4 three recordings in a row','Breathlessness >=',4),
 ('Quality of life very poor','Alert triggers when QOL survey questions are very poor','QOL <= very poor',4);
 
-
 INSERT INTO tbl_Alert (URNumber, StaffID, AlertTypeID, TriggerValue, DateTimeRaised, DateTimeActioned, [Status], Notes)
-VALUES ('1',  1,    1,     320 ,   '2021-10-13 08:50:12',    '2021-10-13 09:30:12', 'Actioned', null),
-('1',  1,    1,      320 ,  '2015-10-13 08:50:12', null, null , null);
+VALUES ('1',  1,    1,     320 ,   '2021-10-13 08:50:12',    '2021-10-13 09:30:12', 'Actioned', null);
+
+INSERT INTO tbl_Alert (URNumber, AlertTypeID, TriggerValue, DateTimeRaised, DateTimeActioned, [Status], Notes)
+VALUES ('1', 1, 320 , '2015-10-13 08:50:12', null, null , null);
