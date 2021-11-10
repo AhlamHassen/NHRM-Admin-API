@@ -153,12 +153,12 @@ END
 
 GO 
 
---QOL PROCEDURE I'm working on 
- DROP PROCEDURE IF EXISTS QOLTrigger;
+--QOL PROCEDURE
+ DROP PROCEDURE IF EXISTS QOLTriggerConsec;
  
  GO
  
- CREATE PROCEDURE QOLTrigger
+ CREATE PROCEDURE QOLTriggerConsec
  @insertedValue int, @URNumber nvarchar(50), @DateTimeRaised datetime
  AS
  BEGIN
@@ -189,7 +189,7 @@ GO
  		DECLARE @AlertTypeID int;
 
  		SELECT @StaffID = 1;
- 		SELECT @AlertTypeID = 4;
+ 		SELECT @AlertTypeID = 2;
 
  		INSERT INTO tbl_Alert
  		(
@@ -202,6 +202,33 @@ GO
 
  		VALUES(@URNumber,@StaffID,@AlertTypeID,@insertedValue,@DateTimeRaised)
  	END
+ END
+
+GO
+
+DROP PROCEDURE IF EXISTS QOLTriggerVeryPoor;
+
+GO 
+
+CREATE PROCEDURE QOLTriggerVeryPoor
+ @insertedValue int, @URNumber nvarchar(50), @DateTimeRaised datetime
+ AS
+ BEGIN 	
+	DECLARE @StaffID int;
+	DECLARE @AlertTypeID int;
+
+	SELECT @StaffID = 1;
+	SELECT @AlertTypeID = 5;
+
+	INSERT INTO tbl_Alert
+	(
+ 		URNumber,
+ 		StaffID,
+ 		AlertTypeID,
+ 		TriggerValue,
+ 		DateTimeRaised
+	)
+ 	VALUES(@URNumber,@StaffID,@AlertTypeID,@insertedValue,@DateTimeRaised)
  END
 
 GO
@@ -238,7 +265,7 @@ BEGIN
 		BEGIN				
 			SELECT @URNumber = URNumber FROM MeasurementRecord WHERE MeasurementRecordID = (SELECT MeasurementRecordId FROM inserted);
 			SELECT @StaffID = 1;
-			SELECT @AlertTypeID = 1;
+			SELECT @AlertTypeID = 3;
 			SELECT @TriggerValue = value FROM inserted;
 			SELECT @DateTimeRaised = DateTimeRecorded FROM MeasurementRecord WHERE MeasurementRecordID = (SELECT MeasurementRecordId FROM inserted);
 
@@ -250,7 +277,7 @@ BEGIN
 		BEGIN
 			SELECT @URNumber = URNumber FROM MeasurementRecord WHERE MeasurementRecordID = (SELECT MeasurementRecordId FROM inserted);
 			SELECT @StaffID = 1;
-			SELECT @AlertTypeID = 1;
+			SELECT @AlertTypeID = 4;
 			SELECT @TriggerValue = value FROM inserted;
 			SELECT @DateTimeRaised = DateTimeRecorded FROM MeasurementRecord WHERE MeasurementRecordID = (SELECT MeasurementRecordId FROM inserted);
 
@@ -261,22 +288,38 @@ BEGIN
 		IF (
 		SELECT COUNT(Value) FROM inserted
 		WHERE ((DataPointNumber = 1 OR DataPointNumber = 2 OR DataPointNumber = 3) AND Value <= 3)
- 		OR ((DataPointNumber = 4 OR DataPointNumber = 4) AND Value >= 4)
- 		OR (DataPointNumber <= 6 AND Value <= 70)
+ 		OR ((DataPointNumber = 4 OR DataPointNumber = 5) AND Value >= 4)
+ 		OR (DataPointNumber = 6 AND Value <= 20)
 		) = 6
 		
 		BEGIN
 		SELECT @URNumber = URNumber FROM MeasurementRecord WHERE MeasurementRecordID = (SELECT TOP 1 MeasurementRecordId FROM inserted);
 		SELECT @StaffID = 1;
-		SELECT @AlertTypeID = 1;
+		SELECT @AlertTypeID = 2;
 		SELECT @TriggerValue = value FROM inserted;
 		SELECT @DateTimeRaised = DateTimeRecorded FROM MeasurementRecord WHERE MeasurementRecordID = (SELECT TOP 1 MeasurementRecordId FROM inserted);
 
-		EXEC QOLTrigger @TriggerValue, @URNumber = @URNumber, @DateTimeRaised = @DateTimeRaised
+		EXEC QOLTriggerConsec @TriggerValue, @URNumber = @URNumber, @DateTimeRaised = @DateTimeRaised
+
+		END	
+
+		IF (
+		SELECT COUNT(Value) FROM inserted
+		WHERE ((DataPointNumber = 1 OR DataPointNumber = 2 OR DataPointNumber = 3) AND Value = 1)
+ 		OR ((DataPointNumber = 4 OR DataPointNumber = 5) AND Value = 5)
+ 		OR (DataPointNumber = 6 AND Value <= 10)
+		) >= 1
+
+		BEGIN
+		SELECT @URNumber = URNumber FROM MeasurementRecord WHERE MeasurementRecordID = (SELECT TOP 1 MeasurementRecordId FROM inserted);
+		SELECT @StaffID = 1;
+		SELECT @AlertTypeID = 5;
+		SELECT @TriggerValue = value FROM inserted;
+		SELECT @DateTimeRaised = DateTimeRecorded FROM MeasurementRecord WHERE MeasurementRecordID = (SELECT TOP 1 MeasurementRecordId FROM inserted);
+
+		EXEC QOLTriggerVeryPoor @TriggerValue, @URNumber = @URNumber, @DateTimeRaised = @DateTimeRaised
 
 		END
-
-		-- To do survey alert
 END
 	GO
 
@@ -285,6 +328,8 @@ END
 
 -- insert into MeasurementRecord (DateTimeRecorded,MeasurementID,CategoryID,URNumber)
 -- values ('2023-01-08',5,1,'123456789')
+
+-- select * from MeasurementRecord order by MeasurementRecordID desc;
 
 -- insert into DataPointRecord (MeasurementID, DataPointNumber, Value,MeasurementRecordID)
 -- VALUES 
