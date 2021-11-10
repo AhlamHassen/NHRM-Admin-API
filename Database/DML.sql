@@ -15,9 +15,9 @@ VALUES('staff@staff.com', 'Staff', 'One', HASHBYTES('SHA2_512', CONCAT('password
 -- For when the password in Patient table is of type binary
 
 INSERT INTO Patient
-    (URNumber,Email,Title,SurName,FirstName,Gender,DOB,[Address],Suburb,PostCode,MobileNumber,HomeNumber,CountryOfBirth,PreferredLanguage,[Password],Salt,LivesAlone,RegisteredBy,Active)
-VALUES('123456789', 'patient@patient.com', 'Mrs', 'Doe', 'Jane', 'Female', GETDATE(), '123 Evergreen Terrace', 'Springfield', '1234', '0123456789', '0123456789', 'Australia', 'English', HASHBYTES('SHA2_512', CONCAT('password', 'salt', 'this15myp3pper')), 'salt', 0, 1, 1),
-    ('987654321', 'patient2@patient.com', 'Mr', 'Doe', 'John', 'Male', GETDATE(), '123 Evergreen Terrace', 'Springfield', '1234', '0123456789', '0123456789', 'Australia', 'English', HASHBYTES('SHA2_512', CONCAT('password', 'salt', 'this15myp3pper')), 'salt', 0, 1, 1);
+    (URNumber,Email,Title,SurName,FirstName,Gender,DOB,[Address],Suburb,PostCode,MobileNumber,HomeNumber,CountryOfBirth,PreferredLanguage,[Password],Salt,LivesAlone,RegisteredBy,Active, Deceased)
+VALUES('123456789', 'patient@patient.com', 'Mrs', 'Doe', 'Jane', 'Female', GETDATE(), '123 Evergreen Terrace', 'Springfield', '1234', '0123456789', '0123456789', 'Australia', 'English', HASHBYTES('SHA2_512', CONCAT('password', 'salt', 'this15myp3pper')), 'salt', 0, 1, 1, 0),
+    ('987654321', 'patient2@patient.com', 'Mr', 'Doe', 'John', 'Male', GETDATE(), '123 Evergreen Terrace', 'Springfield', '1234', '0123456789', '0123456789', 'Australia', 'English', HASHBYTES('SHA2_512', CONCAT('password', 'salt', 'this15myp3pper')), 'salt', 0, 1, 1, 0);
 INSERT INTO Patient (URNumber, Email, Title, SurName, FirstName, Gender, DOB, [Address], Suburb, PostCode, MobileNumber, HomeNumber, CountryOfBirth, PreferredLanguage, [Password], Salt, LivesAlone, RegisteredBy, Active, Deceased) values ('1', 'tgreave0@surveymonkey.com', 'Mrs', 'Greave', 'Tiena', 'Female', '1990-02-03', '90116 Esker Trail', 'South Australia', '2064', '1642532084', '4329711023', 'Australia', 'English', HASHBYTES('SHA2_512', CONCAT('password', 'salt', 'this15myp3pper')),'salt', 1, 1, 1, 0);
 INSERT INTO Patient (URNumber, Email, Title, SurName, FirstName, Gender, DOB, [Address], Suburb, PostCode, MobileNumber, HomeNumber, CountryOfBirth, PreferredLanguage, [Password], Salt, LivesAlone, RegisteredBy, Active, Deceased) values ('2', 'clatty1@sohu.com', 'Rev', 'Latty', 'Charla', 'Male', '1985-05-21', '760 Warbler Trail', 'South Australia', 4037, '8152535583', '3888551379', 'Australia', 'Tamil', HASHBYTES('SHA2_512', CONCAT('password', 'salt', 'this15myp3pper')),'salt', 1, 1, 1, 0);
 INSERT INTO Patient (URNumber, Email, Title, SurName, FirstName, Gender, DOB, [Address], Suburb, PostCode, MobileNumber, HomeNumber, CountryOfBirth, PreferredLanguage, [Password], Salt, LivesAlone, RegisteredBy, Active, Deceased) values ('3', 'sdipietro2@bravesites.com', 'Dr', 'Di Pietro', 'Sigismund', 'Female', '1996-02-04', '392 Roxbury Place', 'South Australia', '2895', '5688948853', '3582076951', 'Australia', 'Northern Sotho', HASHBYTES('SHA2_512', CONCAT('password', 'salt', 'this15myp3pper')),'salt', 1, 1, 1, 0);
@@ -367,5 +367,5 @@ INSERT INTO tbl_AlertType (Title , Details , TriggerCondition, TriggerThresholdV
 
 
 INSERT INTO tbl_Alert (URNumber, StaffID, AlertTypeID, TriggerValue, DateTimeRaised, DateTimeActioned, [Status], Notes)
-VALUES ('1',  1,    1,     320 ,   '2021-10-13 08:50:12',    null, '2021-10-14 08:50:12', null),
+VALUES ('1',  1,    1,     320 ,   '2021-10-13 08:50:12',    null, 'Actioned', null),
 ('1',  1,    1,      320 ,  '2015-10-13 08:50:12', '2021-10-13 08:53:10', null , null);
