@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NHRM_Admin_API.Model;
 
 namespace NHRM_Admin_API.Migrations
 {
     [DbContext(typeof(NHRMDBContext))]
-    partial class NHRMDBContextModelSnapshot : ModelSnapshot
+    [Migration("20211110023054_ChangingStaffPasword")]
+    partial class ChangingStaffPasword
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -807,16 +809,7 @@ namespace NHRM_Admin_API.Migrations
                     b.ToTable("view_Alerts");
                 });
 
-            modelBuilder.Entity("NHRM_Admin_API.ViewModels.AllCategoriesView", b =>
-                {
-                    b.Property<int>("CategoryID")
-                        .HasColumnType("int");
 
-                    b.Property<string>("CategoryName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.ToTable("AllCategoriesView");
-                });
 
             modelBuilder.Entity("NHRM_Admin_API.ViewModels.CategoryMeasurementsView", b =>
                 {

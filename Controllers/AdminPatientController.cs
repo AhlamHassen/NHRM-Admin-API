@@ -22,6 +22,8 @@ namespace NHRM_Admin_API.Controllers
         private readonly NHRMDBContext context;
         public IConfiguration Configuration { get; }
 
+        private SearchHelper searchHelper = new SearchHelper();
+
         public AdminPatientController(NHRMDBContext _context, IConfiguration configuration)
         {
             context = _context;
@@ -322,9 +324,9 @@ namespace NHRM_Admin_API.Controllers
             Boolean isExactGivenName, string searchfamilyname, Boolean isExactFamilyName, DateTime searchdob)
         {
 
-            var searchDobDate = new DateTime(searchdob.Year, searchdob.Month, searchdob.Day);
+            //var searchDobDate = new DateTime(searchdob.Year, searchdob.Month, searchdob.Day);
 
-            if (searchurnumber == null && searchgivenname == null && searchfamilyname == null && searchDobDate == DateTime.MinValue)
+            if (searchurnumber == null && searchgivenname == null && searchfamilyname == null && searchdob == DateTime.MinValue)
             {
                 return BadRequest("No search string was provided");
             }
@@ -337,9 +339,9 @@ namespace NHRM_Admin_API.Controllers
 
 
             //only hit the database for the provided search terms?
-            if (searchDobDate != DateTime.MinValue)
+            if (searchdob != DateTime.MinValue)
             {
-                Qdob = await context.Patients.Where(p => p.Dob == searchDobDate).ToListAsync();
+                Qdob = await context.Patients.Where(p => p.Dob == searchdob).ToListAsync();
             }
 
             if (searchurnumber != null)
@@ -363,59 +365,59 @@ namespace NHRM_Admin_API.Controllers
 
 
             //returning the single feilds//---------------------------------------------------------------------------
-            if (searchurnumber != null && searchgivenname == null && searchfamilyname == null && searchDobDate == DateTime.MinValue)
+            if (searchurnumber != null && searchgivenname == null && searchfamilyname == null && searchdob == DateTime.MinValue)
             {
-                return Ok(PatientListFixer(Qurnumber));
+                return Ok(searchHelper.PatientListTransform(Qurnumber));
             }
 
-            if (searchurnumber == null && searchgivenname != null && searchfamilyname == null && searchDobDate == DateTime.MinValue)
+            if (searchurnumber == null && searchgivenname != null && searchfamilyname == null && searchdob == DateTime.MinValue)
             {
-                return Ok(PatientListFixer(Qgivenname));
+                return Ok(searchHelper.PatientListTransform(Qgivenname));
             }
 
-            if (searchurnumber == null && searchgivenname == null && searchfamilyname != null && searchDobDate == DateTime.MinValue)
+            if (searchurnumber == null && searchgivenname == null && searchfamilyname != null && searchdob == DateTime.MinValue)
             {
-                return Ok(PatientListFixer(Qfamilyname));
+                return Ok(searchHelper.PatientListTransform(Qfamilyname));
             }
 
-            if (searchurnumber == null && searchgivenname == null && searchfamilyname == null && searchDobDate != DateTime.MinValue)
+            if (searchurnumber == null && searchgivenname == null && searchfamilyname == null && searchdob != DateTime.MinValue)
             {
-                return Ok(PatientListFixer(Qdob));
+                return Ok(searchHelper.PatientListTransform(Qdob));
             }
             
             //-------------------------------------------------------------------------------------------------------//
             //-------------- you can now only search givename, family name and dob together -------------------------//
             
 
-            if (searchurnumber == null && searchgivenname != null && searchfamilyname != null && searchDobDate == DateTime.MinValue)
+            if (searchurnumber == null && searchgivenname != null && searchfamilyname != null && searchdob == DateTime.MinValue)
             {
                 var output = Qgivenname.Intersect(Qfamilyname);
-                return Ok(PatientListEnumerableFixer(output));
+                return Ok(searchHelper.PatientListEnumerableTransform(output));
             }
 
-            if (searchurnumber == null && searchgivenname != null && searchfamilyname == null && searchDobDate != DateTime.MinValue)
+            if (searchurnumber == null && searchgivenname != null && searchfamilyname == null && searchdob != DateTime.MinValue)
             {
                 var output = Qgivenname.Intersect(Qdob);
-                return Ok(PatientListEnumerableFixer(output));
+                return Ok(searchHelper.PatientListEnumerableTransform(output));
             }
          
 
-            if (searchurnumber == null && searchgivenname == null && searchfamilyname != null && searchDobDate != DateTime.MinValue)
+            if (searchurnumber == null && searchgivenname == null && searchfamilyname != null && searchdob != DateTime.MinValue)
             {
                 var output = Qfamilyname.Intersect(Qdob);
 
-                return Ok(PatientListEnumerableFixer(output));
+                return Ok(searchHelper.PatientListEnumerableTransform(output));
             }
 
-            if (searchurnumber == null && searchgivenname != null && searchfamilyname != null && searchDobDate != DateTime.MinValue)
+            if (searchurnumber == null && searchgivenname != null && searchfamilyname != null && searchdob != DateTime.MinValue)
             {
                 var output = Qfamilyname.Intersect(Qdob).Intersect(Qgivenname);
 
-                return Ok(PatientListEnumerableFixer(output));
+                return Ok(searchHelper.PatientListEnumerableTransform(output));
             }
 
             var result = Qurnumber.Concat(Qgivenname).Concat(Qfamilyname).Concat(Qdob);
-            return Ok(PatientListEnumerableFixer(result));
+            return Ok(searchHelper.PatientListEnumerableTransform(result));
 
         }
 
