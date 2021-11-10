@@ -257,6 +257,7 @@ BEGIN
 			EXEC BreathlessnessTrigger @TriggerValue, @URNumber = @URNumber, @DateTimeRaised = @DateTimeRaised
 		END
 
+		-- check QOL and trigger an alert if required
 		IF (
 		SELECT COUNT(Value) FROM inserted
 		WHERE ((DataPointNumber = 1 OR DataPointNumber = 2 OR DataPointNumber = 3) AND Value <= 3)
