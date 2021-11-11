@@ -169,7 +169,8 @@ GO
  	= Count(*)
  	from (
  	--get the three latest measurements of pain for the patient
- 	SELECT TOP 18 dpr.MeasurementID,dpr.DataPointNumber,dpr.Value,dpr.MeasurementRecordID,mr.DateTimeRecorded,mr.URNumber from DataPointRecord as dpr
+ 	SELECT TOP 18 dpr.MeasurementID,dpr.DataPointNumber,dpr.Value,dpr.MeasurementRecordID,mr.DateTimeRecorded,mr.URNumber 
+	FROM DataPointRecord as dpr
  	INNER JOIN MeasurementRecord as mr ON mr.MeasurementRecordID = dpr.MeasurementRecordID
  	WHERE dpr.MeasurementID = 5 AND mr.URNumber = @URNumber
  	ORDER BY mr.DateTimeRecorded DESC

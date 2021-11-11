@@ -54,8 +54,7 @@ namespace NHRM_Admin_API.Controllers
             IEnumerable<AlertsLog> alerts = await context.view_Log
                                                 //Potential Option if null don't show in log
                                                 .Where(a => a.Proceeding != null)                                                                                                                                    
-                                                .OrderBy(a => a.Date)
-                                                .OrderBy(a => a.Time)                                        
+                                                .OrderBy(a => a.DateTimeActioned)                                                                                      
                                                 .ToListAsync();
 
                      
