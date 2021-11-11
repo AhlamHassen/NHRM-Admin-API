@@ -25,43 +25,12 @@ namespace NHRM_Admin_API.Controllers
             context = _context;
             Configuration = configuration;
         }
-
-        //'ExportPatient' is given a Urnumber, Lower date range & Upper date range 
-        // In response 'ExportPatient' creates a CSV and then as of now the CSV's are sent to a folder and a success or failiure is returned
-
-
-        [HttpPost]
+        [HttpGet]
         [Route("ExportAll")]
-        public async Task<IActionResult> ExportAll([FromBody] ExportAllRequest exportRequest)
+        // ExportAll grabs all recordings from all patients and exports them as an array
+        public async Task<IActionResult> ExportAll()
         {
-            DateTime startDate; DateTime endDate;
-            // Parse strings into Datetime format
-            // try
-            // {
-            startDate = DateTime.ParseExact(exportRequest.StartDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-            endDate = DateTime.ParseExact(exportRequest.EndDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-            // }
-            // catch (System.FormatException)
-            // {
-            //     return BadRequest();
-            // }
-
-            // Validate & Error checking dates
-
-            // Declare CSV storage location 
-            var path = Path.Combine(Environment.CurrentDirectory, $"CSV's/PatientRecords_{DateTime.Now.ToString("dd-MM-yyyy")}.csv");
-
-            // Convert into CSV
-            using (var streamWriter = new StreamWriter(path))
-            {
-                using (var csvWriter = new CsvWriter(streamWriter, CultureInfo.InvariantCulture))
-                {
-                    // Get Data
-                    List<ViewTableData> data = await context.ViewTableData.ToListAsync();
-                    csvWriter.WriteRecords(data);
-                }
-            }
-            return Ok();
+            return Ok(await context.ViewTableData.ToArrayAsync());
         }
     }
 }
