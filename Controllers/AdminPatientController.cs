@@ -321,7 +321,7 @@ namespace NHRM_Admin_API.Controllers
         [HttpGet]
         [Route("SearchPatient")]
         public async Task<ActionResult<IEnumerable<PatientSearchViewModel>>> SearchPatient([FromQuery] string searchurnumber, string searchgivenname,
-            Boolean isExactGivenName, string searchfamilyname, Boolean isExactFamilyName, DateTime searchdob)
+            string searchfamilyname, DateTime searchdob)
         {
 
             //var searchDobDate = new DateTime(searchdob.Year, searchdob.Month, searchdob.Day);
@@ -353,13 +353,13 @@ namespace NHRM_Admin_API.Controllers
 
             if (searchgivenname != null)
             {
-                Qgivenname = await context.Patients.Where(p => isExactGivenName ? p.FirstName == searchgivenname : p.FirstName.StartsWith(searchgivenname))
+                Qgivenname = await context.Patients.Where(p => p.FirstName == searchgivenname || p.FirstName.StartsWith(searchgivenname))
                 .ToListAsync();
             }
 
             if (searchfamilyname != null)
             {
-                Qfamilyname = await context.Patients.Where(p => isExactFamilyName ? p.SurName == searchfamilyname : p.SurName.StartsWith(searchfamilyname))
+                Qfamilyname = await context.Patients.Where(p => p.SurName == searchfamilyname || p.SurName.StartsWith(searchfamilyname))
                 .ToListAsync();
             }
 
