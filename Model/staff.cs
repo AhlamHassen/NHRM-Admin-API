@@ -17,7 +17,7 @@ namespace NHRM_Admin_API.Model
         public string Email { get; set; }
         public string FirstName { get; set; }
         public string Surname { get; set; }
-        public byte[] Password { get; set; }
+        public string Password { get; set; }
         public string Salt { get; set; }
         public int RoleId { get; set; }
 

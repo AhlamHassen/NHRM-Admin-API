@@ -1,4 +1,5 @@
 --USE NHRMDB;
+
 Go
 
 INSERT INTO StaffRole
@@ -8,8 +9,8 @@ VALUES('Admin'),
 
 INSERT INTO Staff
     (Email,FirstName,Surname,[Password],Salt,RoleID)
-VALUES('staff@staff.com', 'Staff', 'One', HASHBYTES('SHA2_512', CONCAT('password', 'salt', 'this15myp3pper')), 'salt', 1),
-    ('staff2@staff.com', 'Staff', 'Two', HASHBYTES('SHA2_512', CONCAT('password', 'salt', 'this15myp3pper')), 'salt', 2);
+VALUES('admin@nhrm', 'Admin', 'Admin', 'Admin123', 'salt', 1),
+    ('clinician@nhrm', 'Clinician', 'Clinician', 'Admin123', 'salt', 2);
 
 
 -- For when the password in Patient table is of type binary

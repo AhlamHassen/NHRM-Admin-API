@@ -3,17 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using NHRM_Admin_API.Model;
 using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authorization;
 using NHRM_Admin_API.ViewModels;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using System.Text.Json;
-using System.Net.Http;
-using System.Net;
+using NHRM_Admin_API.Methods;
+
 
 namespace NHRM_Admin_API.Controllers
 {
@@ -23,6 +21,8 @@ namespace NHRM_Admin_API.Controllers
     {
         private readonly NHRMDBContext context;
         public IConfiguration Configuration { get; }
+
+        private SearchHelper searchHelper = new SearchHelper();
 
         public AdminPatientController(NHRMDBContext _context, IConfiguration configuration)
         {
@@ -139,12 +139,14 @@ namespace NHRM_Admin_API.Controllers
             var allPatients = await context.Patients.ToListAsync();
             var emailList = new List<string>();
 
-            foreach(var pa in allPatients){
+            foreach (var pa in allPatients)
+            {
                 emailList.Add(pa.Email);
             }
 
             //To allow only unique emails
-            if(emailList.Contains(pm.Patient.Email)){
+            if (emailList.Contains(pm.Patient.Email))
+            {
                 return BadRequest("Entered email is already in use");
             }
 
@@ -184,9 +186,10 @@ namespace NHRM_Admin_API.Controllers
         [Route("EditPatient")]
         public async Task<ActionResult> EditPatient([FromBody] AddPatientModel pm)
         {
+            //check pm for null reference exception
 
             var patient = await context.Patients.FirstOrDefaultAsync(p => p.Urnumber == pm.Patient.Urnumber);
-            
+
 
             if (patient == null)
             {
@@ -205,14 +208,17 @@ namespace NHRM_Admin_API.Controllers
             var allPatients = await context.Patients.ToListAsync();
             var emailList = new List<string>();
 
-            if(pm.Patient.Email != currentEmail){
+            if (pm.Patient.Email != currentEmail)
+            {
 
-                foreach(var pa in allPatients){
-                   emailList.Add(pa.Email);
+                foreach (var pa in allPatients)
+                {
+                    emailList.Add(pa.Email);
                 }
 
                 //To allow only unique emails
-                if(emailList.Contains(pm.Patient.Email)){
+                if (emailList.Contains(pm.Patient.Email))
+                {
                     return BadRequest("Entered email is already in use");
                 }
             }
@@ -316,45 +322,105 @@ namespace NHRM_Admin_API.Controllers
         //Search a patient using either a urnumber, givenName or familyName or all
         [HttpGet]
         [Route("SearchPatient")]
-        public async Task<ActionResult<IEnumerable<PatientSearchViewModel>>> SearchPatient([FromQuery] string searchurnumber, Boolean isExactUr, string searchgivenname,
-            Boolean isExactGivenName, string searchfamilyname, Boolean isExactFamilyName)
+        public async Task<ActionResult<IEnumerable<PatientSearchViewModel>>> SearchPatient([FromQuery] string searchurnumber, string searchgivenname,
+            string searchfamilyname, DateTime searchdob)
         {
 
-            var patientList = new List<PatientSearchViewModel>();
-            if (searchurnumber == null && searchgivenname == null && searchfamilyname == null)
+            //var searchDobDate = new DateTime(searchdob.Year, searchdob.Month, searchdob.Day);
+
+            if (searchurnumber == null && searchgivenname == null && searchfamilyname == null && searchdob == DateTime.MinValue)
             {
                 return BadRequest("No search string was provided");
             }
 
-            ///changed the contains to starts with 
-            var Qurn = await context.Patients.Where(p => isExactUr ? p.Urnumber == searchurnumber : p.Urnumber.StartsWith(searchurnumber)).ToListAsync();
-            var Qgname = await context.Patients.Where(p => isExactGivenName ? p.FirstName == searchgivenname : p.FirstName.StartsWith(searchgivenname)).ToListAsync();
-            var Qfname = await context.Patients.Where(p => isExactFamilyName ? p.SurName == searchfamilyname : p.SurName.StartsWith(searchfamilyname)).ToListAsync();
 
-            //intersect to make sure both lists match ¯\_(ツ)_/¯
-            if(searchurnumber != null && searchgivenname != null && searchfamilyname == null){
-                var output = Qurn.Intersect(Qgname);
-                return Ok(output);
+            var Qdob = new List<Patient>();
+            var Qurnumber = new List<Patient>();
+            var Qgivenname = new List<Patient>();
+            var Qfamilyname = new List<Patient>();
+
+
+            //only hit the database for the provided search terms?
+            if (searchdob != DateTime.MinValue)
+            {
+                Qdob = await context.Patients.Where(p => p.Dob == searchdob).ToListAsync();
             }
 
-            if(searchurnumber != null && searchgivenname == null && searchfamilyname != null){
-                var output = Qurn.Intersect(Qfname);
-                return Ok(output);
+            if (searchurnumber != null)
+            {
+                Qurnumber = await context.Patients.Where(p => p.Urnumber == searchurnumber)
+                .ToListAsync();
+                
             }
 
-             if(searchurnumber != null && searchgivenname != null && searchfamilyname != null){
+            if (searchgivenname != null)
+            {
+                Qgivenname = await context.Patients.Where(p => p.FirstName == searchgivenname || p.FirstName.StartsWith(searchgivenname))
+                .ToListAsync();
+            }
 
-                var output = Qurn.Intersect(Qfname).Intersect(Qgname);
-                return Ok(output);
+            if (searchfamilyname != null)
+            {
+                Qfamilyname = await context.Patients.Where(p => p.SurName == searchfamilyname || p.SurName.StartsWith(searchfamilyname))
+                .ToListAsync();
             }
 
 
-            // it the above arent caught it jsut returns one of these and re
-            // concat and remove any duplicate values in the final list
-            var result = Qurn.Concat(Qgname).Concat(Qfname).Distinct();
+            //returning the single feilds//---------------------------------------------------------------------------
+            if (searchurnumber != null && searchgivenname == null && searchfamilyname == null && searchdob == DateTime.MinValue)
+            {
+                return Ok(searchHelper.PatientListTransform(Qurnumber));
+            }
+
+            if (searchurnumber == null && searchgivenname != null && searchfamilyname == null && searchdob == DateTime.MinValue)
+            {
+                return Ok(searchHelper.PatientListTransform(Qgivenname));
+            }
+
+            if (searchurnumber == null && searchgivenname == null && searchfamilyname != null && searchdob == DateTime.MinValue)
+            {
+                return Ok(searchHelper.PatientListTransform(Qfamilyname));
+            }
+
+            if (searchurnumber == null && searchgivenname == null && searchfamilyname == null && searchdob != DateTime.MinValue)
+            {
+                return Ok(searchHelper.PatientListTransform(Qdob));
+            }
+            
+            //-------------------------------------------------------------------------------------------------------//
+            //-------------- you can now only search givename, family name and dob together -------------------------//
+            
+
+            if (searchurnumber == null && searchgivenname != null && searchfamilyname != null && searchdob == DateTime.MinValue)
+            {
+                var output = Qgivenname.Intersect(Qfamilyname);
+                return Ok(searchHelper.PatientListEnumerableTransform(output));
+            }
+
+            if (searchurnumber == null && searchgivenname != null && searchfamilyname == null && searchdob != DateTime.MinValue)
+            {
+                var output = Qgivenname.Intersect(Qdob);
+                return Ok(searchHelper.PatientListEnumerableTransform(output));
+            }
          
 
-            return Ok(result);
+            if (searchurnumber == null && searchgivenname == null && searchfamilyname != null && searchdob != DateTime.MinValue)
+            {
+                var output = Qfamilyname.Intersect(Qdob);
+
+                return Ok(searchHelper.PatientListEnumerableTransform(output));
+            }
+
+            if (searchurnumber == null && searchgivenname != null && searchfamilyname != null && searchdob != DateTime.MinValue)
+            {
+                var output = Qfamilyname.Intersect(Qdob).Intersect(Qgivenname);
+
+                return Ok(searchHelper.PatientListEnumerableTransform(output));
+            }
+
+            var result = Qurnumber.Concat(Qgivenname).Concat(Qfamilyname).Concat(Qdob);
+            return Ok(searchHelper.PatientListEnumerableTransform(result));
+
         }
 
 
@@ -398,7 +464,7 @@ namespace NHRM_Admin_API.Controllers
             return Ok(outputlist);
 
         }
-        
+
 
         // it returns the table data for the view patient mode
         [HttpGet]
@@ -508,6 +574,9 @@ namespace NHRM_Admin_API.Controllers
 
             return HashSalt;
         }
+
+
+     
 
     }
 }
