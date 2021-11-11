@@ -102,7 +102,7 @@ namespace NHRM_Admin_API.Controllers
 
             alert.Status = alertReq.Status;
             alert.StaffID = alertReq.StaffID;
-            alert.DateTimeActioned = alertReq.DateTimeActioned;
+            alert.DateTimeActioned = DateTime.Now;
 
             context.SaveChanges();
 
