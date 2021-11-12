@@ -436,3 +436,6 @@ C:\Users\dnadi\Desktop\dotnet api\NHRM-Admin-API\obj\Debug\net5.0\NHRM-Admin-API
 C:\Users\dnadi\Desktop\dotnet api\NHRM-Admin-API\obj\Debug\net5.0\ref\NHRM-Admin-API.dll
 C:\Users\dnadi\Desktop\dotnet api\NHRM-Admin-API\bin\Debug\net5.0\Json.Net.dll
 C:\Users\User\Desktop\myRepositories\NHRM-Admin-API\bin\Debug\net5.0\Json.Net.dll
+C:\Users\Cooler Master\source\repos\NHRM-Admin-API\bin\Debug\net5.0\package-lock.json
+C:\Users\Cooler Master\source\repos\NHRM-Admin-API\bin\Debug\net5.0\CsvHelper.dll
+C:\Users\Cooler Master\source\repos\NHRM-Admin-API\bin\Debug\net5.0\Json.Net.dll
