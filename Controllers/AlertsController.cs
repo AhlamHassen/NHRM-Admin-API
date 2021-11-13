@@ -35,8 +35,8 @@ namespace NHRM_Admin_API.Controllers
         {
             
             var alerts = await context.view_Alerts
-                                                //Potential Option if actioned or dissmissed don't need to be shown
-                                                .Where(a => a.Status == null || a.Status == "Snooze")                                                                                     
+                                                //Potential Option if actioned, dissmissed or Snooze don't need to be shown
+                                                .Where(a => a.Status == null)                                                                                     
                                                 .OrderBy(a => a.DateTimeRaised)
                                                 .Select(va => new {va.Identifier, va.PatientName, va.PatientID, va.AlertTitle})
                                                 .ToListAsync();
@@ -110,6 +110,28 @@ namespace NHRM_Admin_API.Controllers
             return Ok(response);
 
         }
+
+        //UnSnooze All Alerts
+        [HttpPut]
+        [Route("UnSnooze")]
+        public async Task<ActionResult<Boolean>> UnSnoozeAlerts() {
+            //Find alert
+            IEnumerable<Alert> snoozeAlert = await context.tbl_Alert
+                .Where(a => a.Status == "Snooze")
+                .ToListAsync();
+            
+            foreach (var alert in snoozeAlert)
+            {
+                alert.Status = null;
+            }
+
+            context.SaveChanges();
+
+
+            return Ok(snoozeAlert);
+
+        }
+
 
     }
 }

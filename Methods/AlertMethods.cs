@@ -9,7 +9,7 @@ namespace NHRM_Admin_API.Methods
         //Alert Valid Status
         public Boolean isValidStatus(AlertsRequest alertReq)
         {
-            var statusOptions = new List<string>() {"Actioned","Snooze","Dismiss"};
+            var statusOptions = new List<string>() {"Actioned","Dismiss","Snooze"};
             return statusOptions.Contains(alertReq.Status);
         }
 
@@ -23,7 +23,7 @@ namespace NHRM_Admin_API.Methods
         public UpdateAlertResponse AlertNotValid(AlertsRequest alertReq)
         {                       
             return new UpdateAlertResponse(null, false, alertReq.Status 
-            + " " + "is not a valid Status Please enter either Actioned,Snooze or Dismiss");                       
+            + " " + "is not a valid Status Please enter either Actioned, Dismiss or Snooze");                       
         }
 
 
