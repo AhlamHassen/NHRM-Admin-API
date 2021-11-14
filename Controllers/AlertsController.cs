@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -153,14 +154,15 @@ namespace NHRM_Admin_API.Controllers
 
             // if alert for missed survey was alredy created don't create another one
             Boolean isSurveyAlert;
+            List<string> URList = new List<string>();
 
             foreach (var survey in missedSurvies)
             {
                 isSurveyAlert =
-                alerts.Find(a => a.URNumber == survey.URNumber) == null ? false : true;
+                alerts.Find(a => a.URNumber == survey.URNumber) == null ? false : true;               
 
                 // if alert is not yet created create one
-                if(!isSurveyAlert)
+                if(!isSurveyAlert && !URList.Contains(survey.URNumber))
                 {
                     var newAlert = new Alert();
                     newAlert.AlertTypeID = 6;
@@ -170,11 +172,12 @@ namespace NHRM_Admin_API.Controllers
 
                     context.tbl_Alert.Add(newAlert);
                 }
+                URList.Add(survey.URNumber);
             }
 
             context.SaveChanges();
             
-            return Ok(true);
+            return Ok(alerts);
 
 
         }
