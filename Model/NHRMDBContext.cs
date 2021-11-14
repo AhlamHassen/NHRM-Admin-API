@@ -34,6 +34,8 @@ namespace NHRM_Admin_API.Model
         //Alerts Log view
         public DbSet<AlertsLog> view_Log  { get; set; }
 
+        public DbSet<SurveyCheck> view_Survey_Check { get; set; }
+
         public virtual DbSet<ConditionDetail> ConditionDetails { get; set; }
         public virtual DbSet<DataPoint> DataPoints { get; set; }
         public virtual DbSet<DataPointRecord> DataPointRecords { get; set; }
@@ -71,8 +73,25 @@ namespace NHRM_Admin_API.Model
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //model builder for tbl_Alert 
+            modelBuilder.Entity<Alert>(entity =>
+            {
+                entity
+                .HasKey(a => a.AlertID);
+
+                entity
+                .Property(a => a.AlertID)
+                .HasColumnName("AlertID");
+            });
+
+            //Model builder for Survey Check View
+            modelBuilder.Entity<SurveyCheck>(entity =>
+            {
+                entity.HasNoKey();
+            });
+
             //model builder for Viewing logs
-             modelBuilder.Entity<AlertsLog>(entity =>
+            modelBuilder.Entity<AlertsLog>(entity =>
             {
                 entity.HasNoKey();
             });

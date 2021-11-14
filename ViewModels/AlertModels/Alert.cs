@@ -5,6 +5,10 @@ namespace NHRM_Admin_API.ViewModels.AlertModels
 {
     public class Alert
     {
+        public Alert()
+        {
+            
+        }
         public Alert(int alertID, string uRNumber, int? staffID, int alertTypeID, int triggerValue, DateTime dateTimeRaised)
         {
             this.AlertID = alertID;
@@ -15,6 +19,7 @@ namespace NHRM_Admin_API.ViewModels.AlertModels
             this.DateTimeRaised = dateTimeRaised;
 
         }
+
         public int AlertID { get; set; }
         public string URNumber { get; set; }
         public int? StaffID { get; set; }

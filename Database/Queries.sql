@@ -102,12 +102,29 @@ INNER JOIN Patient AS p on p.URNumber = ta.URNumber
 INNER JOIN tbl_AlertType AS tat on tat.AlertTypeID = ta.AlertTypeID
 WHERE ta.DateTimeActioned is not null;
 
+GO
 
--- CREATE VIEW view_Log AS
+DROP VIEW IF EXISTS view_Survey_Check;
 
--- SELECT ta.AlertID,ta.URNumber, tat.Title AS AlertTitle, ta.StaffID, ta.Status AS Proceeding,
--- cast(ta.DateTimeActioned as date) as [Date],cast(ta.DateTimeActioned as time) as [Time]
--- From tbl_Alert AS ta
--- INNER JOIN Patient AS p on p.URNumber = ta.URNumber
--- INNER JOIN tbl_AlertType AS tat on tat.AlertTypeID = ta.AlertTypeID
--- WHERE ta.DateTimeActioned is not null;
+GO
+	-- View for missed survey
+CREATE VIEW view_Survey_Check AS 
+    SELECT mr.MeasurementID, mr.CategoryID, mr.URNumber,max(mr.DateTimeRecorded) as DateTimeRecorded,pm.Frequency FROM MeasurementRecord AS mr
+	INNER JOIN PatientMeasurement AS pm on pm.URNumber = mr.URNumber and pm.MeasurementID = mr.MeasurementID and pm.CategoryID = mr.CategoryID
+	INNER JOIN Patient AS p on p.URNumber = pm.URNumber
+	WHERE p.Active = 1 AND p.Deceased = 0 
+	group by mr.MeasurementID, mr.CategoryID, mr.URNumber, pm.Frequency
+	having DateAdd(Day, pm.Frequency + 1 ,max(mr.DateTimeRecorded)) < GETDATE()
+
+--what if an alert has already been created how do we avoid duplicate alerts
+--todo view for missed survey and never recorded a survey before
+
+	--  SELECT mr.MeasurementID, mr.CategoryID, mr.URNumber,max(mr.DateTimeRecorded) as DateTimeRecorded,pm.Frequency FROM MeasurementRecord AS mr
+	-- INNER JOIN PatientMeasurement AS pm on pm.URNumber = mr.URNumber and pm.MeasurementID = mr.MeasurementID and pm.CategoryID = mr.CategoryID	
+	-- group by mr.MeasurementID, mr.CategoryID, mr.URNumber, pm.Frequency
+	-- having DateAdd(Day, pm.Frequency,max(mr.DateTimeRecorded)) < GETDATE()
+
+    -- SELECT mr.MeasurementID, mr.CategoryID, mr.URNumber,max(mr.DateTimeRecorded) as DateTimeRecorded,pm.Frequency FROM MeasurementRecord AS mr
+	-- INNER JOIN PatientMeasurement AS pm on pm.URNumber = mr.URNumber and pm.MeasurementID = mr.MeasurementID and pm.CategoryID = mr.CategoryID	
+	-- group by mr.MeasurementID, mr.CategoryID, mr.URNumber, pm.Frequency
+	-- having DateAdd(Day, pm.Frequency + 1 ,max(mr.DateTimeRecorded)) < GETDATE()

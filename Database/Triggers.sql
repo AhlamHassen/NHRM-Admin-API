@@ -108,7 +108,7 @@ GO
 
 DROP PROCEDURE IF EXISTS BreathlessnessTrigger;
 GO
---procedure if level of pain is greater than or equal to 4 three times in a row 
+
 CREATE PROCEDURE BreathlessnessTrigger
 @insertedValue int, @URNumber nvarchar(50), @DateTimeRaised datetime
 AS
@@ -327,16 +327,18 @@ END
 
 --insert statement for measurement ID 5 VVV
 
--- insert into MeasurementRecord (DateTimeRecorded,MeasurementID,CategoryID,URNumber)
--- values ('2023-01-08',5,1,'123456789')
+ --insert into MeasurementRecord (DateTimeRecorded,MeasurementID,CategoryID,URNumber)
+ --values ('2023-01-01',5,1,'123456789')
 
--- select * from MeasurementRecord order by MeasurementRecordID desc;
+ --select * from MeasurementRecord order by MeasurementRecordID desc;
+ --select * from tbl_Alert;
+ --select * from Measurement;
 
--- insert into DataPointRecord (MeasurementID, DataPointNumber, Value,MeasurementRecordID)
--- VALUES 
--- 	(5,1,3,38),
--- 	(5,2,3,38),
--- 	(5,3,3,38),
--- 	(5,4,4,38),
--- 	(5,5,4,38),
--- 	(5,6,20,38)
+ --insert into DataPointRecord (MeasurementID, DataPointNumber, Value,MeasurementRecordID)
+ --VALUES 
+ --	(5,1,3,38),
+ --	(5,2,3,38),
+ --	(5,3,3,38),
+ --	(5,4,4,38),
+ --	(5,5,4,38),
+ --	(5,6,20,38)

@@ -132,6 +132,51 @@ namespace NHRM_Admin_API.Controllers
 
         }
 
+        [HttpPost]
+        [Route("SurveyCheck")]
+        public async Task<ActionResult<Boolean>> SurveyCheck()
+        {
 
+            var now = DateTime.Now;
+
+            //get list of alerts created today
+            var alerts = await context.tbl_Alert
+                .Where(a => a.DateTimeRaised > new DateTime(now.Year, now.Month, now.Day, 0, 0, 0))
+                .Where(a => a.AlertTypeID == 6)
+                .ToListAsync();
+            
+
+            //get list of rows from survey check view
+            var missedSurvies = await context.view_Survey_Check
+            .ToListAsync();
+            
+
+            // if alert for missed survey was alredy created don't create another one
+            Boolean isSurveyAlert;
+
+            foreach (var survey in missedSurvies)
+            {
+                isSurveyAlert =
+                alerts.Find(a => a.URNumber == survey.URNumber) == null ? false : true;
+
+                // if alert is not yet created create one
+                if(!isSurveyAlert)
+                {
+                    var newAlert = new Alert();
+                    newAlert.AlertTypeID = 6;
+                    newAlert.DateTimeRaised = DateTime.Now;
+                    newAlert.URNumber = survey.URNumber;
+                    newAlert.TriggerValue = 1;
+
+                    context.tbl_Alert.Add(newAlert);
+                }
+            }
+
+            context.SaveChanges();
+            
+            return Ok(alerts);
+
+
+        }
     }
 }
