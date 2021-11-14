@@ -174,7 +174,7 @@ namespace NHRM_Admin_API.Controllers
 
             context.SaveChanges();
             
-            return Ok(alerts);
+            return Ok(true);
 
 
         }
