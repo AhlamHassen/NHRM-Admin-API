@@ -365,7 +365,7 @@ INSERT INTO tbl_AlertType (Title , Details , TriggerCondition, TriggerThresholdV
 ('Quality of Life Poor', 'Alert triggers when QOL survey is poor three times in a row', 'QOL <= poor', 3 ),
 ('Level of Pain','Level of pain Higher than four three times in a row','Level of Pain >= 4',4),
 ('Breathlessness','When breathlessness is greater than or equal to 4 three recordings in a row','Breathlessness >=',4),
-('Quality of life very poor','Alert triggers when QOL survey questions are very poor','QOL <= very poor',4);
+('Quality of life very poor','Alert triggers when QOL survey questions are very poor','QOL <= very poor',4),
 ('Missed Survey','Patient Missed a Survey','Survey Missed',1);
 
 INSERT INTO tbl_Alert (URNumber, StaffID, AlertTypeID, TriggerValue, DateTimeRaised, DateTimeActioned, [Status], Notes)
