@@ -118,13 +118,3 @@ CREATE VIEW view_Survey_Check AS
 
 --what if an alert has already been created how do we avoid duplicate alerts
 --todo view for missed survey and never recorded a survey before
-
-	--  SELECT mr.MeasurementID, mr.CategoryID, mr.URNumber,max(mr.DateTimeRecorded) as DateTimeRecorded,pm.Frequency FROM MeasurementRecord AS mr
-	-- INNER JOIN PatientMeasurement AS pm on pm.URNumber = mr.URNumber and pm.MeasurementID = mr.MeasurementID and pm.CategoryID = mr.CategoryID	
-	-- group by mr.MeasurementID, mr.CategoryID, mr.URNumber, pm.Frequency
-	-- having DateAdd(Day, pm.Frequency,max(mr.DateTimeRecorded)) < GETDATE()
-
-    -- SELECT mr.MeasurementID, mr.CategoryID, mr.URNumber,max(mr.DateTimeRecorded) as DateTimeRecorded,pm.Frequency FROM MeasurementRecord AS mr
-	-- INNER JOIN PatientMeasurement AS pm on pm.URNumber = mr.URNumber and pm.MeasurementID = mr.MeasurementID and pm.CategoryID = mr.CategoryID	
-	-- group by mr.MeasurementID, mr.CategoryID, mr.URNumber, pm.Frequency
-	-- having DateAdd(Day, pm.Frequency + 1 ,max(mr.DateTimeRecorded)) < GETDATE()
