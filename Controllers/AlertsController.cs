@@ -35,7 +35,7 @@ namespace NHRM_Admin_API.Controllers
 
             var alerts = await context.view_Alerts
                 //Potential Option if actioned, dissmissed or Snooze don't need to be shown
-                .Where(a => a.Status == "Snoozed" || a.Status == null)
+                .Where(a => a.Status == "Snooze" || a.Status == null)
                 .OrderBy(a => a.DateTimeRaised)
                 .Select(va => new { va.Identifier, va.PatientName, va.PatientID, va.AlertTitle })
                 .ToListAsync();
