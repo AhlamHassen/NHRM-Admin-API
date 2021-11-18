@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "g77zSCEzLSAmnT7GHs+YpQzzsGvt77Uw3qdu03bH1+VfgaNyIcdlEZRvsI9SI16TRevEtZefhal44bsJh2BdLw==",
+  "dgSpecHash": "Ctljaw0Crz8h+kkv5OoJzhtZ1oDy1tM2YK08yX18Td88UEwfj06hO9oE4i+qwxMm8dkCCKXD70QBl4szPGtxHA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\dnadi\\Desktop\\dotnet api\\NHRM-Admin-API\\NHRM-Admin-API.csproj",
+  "projectFilePath": "C:\\Users\\dnadi\\Desktop\\Deployable\\nhrm-admin-api-deployable\\Admin dotnet api\\NHRM-Admin-API\\NHRM-Admin-API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\dnadi\\.nuget\\packages\\automapper\\10.1.1\\automapper.10.1.1.nupkg.sha512",
     "C:\\Users\\dnadi\\.nuget\\packages\\csvhelper\\27.1.1\\csvhelper.27.1.1.nupkg.sha512",
@@ -124,8 +124,7 @@
     "C:\\Users\\dnadi\\.nuget\\packages\\system.xml.readerwriter\\4.3.0\\system.xml.readerwriter.4.3.0.nupkg.sha512",
     "C:\\Users\\dnadi\\.nuget\\packages\\system.xml.xdocument\\4.3.0\\system.xml.xdocument.4.3.0.nupkg.sha512",
     "C:\\Users\\dnadi\\.nuget\\packages\\system.xml.xmldocument\\4.3.0\\system.xml.xmldocument.4.3.0.nupkg.sha512",
-    "C:\\Users\\dnadi\\.nuget\\packages\\system.xml.xmlserializer\\4.3.0\\system.xml.xmlserializer.4.3.0.nupkg.sha512",
-    "C:\\Users\\dnadi\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\5.0.8\\microsoft.netcore.app.host.win-x64.5.0.8.nupkg.sha512"
+    "C:\\Users\\dnadi\\.nuget\\packages\\system.xml.xmlserializer\\4.3.0\\system.xml.xmlserializer.4.3.0.nupkg.sha512"
   ],
   "logs": []
 }

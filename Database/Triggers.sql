@@ -328,6 +328,8 @@ GO
 --need to change some sqlserver settings for this to work
 --todo run procedure daily
 --todo surver needs to restart
+
+-- ----------------------------------------------
 -- DROP PROCEDURE IF EXISTS procSurveyCheck;
 -- GO 
 -- --create/alter a stored proceudre  accordingly
@@ -378,6 +380,58 @@ GO
 -- IF @ret <> 0 RAISERROR('Unable to close HTTP connection.', 10, 1);
 
 -- GO 
+
+
+-- --Server configuration requirements
+-- sp_configure 'show advanced options', 1;  
+-- GO  
+-- RECONFIGURE;  
+-- GO  
+-- sp_configure 'Ole Automation Procedures', 1;  
+-- GO  
+-- RECONFIGURE;  
+-- GO  
+
+-- USE Master
+-- GO
+
+-- IF  EXISTS( SELECT *
+--             FROM sys.objects
+--             WHERE object_id = OBJECT_ID(N'[dbo].[MyBackgroundTask]')
+--             AND type in (N'P', N'PC'))
+--     DROP PROCEDURE [dbo].[MyBackgroundTask]
+-- GO
+
+-- --set up time to run in master DB
+-- CREATE PROCEDURE MyBackgroundTask
+-- AS
+-- BEGIN
+--     -- SET NOCOUNT ON added to prevent extra result sets from
+--     -- interfering with SELECT statements.
+--     SET NOCOUNT ON;
+
+--     -- The interval between cleanup attempts
+--     declare @timeToRun nvarchar(50)
+--     set @timeToRun = '13:45:00'
+
+--     while 1 = 1
+--     begin
+--         waitfor time @timeToRun
+--         begin
+--             execute [NHOriginalDB].[dbo].[procSurveyCheck]
+--         end
+--     end
+-- END
+-- GO
+
+-- -- Run the procedure when the master database starts.
+-- sp_procoption    @ProcName = 'MyBackgroundTask',
+--                 @OptionName = 'startup',
+--                 @OptionValue = 'on'
+-- GO
+------------------------------------------------------------------
+
+
 --insert statement for measurement ID 5 VVV
 
  --insert into MeasurementRecord (DateTimeRecorded,MeasurementID,CategoryID,URNumber)
