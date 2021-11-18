@@ -18,10 +18,8 @@ namespace NHRM_Admin_API.Controllers
     [Route("[controller]")]
     public class AlertsController : ControllerBase
     {
-       private readonly NHRMDBContext context;
+        private readonly NHRMDBContext context;
         public IConfiguration Configuration { get; }
-
-        private AlertMethods alertMethods = new AlertMethods();
 
         public AlertsController(NHRMDBContext _context, IConfiguration configuration)
         {
@@ -29,109 +27,61 @@ namespace NHRM_Admin_API.Controllers
             Configuration = configuration;
         }
 
-        //Gets All new or snoozed Alerts orders by Date time raised
+        //Gets All Alerts where status is either Null or Dissmissed orders by Date time raised
         [HttpGet]
+        [Route("GetAlerts")]
         public async Task<ActionResult<IEnumerable<ViewAlerts>>> GetAlerts()
         {
-            
+
             var alerts = await context.view_Alerts
-                                                //Potential Option if actioned, dissmissed or Snooze don't need to be shown
-                                                .Where(a => a.Status == null)                                                                                     
-                                                .OrderBy(a => a.DateTimeRaised)
-                                                .Select(va => new {va.Identifier, va.PatientName, va.PatientID, va.AlertTitle})
-                                                .ToListAsync();
+                //Potential Option if actioned, dissmissed or Snooze don't need to be shown
+                .Where(a => a.Status == "Snoozed" || a.Status == null)
+                .OrderBy(a => a.DateTimeRaised)
+                .Select(va => new { va.Identifier, va.PatientName, va.PatientID, va.AlertTitle })
+                .ToListAsync();
             return Ok(alerts);
         }
 
-        //gets alert logs for the logs page
+        //Gets Alert Log
         [HttpGet]
-        [Route("Log")]
-        public async Task<ActionResult<IEnumerable<AlertsLog>>> GetAlertsLog()
+        [Route("GetLog")]
+        public async Task<ActionResult<IEnumerable<AlertsLog>>> GetAlertLog()
         {
-            //Other option convert time span to string
-            //List<AlertLogResponse> alertsLogResponse = new List<AlertLogResponse>();
-
-            IEnumerable<AlertsLog> alerts = await context.view_Log
-                                                //Potential Option if null don't show in log
-                                                .Where(a => a.Proceeding != null)                                                                                                                                    
-                                                .OrderBy(a => a.DateTimeActioned)                                                                                      
-                                                .ToListAsync();
-
-                     
-            return Ok(alerts);
-        }        
+            AlertsLog[] log = await context.view_Log
+                .OrderBy(a => a.DateTimeActioned)
+                .ToArrayAsync();
+            return Ok(log);
+        }
 
         //Updates alerts
-        [HttpPut]         
-        public async Task<ActionResult<UpdateAlertResponse>> UpdateAlert([FromBody] AlertsRequest alertReq)
+        [HttpPut]
+        [Route("UpdateAlert")]
+        public async Task<ActionResult> UpdateAlert([FromBody] AlertsRequest alertRequest)
         {
-            var response = new UpdateAlertResponse();
             //Find alert
             Alert alert = await context.tbl_Alert
-                .FirstOrDefaultAsync(a => a.AlertID == alertReq.Identifier);
+                .FirstOrDefaultAsync(a => a.AlertID == alertRequest.Identifier);
 
-            //check alert is null
-            if (alert == null)
+            //Validation Checks
+            if (alert == null) return BadRequest("Request isn't a valid Status Please enter either Actioned, Dismiss or Snooze");
+            switch (alertRequest.Status)
             {
-                response = alertMethods.AlertIsNull(alertReq);
-
-                return Ok(response);
+                case "Snooze":
+                    break;
+                case "Dissmiss":
+                    break;
+                case "Actioned":
+                    break;
+                default:
+                    return BadRequest("Request isn't a valid Status Please enter either Actioned, Dismiss or Snooze");
             }
 
-            //Check if status is valid                        
-            if (!alertMethods.isValidStatus(alertReq))
-            {
-                response = alertMethods.AlertNotValid(alertReq);
-                return Ok(response);
-            } 
-
-            //change alert if snooze add 30 min current time and that will be the new value
-//-----------potential option for snooze set a time when that time passes the api sends these alerts again--------------------//
-            // if(alertReq.Status == "Snooze")
-            // {
-            //     alert.Status = alertReq.Status;
-            //     DateTime currentTime = DateTime.Now;
-            //     alert.DateTimeActioned = currentTime.AddMinutes(30);
-
-            //     await context.SaveChangesAsync();
-
-            //     response = new UpdateAlertResponse(alert, true, "Alert Successfully Updated");
-            //     return Ok(response);
-
-            // }
-
-            alert.Status = alertReq.Status;
-            alert.StaffID = alertReq.StaffID;
+            // Setting up response variables
+            alert.Status = alertRequest.Status;
+            alert.StaffID = alertRequest.StaffID;
             alert.DateTimeActioned = DateTime.Now;
-
             context.SaveChanges();
-
-            response = new UpdateAlertResponse(alert, true, "Alert Successfully Updated");
-            return Ok(response);
-
+            return Ok();
         }
-
-        //UnSnooze All Alerts
-        [HttpPut]
-        [Route("UnSnooze")]
-        public async Task<ActionResult<Boolean>> UnSnoozeAlerts() {
-            //Find alert
-            IEnumerable<Alert> snoozeAlert = await context.tbl_Alert
-                .Where(a => a.Status == "Snooze")
-                .ToListAsync();
-            
-            foreach (var alert in snoozeAlert)
-            {
-                alert.Status = null;
-            }
-
-            context.SaveChanges();
-
-
-            return Ok(snoozeAlert);
-
-        }
-
-
     }
 }

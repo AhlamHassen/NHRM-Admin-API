@@ -1,4 +1,5 @@
 --USE NHRMDB;
+USE NH;
 Go
 
 DROP VIEW IF EXISTS view_Alerts;
@@ -65,7 +66,8 @@ DROP TABLE IF EXISTS Measurement;
 
 GO
 
-CREATE TABLE Measurement(
+CREATE TABLE Measurement
+(
     MeasurementID INT IDENTITY(1,1) NOT NULL,
     MeasurementName NVARCHAR(50) NOT NULL,
     Frequency INT NOT NULL,
@@ -75,21 +77,23 @@ CREATE TABLE Measurement(
 
 GO
 
-CREATE TABLE DataPoint(
-   MeasurementID INT NOT NULL,
-   DataPointNumber INT NOT NULL,
-   UpperLimit INT NOT NULL,
-   LowerLimit INT NOT NULL,
-   [Name] NVARCHAR(50),
-   CONSTRAINT PK_DataPoint PRIMARY KEY (MeasurementID, DataPointNumber),
-   CONSTRAINT FK_DataPoint_Measurement FOREIGN KEY (MeasurementID) REFERENCES Measurement
+CREATE TABLE DataPoint
+(
+    MeasurementID INT NOT NULL,
+    DataPointNumber INT NOT NULL,
+    UpperLimit INT NOT NULL,
+    LowerLimit INT NOT NULL,
+    [Name] NVARCHAR(50),
+    CONSTRAINT PK_DataPoint PRIMARY KEY (MeasurementID, DataPointNumber),
+    CONSTRAINT FK_DataPoint_Measurement FOREIGN KEY (MeasurementID) REFERENCES Measurement
 );
 
 GO
 
-CREATE TABLE SurveyQuestion(
+CREATE TABLE SurveyQuestion
+(
     MeasurementID INT NOT NULL,
-    DataPointNumber INT NOT NULL, 
+    DataPointNumber INT NOT NULL,
     CategoryName NVARCHAR(MAX),
     Question NVARCHAR(MAX) NOT NULL,
     CONSTRAINT PK_SurveyQuestion PRIMARY KEY (MeasurementID, DataPointNumber),
@@ -98,28 +102,31 @@ CREATE TABLE SurveyQuestion(
 
 GO
 
-CREATE TABLE SurveyAnswer(
+CREATE TABLE SurveyAnswer
+(
     MeasurementID INT NOT NULL,
-    DataPointNumber INT NOT NULL, 
+    DataPointNumber INT NOT NULL,
     AnswerNumber INT NOT NULL,
     AnswerText NVARCHAR(MAX) NOT NULL,
-    [Value] INT NOT NULL, 
+    [Value] INT NOT NULL,
     CONSTRAINT PK_SurveyAnswer PRIMARY KEY (MeasurementID, DataPointNumber, AnswerNumber),
     CONSTRAINT FK_SurveyAnswer_SurveyQuestion FOREIGN KEY (MeasurementID, DataPointNumber) REFERENCES SurveyQuestion (MeasurementID, DataPointNumber)
 )
 
 GO
 
-CREATE TABLE StaffRole(
-      RoleID INT IDENTITY(1,1) NOT NULL,
-      StaffType NVARCHAR(50) NOT NULL,
-      CONSTRAINT PK_StaffRole PRIMARY KEY (RoleID),
-      CONSTRAINT UQ_StaffType UNIQUE (StaffType)
+CREATE TABLE StaffRole
+(
+    RoleID INT IDENTITY(1,1) NOT NULL,
+    StaffType NVARCHAR(50) NOT NULL,
+    CONSTRAINT PK_StaffRole PRIMARY KEY (RoleID),
+    CONSTRAINT UQ_StaffType UNIQUE (StaffType)
 )
 
 GO
 
-CREATE TABLE Staff(
+CREATE TABLE Staff
+(
     StaffID INT IDENTITY(1,1) NOT NULL,
     Email NVARCHAR(256) NOT NULL,
     FirstName NVARCHAR(50) NOT NULL,
@@ -132,9 +139,10 @@ CREATE TABLE Staff(
     CONSTRAINT FK_Staff_StaffRole FOREIGN KEY (RoleID) REFERENCES StaffRole
 )
 
-GO 
+GO
 
-CREATE TABLE Patient(
+CREATE TABLE Patient
+(
     URNumber NVARCHAR(50) NOT NULL,
     Email NVARCHAR(256) NOT NULL,
     Title NVARCHAR(50) NOT NULL,
@@ -149,9 +157,9 @@ CREATE TABLE Patient(
     HomeNumber NVARCHAR(10),
     CountryOfBirth NVARCHAR(50) NOT NULL,
     PreferredLanguage NVARCHAR(50) NOT NULL,
-    [Password] BINARY(64) NOT NULL, 
+    [Password] BINARY(64) NOT NULL,
     Salt NVARCHAR(MAX) NOT NULL,
-    LivesAlone BIT NOT NULL,    
+    LivesAlone BIT NOT NULL,
     RegisteredBy INT NOT NULL,
     Active BIT NOT NULL,
     Deceased BIT NOT NULL,
@@ -163,7 +171,8 @@ CREATE TABLE Patient(
 
 GO
 
-CREATE TABLE Treating(
+CREATE TABLE Treating
+(
     StartDate DATETIME NOT NULL,
     EndDate DATETIME,
     URNumber NVARCHAR(50) NOT NULL,
@@ -175,7 +184,8 @@ CREATE TABLE Treating(
 
 GO
 
-CREATE TABLE RecordCategory(
+CREATE TABLE RecordCategory
+(
     RecordCategoryID INT IDENTITY(1,1) NOT NULL,
     Category NVARCHAR(50) NOT NULL,
     CONSTRAINT PK_RecordCategory PRIMARY KEY (RecordCategoryID),
@@ -184,7 +194,8 @@ CREATE TABLE RecordCategory(
 
 GO
 
-CREATE TABLE RecordType(
+CREATE TABLE RecordType
+(
     RecordTypeID INT IDENTITY(1,1) NOT NULL,
     RecordType NVARCHAR(50) NOT NULL,
     RecordCategoryID INT NOT NULL,
@@ -193,7 +204,8 @@ CREATE TABLE RecordType(
     CONSTRAINT UQ_RecordType UNIQUE (RecordType)
 )
 
-CREATE TABLE PatientRecord(
+CREATE TABLE PatientRecord
+(
     DateTimeRecorded DATETIME NOT NULL,
     Notes NVARCHAR(MAX),
     URNumber NVARCHAR(50) NOT NULL,
@@ -205,7 +217,8 @@ CREATE TABLE PatientRecord(
 
 GO
 
-CREATE TABLE TemplateCategory(
+CREATE TABLE TemplateCategory
+(
     CategoryID INT IDENTITY(1,1) NOT NULL,
     CategoryName NVARCHAR(50) NOT NULL,
     CONSTRAINT PK_TemplateCategory PRIMARY KEY (CategoryID),
@@ -214,7 +227,8 @@ CREATE TABLE TemplateCategory(
 
 GO
 
-CREATE TABLE PatientCategory(
+CREATE TABLE PatientCategory
+(
     CategoryID INT NOT NULL,
     URNumber NVARCHAR(50) NOT NULL,
     CONSTRAINT PK_PatientCategory PRIMARY KEY (CategoryID, URNumber),
@@ -222,9 +236,10 @@ CREATE TABLE PatientCategory(
     CONSTRAINT FK_PatientCategory_TemplateCategory FOREIGN KEY (CategoryID) REFERENCES TemplateCategory
 )
 
-GO 
+GO
 
-CREATE TABLE ConditionDetails(
+CREATE TABLE ConditionDetails
+(
     CategoryID INT NOT NULL,
     URNumber NVARCHAR(50) NOT NULL,
     Diagnosis NVARCHAR(500),
@@ -236,7 +251,8 @@ CREATE TABLE ConditionDetails(
 
 GO
 
-CREATE TABLE PatientMeasurement(
+CREATE TABLE PatientMeasurement
+(
     MeasurementID INT NOT NULL,
     CategoryID INT NOT NULL,
     URNumber NVARCHAR(50) NOT NULL,
@@ -247,9 +263,10 @@ CREATE TABLE PatientMeasurement(
     CONSTRAINT FK_PatientMeasurement_PatientCategory FOREIGN KEY (CategoryID, URNumber) REFERENCES PatientCategory(CategoryID, URNumber)
 )
 
-GO 
+GO
 
-CREATE TABLE MeasurementRecord(
+CREATE TABLE MeasurementRecord
+(
     MeasurementRecordID INT IDENTITY(1,1) NOT NULL,
     DateTimeRecorded DATETIME NOT NULL,
     MeasurementID INT NOT NULL,
@@ -262,7 +279,8 @@ CREATE TABLE MeasurementRecord(
 
 GO
 
-CREATE TABLE DataPointRecord(
+CREATE TABLE DataPointRecord
+(
     MeasurementID INT NOT NULL,
     DataPointNumber INT NOT NULL,
     [Value] FLOAT NOT NULL,
@@ -274,7 +292,8 @@ CREATE TABLE DataPointRecord(
 
 GO
 
-CREATE TABLE TemplateMeasurement(
+CREATE TABLE TemplateMeasurement
+(
     MeasurementID INT NOT NULL,
     CategoryID INT NOT NULL,
     CONSTRAINT PK_TemplateMeasurement PRIMARY KEY (MeasurementID, CategoryID),
@@ -284,16 +303,18 @@ CREATE TABLE TemplateMeasurement(
 
 GO
 
-CREATE TABLE ResourceType(
+CREATE TABLE ResourceType
+(
     ResourceTypeID INT IDENTITY(1,1) NOT NULL,
     TypeName NVARCHAR(50) NOT NULL,
     CONSTRAINT PK_ResourceType PRIMARY KEY (ResourceTypeID),
     CONSTRAINT UQ_ResourceType_TypeName UNIQUE (TypeName)
 )
 
-GO 
+GO
 
-CREATE TABLE [Resource](
+CREATE TABLE [Resource]
+(
     ResourceID INT IDENTITY(1,1) NOT NULL,
     Title NVARCHAR(65) NOT NULL,
     Prompt NVARCHAR(12) NOT NULL,
@@ -303,9 +324,10 @@ CREATE TABLE [Resource](
     CONSTRAINT FK_Resource_ResourceType FOREIGN KEY (TypeID) REFERENCES ResourceType
 )
 
-GO 
+GO
 
-CREATE TABLE PatientResource(
+CREATE TABLE PatientResource
+(
     CategoryID INT NOT NULL,
     URNumber NVARCHAR(50),
     ResourceID INT NOT NULL,
@@ -316,7 +338,8 @@ CREATE TABLE PatientResource(
 
 GO
 
-CREATE TABLE TemplateResource(
+CREATE TABLE TemplateResource
+(
     CategoryID INT NOT NULL,
     ResourceID INT NOT NULL,
     CONSTRAINT PK_TemplateResource PRIMARY KEY (CategoryID, ResourceID),
@@ -326,7 +349,8 @@ CREATE TABLE TemplateResource(
 
 GO
 
-CREATE TABLE ResourceDialog(
+CREATE TABLE ResourceDialog
+(
     ResourceDialogID INT IDENTITY(1,1) NOT NULL,
     Heading NVARCHAR(60) NOT NULL,
     Content NVARCHAR(MAX) NOT NULL,
@@ -338,32 +362,34 @@ CREATE TABLE ResourceDialog(
 
 GO
 
-CREATE TABLE tbl_AlertType(
-	AlertTypeID INT IDENTITY(1,1) NOT NULL,
-	Title NVARCHAR(500) NOT NULL,
-	Details NVARCHAR(600) NOT NULL,
-	TriggerCondition NVARCHAR(400) NOT NULL,
-	TriggerThresholdValue INT NOT NULL,
-	CONSTRAINT PK_AlertTypeID PRIMARY KEY (AlertTypeID)
+CREATE TABLE tbl_AlertType
+(
+    AlertTypeID INT IDENTITY(1,1) NOT NULL,
+    Title NVARCHAR(500) NOT NULL,
+    Details NVARCHAR(600) NOT NULL,
+    TriggerCondition NVARCHAR(400) NOT NULL,
+    TriggerThresholdValue INT NOT NULL,
+    CONSTRAINT PK_AlertTypeID PRIMARY KEY (AlertTypeID)
 )
 
 GO
 
-CREATE TABLE tbl_Alert(
-	AlertID INT IDENTITY(1,1) NOT NULL,
-	[URNumber] NVARCHAR(50) NOT NULL,
-	StaffID INT NULL,
-	AlertTypeID INT NOT NULL,
-	TriggerValue INT NOT NULL,
-	DateTimeRaised DATETIME NOT NULL,
-	DateTimeActioned DATETIME NULL,
-	Status NVARCHAR(15) NULL,
-	Notes NVARCHAR(300) NULL,
-	CONSTRAINT PK_AlertID  PRIMARY KEY (AlertID),
-	CONSTRAINT FK_URNumber FOREIGN KEY (URNumber) REFERENCES Patient,
-	CONSTRAINT FK_StaffID FOREIGN KEY (StaffID) REFERENCES Staff,
-	CONSTRAINT FK_AlertTypeID  FOREIGN KEY (AlertTypeID) REFERENCES tbl_AlertType,
-	CONSTRAINT CHK_Status CHECK (Status = 'Actioned' OR Status = 'Snooze' OR Status = 'Dismiss')
+CREATE TABLE tbl_Alert
+(
+    AlertID INT IDENTITY(1,1) NOT NULL,
+    [URNumber] NVARCHAR(50) NOT NULL,
+    StaffID INT NULL,
+    AlertTypeID INT NOT NULL,
+    TriggerValue INT NOT NULL,
+    DateTimeRaised DATETIME NOT NULL,
+    DateTimeActioned DATETIME NULL,
+    Status NVARCHAR(15) NULL,
+    Notes NVARCHAR(300) NULL,
+    CONSTRAINT PK_AlertID  PRIMARY KEY (AlertID),
+    CONSTRAINT FK_URNumber FOREIGN KEY (URNumber) REFERENCES Patient,
+    CONSTRAINT FK_StaffID FOREIGN KEY (StaffID) REFERENCES Staff,
+    CONSTRAINT FK_AlertTypeID  FOREIGN KEY (AlertTypeID) REFERENCES tbl_AlertType,
+    CONSTRAINT CHK_Status CHECK (Status = 'Actioned' OR Status = 'Snooze' OR Status = 'Dismiss')
 )
 
 GO
@@ -374,15 +400,17 @@ CREATE VIEW CategoryMeasurements
 
 AS
 
-SELECT m.MeasurementID, m.MeasurementName, tc.CategoryID, tc.CategoryName, m.Frequency FROM Measurement AS m
-INNER JOIN TemplateMeasurement as tm ON tm.MeasurementID = m.MeasurementID
-INNER JOIN TemplateCategory as tc on tc.CategoryID = tm.CategoryID
+    SELECT m.MeasurementID, m.MeasurementName, tc.CategoryID, tc.CategoryName, m.Frequency
+    FROM Measurement AS m
+        INNER JOIN TemplateMeasurement as tm ON tm.MeasurementID = m.MeasurementID
+        INNER JOIN TemplateCategory as tc on tc.CategoryID = tm.CategoryID
 
 
 GO
 
 CREATE VIEW AllCategoriesView
 
-AS 
+AS
 
-SELECT * FROM TemplateCategory;
+    SELECT *
+    FROM TemplateCategory;

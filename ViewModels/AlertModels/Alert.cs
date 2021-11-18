@@ -13,7 +13,6 @@ namespace NHRM_Admin_API.ViewModels.AlertModels
             this.AlertTypeID = alertTypeID;
             this.TriggerValue = triggerValue;
             this.DateTimeRaised = dateTimeRaised;
-
         }
         public int AlertID { get; set; }
         public string URNumber { get; set; }
