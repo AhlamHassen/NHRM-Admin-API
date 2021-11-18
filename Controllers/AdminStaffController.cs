@@ -28,7 +28,7 @@ namespace NHRM_Admin_API.Controllers
             return context.staff.ToList();
         }
 
-       // create an endpoint that takes a staff login object and logs in
+        // create an endpoint that takes a staff login object and logs in
         [HttpPost]
         [Route("LoginStaff")]
         public ActionResult<StaffLoginResponseModel> Login([FromBody] StaffLoginViewModel staff)
@@ -38,11 +38,11 @@ namespace NHRM_Admin_API.Controllers
             var staffList = context.staff.ToList();
 
             var staffFound = staffList.Find(x => x.Email == staff.email && x.Password == staff.password);
-        
+
             if (staffFound != null)
             {
                 //get the role of the staffmember from the 
-                var RoleId = context.staff.Where(x => x.Email == staff.email).Select(x => x.RoleId).FirstOrDefault();   
+                var RoleId = context.staff.Where(x => x.Email == staff.email).Select(x => x.RoleId).FirstOrDefault();
                 var RoleName = context.StaffRoles.Where(x => x.RoleId == RoleId).Select(x => x.StaffType).FirstOrDefault();
                 response.role = RoleName;
                 response.email = staffFound.Email;
@@ -50,10 +50,14 @@ namespace NHRM_Admin_API.Controllers
             }
             else
             {
-                return Unauthorized("Staff Member not found");
+                response.role = "none";
+                response.email = "none";
+                response.Message = "Staff Member not found";
+                // return Unauthorized("Staff Member not found");
+                return BadRequest(response);
+                // return Ok(response);
             }
-            
-              
+
         }
 
         //create an endpoint that takes a staff object and creates a new staff
@@ -77,7 +81,7 @@ namespace NHRM_Admin_API.Controllers
                 context.SaveChanges();
                 response.Message = "Staff Member Created";
                 response.Status = "Success";
-                return Ok(response);   
+                return Ok(response);
             }
         }
 

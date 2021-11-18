@@ -11,7 +11,7 @@ using System.Text;
 using Microsoft.Extensions.Configuration;
 using System.Text.Json;
 using NHRM_Admin_API.Methods;
-
+using System.Diagnostics;
 
 namespace NHRM_Admin_API.Controllers
 {
@@ -177,6 +177,7 @@ namespace NHRM_Admin_API.Controllers
 
             //TODO -Lee SaveChangesAsync
             context.SaveChanges();
+            context.Dispose();
             return Ok(JsonSerializer.Serialize("Patient Added Successfully"));
         }
 
@@ -186,136 +187,147 @@ namespace NHRM_Admin_API.Controllers
         [Route("EditPatient")]
         public async Task<ActionResult> EditPatient([FromBody] AddPatientModel pm)
         {
-            //check pm for null reference exception
 
-            var patient = await context.Patients.FirstOrDefaultAsync(p => p.Urnumber == pm.Patient.Urnumber);
+            // try
+            // {
 
+                //check pm for null reference exception
+                var patient = await context.Patients.FirstOrDefaultAsync(p => p.Urnumber == pm.Patient.Urnumber);
 
-            if (patient == null)
-            {
-                return UnprocessableEntity("The requested patient does not exist");
-            }
-
-            var currentEmail = patient.Email;
-            var password = patient.Password;
-            var salt = patient.Salt;
-
-            if (pm.PatientCategories.Count == 0)
-            {
-                return UnprocessableEntity("The Patient is not assigned to a patient category");
-            }
-
-            var allPatients = await context.Patients.ToListAsync();
-            var emailList = new List<string>();
-
-            if (pm.Patient.Email != currentEmail)
-            {
-
-                foreach (var pa in allPatients)
+                if (patient == null)
                 {
-                    emailList.Add(pa.Email);
+                    return UnprocessableEntity("The requested patient does not exist");
                 }
 
-                //To allow only unique emails
-                if (emailList.Contains(pm.Patient.Email))
+                var currentEmail = patient.Email;
+                var password = patient.Password;
+                var salt = patient.Salt;
+
+                if (pm.PatientCategories.Count == 0)
                 {
-                    return BadRequest("Entered email is already in use");
-                }
-            }
-
-            if (pm.Patient.Password != "")
-            {
-
-                HashSaltReturnModel hashsalt = GetPepperedHashSalt(pm.Patient.Password, context, Configuration);
-                var p = pm.Patient;
-
-
-                if (patient != null)
-                {
-                    patient.Urnumber = p.Urnumber;
-                    patient.Email = p.Email;
-                    patient.Title = p.Title;
-                    patient.FirstName = p.FirstName;
-                    patient.SurName = p.SurName;
-                    patient.Gender = p.Gender;
-                    patient.Dob = p.Dob;
-                    patient.Address = p.Address;
-                    patient.Suburb = p.Suburb;
-                    patient.PostCode = p.PostCode;
-                    patient.MobileNumber = p.MobileNumber;
-                    patient.CountryOfBirth = p.CountryOfBirth;
-                    patient.PreferredLanguage = p.PreferredLanguage;
-                    patient.Password = hashsalt.Password;
-                    patient.Salt = hashsalt.Salt;
-                    patient.LivesAlone = p.LivesAlone;
-                    patient.RegisteredBy = p.RegisteredBy;
-                    patient.Active = p.Active;
-                    patient.Deceased = p.Deceased;
-                }
-            }
-            else
-            {
-                var p = pm.Patient;
-                if (patient != null)
-                {
-                    patient.Urnumber = p.Urnumber;
-                    patient.Email = p.Email;
-                    patient.Title = p.Title;
-                    patient.FirstName = p.FirstName;
-                    patient.SurName = p.SurName;
-                    patient.Gender = p.Gender;
-                    patient.Dob = p.Dob;
-                    patient.Address = p.Address;
-                    patient.Suburb = p.Suburb;
-                    patient.PostCode = p.PostCode;
-                    patient.MobileNumber = p.MobileNumber;
-                    patient.CountryOfBirth = p.CountryOfBirth;
-                    patient.PreferredLanguage = p.PreferredLanguage;
-                    patient.LivesAlone = p.LivesAlone;
-                    patient.RegisteredBy = p.RegisteredBy;
-                    patient.Active = p.Active;
-                    patient.Deceased = p.Deceased;
+                    return UnprocessableEntity("The Patient is not assigned to a patient category");
                 }
 
-            }
+                var allPatients = await context.Patients.ToListAsync();
+                var emailList = new List<string>();
 
-
-            var pCategories = await context.PatientCategories.Where(p => p.Urnumber == pm.Patient.Urnumber).ToListAsync();
-            var pMeasurements = await context.PatientMeasurements.Where(p => p.Urnumber == pm.Patient.Urnumber).ToListAsync();
-
-
-            //Remove current patient measurements
-            foreach (var m in pMeasurements)
-            {
-                context.PatientMeasurements.Remove(m);
-            }
-
-            //Remove current patient categories 
-            foreach (var c in pCategories)
-            {
-                context.PatientCategories.Remove(c);
-            }
-
-            //Add new patient categories
-            foreach (var c in pm.PatientCategories)
-            {
-                var patientCategory = new PatientCategory(c, pm.Patient.Urnumber);
-                context.PatientCategories.Add(patientCategory);
-            }
-
-            //Add new patient measurements
-            if (pm.PatientMeasurements != null)
-            {
-                foreach (var m in pm.PatientMeasurements)
+                if (pm.Patient.Email != currentEmail)
                 {
-                    var patientMeasurement = new PatientMeasurement(m.MeasurementId, m.CategoryId, pm.Patient.Urnumber,
-                    m.Frequency, DateTime.Now);
-                    context.PatientMeasurements.Add(patientMeasurement);
-                }
-            }
 
-            context.SaveChanges();
-            return Ok(JsonSerializer.Serialize("Patient was editted successfully"));
+                    foreach (var pa in allPatients)
+                    {
+                        emailList.Add(pa.Email);
+                    }
+
+                    //To allow only unique emails
+                    if (emailList.Contains(pm.Patient.Email))
+                    {
+                        return BadRequest("Entered email is already in use");
+                    }
+
+                }
+
+                if (pm.Patient.Password != "")
+                {
+
+                    HashSaltReturnModel hashsalt = GetPepperedHashSalt(pm.Patient.Password, context, Configuration);
+                    var p = pm.Patient;
+                    if (patient != null)
+                    {
+                        patient.Urnumber = p.Urnumber;
+                        patient.Email = p.Email;
+                        patient.Title = p.Title;
+                        patient.FirstName = p.FirstName;
+                        patient.SurName = p.SurName;
+                        patient.Gender = p.Gender;
+                        patient.Dob = p.Dob;
+                        patient.Address = p.Address;
+                        patient.Suburb = p.Suburb;
+                        patient.PostCode = p.PostCode;
+                        patient.MobileNumber = p.MobileNumber;
+                        patient.CountryOfBirth = p.CountryOfBirth;
+                        patient.PreferredLanguage = p.PreferredLanguage;
+                        patient.Password = hashsalt.Password;
+                        patient.Salt = hashsalt.Salt;
+                        patient.LivesAlone = p.LivesAlone;
+                        patient.RegisteredBy = p.RegisteredBy;
+                        patient.Active = p.Active;
+                        patient.Deceased = p.Deceased;
+                    }
+
+                }
+                else
+                {
+
+                    var p = pm.Patient;
+                    if (patient != null)
+                    {
+                        patient.Urnumber = p.Urnumber;
+                        patient.Email = p.Email;
+                        patient.Title = p.Title;
+                        patient.FirstName = p.FirstName;
+                        patient.SurName = p.SurName;
+                        patient.Gender = p.Gender;
+                        patient.Dob = p.Dob;
+                        patient.Address = p.Address;
+                        patient.Suburb = p.Suburb;
+                        patient.PostCode = p.PostCode;
+                        patient.MobileNumber = p.MobileNumber;
+                        patient.CountryOfBirth = p.CountryOfBirth;
+                        patient.PreferredLanguage = p.PreferredLanguage;
+                        patient.LivesAlone = p.LivesAlone;
+                        patient.RegisteredBy = p.RegisteredBy;
+                        patient.Active = p.Active;
+                        patient.Deceased = p.Deceased;
+                    }
+
+                }
+
+                var pCategories = await context.PatientCategories.Where(p => p.Urnumber == pm.Patient.Urnumber).ToListAsync();
+                var pMeasurements = await context.PatientMeasurements.Where(p => p.Urnumber == pm.Patient.Urnumber).ToListAsync();
+
+                //Remove current patient measurements
+                foreach (var m in pMeasurements)
+                {
+                    context.PatientMeasurements.Remove(m);
+                }
+
+                //Remove current patient categories 
+                foreach (var c in pCategories)
+                {
+                    context.PatientCategories.Remove(c);
+                }
+
+                //Add new patient categories
+                foreach (var c in pm.PatientCategories)
+                {
+                    var patientCategory = new PatientCategory(c, pm.Patient.Urnumber);
+                    context.PatientCategories.Add(patientCategory);
+                }
+
+                //Add new patient measurements
+                if (pm.PatientMeasurements != null)
+                {
+                    foreach (var m in pm.PatientMeasurements)
+                    {
+                        var patientMeasurement = new PatientMeasurement(m.MeasurementId, m.CategoryId, pm.Patient.Urnumber,
+                        m.Frequency, DateTime.Now);
+                        context.PatientMeasurements.Add(patientMeasurement);
+                    }
+                }
+
+
+            // }
+            //      finally
+            // {
+       
+                context.SaveChanges();
+         
+                context.Dispose();
+         
+            // }
+                return Ok(JsonSerializer.Serialize("Patient was edited successfully"));
+            
         }
 
 
@@ -333,12 +345,10 @@ namespace NHRM_Admin_API.Controllers
                 return BadRequest("No search string was provided");
             }
 
-
             var Qdob = new List<Patient>();
             var Qurnumber = new List<Patient>();
             var Qgivenname = new List<Patient>();
             var Qfamilyname = new List<Patient>();
-
 
             //only hit the database for the provided search terms?
             if (searchdob != DateTime.MinValue)
@@ -350,7 +360,6 @@ namespace NHRM_Admin_API.Controllers
             {
                 Qurnumber = await context.Patients.Where(p => p.Urnumber == searchurnumber)
                 .ToListAsync();
-                
             }
 
             if (searchgivenname != null)
@@ -386,10 +395,10 @@ namespace NHRM_Admin_API.Controllers
             {
                 return Ok(searchHelper.PatientListTransform(Qdob));
             }
-            
+
             //-------------------------------------------------------------------------------------------------------//
             //-------------- you can now only search givename, family name and dob together -------------------------//
-            
+
 
             if (searchurnumber == null && searchgivenname != null && searchfamilyname != null && searchdob == DateTime.MinValue)
             {
@@ -402,7 +411,7 @@ namespace NHRM_Admin_API.Controllers
                 var output = Qgivenname.Intersect(Qdob);
                 return Ok(searchHelper.PatientListEnumerableTransform(output));
             }
-         
+
 
             if (searchurnumber == null && searchgivenname == null && searchfamilyname != null && searchdob != DateTime.MinValue)
             {
@@ -576,7 +585,7 @@ namespace NHRM_Admin_API.Controllers
         }
 
 
-     
+
 
     }
 }

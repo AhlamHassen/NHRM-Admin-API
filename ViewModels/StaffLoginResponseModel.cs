@@ -4,6 +4,7 @@ namespace NHRM_Admin_API.ViewModels
     {
         public string email { get; set; }
         public string role { get; set; }
+        public string Message { get; set; } 
         
     }
 
