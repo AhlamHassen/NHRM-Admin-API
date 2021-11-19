@@ -82,7 +82,7 @@ namespace NHRM_Admin_API.Controllers
             alert.StaffID = alertRequest.StaffID;
             alert.DateTimeActioned = DateTime.Now;
             context.SaveChanges();
-
+            context.Dispose();
             return Ok();
         }
 
@@ -126,6 +126,7 @@ namespace NHRM_Admin_API.Controllers
             }
 
             context.SaveChanges();
+            context.Dispose();
             return Ok(alerts);
         }
     }

@@ -177,6 +177,7 @@ namespace NHRM_Admin_API.Controllers
 
             //TODO -Lee SaveChangesAsync
             context.SaveChanges();
+            context.Dispose();
             return Ok(JsonSerializer.Serialize("Patient Added Successfully"));
         }
 
@@ -315,6 +316,7 @@ namespace NHRM_Admin_API.Controllers
             }
 
             context.SaveChanges();
+            context.Dispose();
             return Ok(JsonSerializer.Serialize("Patient was editted successfully"));
         }
 
