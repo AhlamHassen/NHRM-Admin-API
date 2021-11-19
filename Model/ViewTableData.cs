@@ -14,10 +14,10 @@ namespace NHRM_Admin_API.Model
         public double? SelfCare { get; set; }
         public double? UsualActivities { get; set; }
         public double? QolPainDiscomfort { get; set; }
-        public double? AnxietyDepressinon { get; set; }
+        public double? AnxietyDepression { get; set; }
         public double? HealthSlider { get; set; }
 
-        public ViewTableData(string uRNumber, DateTime dateTimeRecorded, double? ecogStatus, double? breathlessness, double? levelOfPain, double? fluidDrain, double? mobility, double? selfCare, double? usualActivities, double? qolPainDiscomfort, double? anxietyDepressinon, double? healthSlider)
+        public ViewTableData(string uRNumber, DateTime dateTimeRecorded, double? ecogStatus, double? breathlessness, double? levelOfPain, double? fluidDrain, double? mobility, double? selfCare, double? usualActivities, double? qolPainDiscomfort, double? anxietyDepression, double? healthSlider)
         {
             URNumber = uRNumber;
             DateTimeRecorded = dateTimeRecorded;
@@ -29,7 +29,7 @@ namespace NHRM_Admin_API.Model
             SelfCare = selfCare;
             UsualActivities = usualActivities;
             QolPainDiscomfort = qolPainDiscomfort;
-            AnxietyDepressinon = anxietyDepressinon;
+            AnxietyDepression = anxietyDepression;
             HealthSlider = healthSlider;
         }
 
@@ -49,9 +49,9 @@ namespace NHRM_Admin_API.Model
         public double? AnxietyDepressinon { get; set; }
         public double? HealthSlider { get; set; }
 
-        public ViewTableDataNoUr(string dateTimeRecorded, double? ecogStatus, double? breathlessness, double? levelOfPain, double? fluidDrain, double? mobility, double? selfCare, double? usualActivities, double? qolPainDiscomfort, double? anxietyDepressinon, double? healthSlider)
+        public ViewTableDataNoUr(string dateTimeRecorded, double? ecogStatus, double? breathlessness, double? levelOfPain, double? fluidDrain, double? mobility, double? selfCare, double? usualActivities, double? qolPainDiscomfort, double? anxietyDepression, double? healthSlider)
         {
-           
+
             DateTimeRecorded = dateTimeRecorded;
             EcogStatus = ecogStatus;
             Breathlessness = breathlessness;
@@ -61,14 +61,9 @@ namespace NHRM_Admin_API.Model
             SelfCare = selfCare;
             UsualActivities = usualActivities;
             QolPainDiscomfort = qolPainDiscomfort;
-            AnxietyDepressinon = anxietyDepressinon;
+            AnxietyDepressinon = anxietyDepression;
             HealthSlider = healthSlider;
         }
-
-       
-
-
-
     }
-    
+
 }
