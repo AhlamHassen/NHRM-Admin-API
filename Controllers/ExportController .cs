@@ -26,11 +26,21 @@ namespace NHRM_Admin_API.Controllers
             Configuration = configuration;
         }
         [HttpGet]
-        [Route("ExportAll")]
+        [Route("ExportAllPatient")]
         // ExportAll grabs all recordings from all patients and exports them as an array
         public async Task<IActionResult> ExportAll()
         {
             return Ok(await context.ViewTableData.ToArrayAsync());
+        }
+        [HttpGet]
+        [Route("ExportLog")]
+        // ExportAll grabs all recordings from all patients and exports them as an array
+        public async Task<IActionResult> ExportLog()
+        {
+            return Ok(await context.view_Log
+            // OrderBy not working
+            // .OrderBy(x => x.DateTimeActioned)
+            .ToArrayAsync());
         }
     }
 }
