@@ -350,7 +350,7 @@ namespace NHRM_Admin_API.Controllers
             {
                 Qurnumber = await context.Patients.Where(p => p.Urnumber == searchurnumber)
                 .ToListAsync();
-                
+
             }
 
             if (searchgivenname != null)
@@ -386,10 +386,10 @@ namespace NHRM_Admin_API.Controllers
             {
                 return Ok(searchHelper.PatientListTransform(Qdob));
             }
-            
+
             //-------------------------------------------------------------------------------------------------------//
             //-------------- you can now only search givename, family name and dob together -------------------------//
-            
+
 
             if (searchurnumber == null && searchgivenname != null && searchfamilyname != null && searchdob == DateTime.MinValue)
             {
@@ -402,7 +402,7 @@ namespace NHRM_Admin_API.Controllers
                 var output = Qgivenname.Intersect(Qdob);
                 return Ok(searchHelper.PatientListEnumerableTransform(output));
             }
-         
+
 
             if (searchurnumber == null && searchgivenname == null && searchfamilyname != null && searchdob != DateTime.MinValue)
             {
@@ -454,7 +454,7 @@ namespace NHRM_Admin_API.Controllers
                     m.SelfCare,
                     m.UsualActivities,
                     m.QolPainDiscomfort,
-                    m.AnxietyDepressinon,
+                    m.AnxietyDepression,
                     m.HealthSlider
                 );
 
@@ -576,7 +576,7 @@ namespace NHRM_Admin_API.Controllers
         }
 
 
-     
+
 
     }
 }
