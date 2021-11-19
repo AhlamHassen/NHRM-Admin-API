@@ -77,6 +77,7 @@ namespace NHRM_Admin_API.Controllers
                 context.SaveChanges();
                 response.Message = "Staff Member Created";
                 response.Status = "Success";
+                context.Dispose();
                 return Ok(response);   
             }
         }
@@ -103,6 +104,7 @@ namespace NHRM_Admin_API.Controllers
                 return NotFound();
             }
             context.SaveChanges();
+            context.Dispose();
             return Ok(staffFound);
         }
     }
