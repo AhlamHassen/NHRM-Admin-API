@@ -22,6 +22,7 @@ namespace NHRM_Admin_API.Controllers
         private readonly NHRMDBContext context;
         public IConfiguration Configuration { get; }
 
+        private AlertMethods alertMethods = new AlertMethods();
 
         public AlertsController(NHRMDBContext _context, IConfiguration configuration)
         {
@@ -64,19 +65,16 @@ namespace NHRM_Admin_API.Controllers
             //Alert Validation
             if (alert == null)
             {
-                return BadRequest(String.Format("{0} is not a valid alert ID", alertRequest.Identifier));
+                var response = alertMethods.AlertIsNull(alertRequest);
+                return (response);
+
             }
-            switch (alert.Status)
+
+            if (!alertMethods.isValidStatus(alertRequest))
             {
-                case "Snooze":
-                    break;
-                case "Actioned":
-                    break;
-                case "Dismiss":
-                    break;
-                default:
-                    return BadRequest(String.Format("{0} is not a valid Status Please enter either Actioned, Dismiss or Snooze", alert.Status));
-            }
+                var response = alertMethods.AlertNotValid(alertRequest);
+                return (response);
+            } 
 
             alert.Status = alertRequest.Status;
             alert.StaffID = alertRequest.StaffID;
