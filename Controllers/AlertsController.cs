@@ -84,6 +84,28 @@ namespace NHRM_Admin_API.Controllers
             return Ok();
         }
 
+        //UnSnooze All Alerts
+        [HttpPut]
+        [Route("UnSnooze")]
+        public async Task<ActionResult<Boolean>> UnSnoozeAlerts() {
+            //Find alert
+            IEnumerable<Alert> snoozeAlert = await context.tbl_Alert
+                .Where(a => a.Status == "Snooze")
+                .ToListAsync();
+
+            foreach (var alert in snoozeAlert)
+            {
+                alert.Status = null;
+            }
+
+            context.SaveChanges();
+            context.Dispose();
+
+
+            return Ok(snoozeAlert);
+
+        }
+
         [HttpPost]
         [Route("SurveyCheck")]
         public async Task<ActionResult<Boolean>> SurveyCheck()
