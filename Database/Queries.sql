@@ -42,7 +42,7 @@ GO
 Create view ViewTableData
 as
     select URNumber, DateRecorded as [DateTimeRecorded] , [1-1] as EcogStatus, [2-1] as BreathLessness, [3-1] as LevelOfPain,
-        [4-1] as FluidDrain, [5-1] as Mobility, [5-2] as SelfCare , [5-3] as UsualActivities , [5-4] as QolPainDiscomfort , [5-5] as AnxietyDepressinon , [5-6] as HealthSlider
+        [4-1] as FluidDrain, [5-1] as Mobility, [5-2] as SelfCare , [5-3] as UsualActivities , [5-4] as QolPainDiscomfort , [5-5] as AnxietyDepression , [5-6] as HealthSlider
     from
         (   select mr1.urnumber,
             convert(Date, DateTimeRecorded) as DateRecorded,
